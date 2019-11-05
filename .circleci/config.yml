@@ -8,7 +8,7 @@
 # Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle CI admin.
 version: 2.1
 orbs:
-  newman: postman/newman@1.0.0
+  newman: postman/newman@0.0.2
 jobs:
   static-analysis:
     docker:
@@ -76,6 +76,7 @@ jobs:
     # Use a Linux VM instead of docker environment. This is crucial for successful mounting of file systems into docker containers.
     # Note: Not specifying an image (for the machine) results in the circleci:classic image being pulled in. This contains docker-compose on it already.
     machine: true 
+    executor: newman/postman-newman-docker
     working_directory: ~/repo
     steps:
       - checkout
