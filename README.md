@@ -4,9 +4,7 @@
 
 # A3S
 
-*An enterprise framework that makes effortless management of centralized authorization, authentication, and accounting. A3S supports OpenID and OAuth 2.0 identity protocols.
-
-*
+*An enterprise framework that makes effortless management of centralized authorization, authentication, and accounting. A3S supports OpenID and OAuth 2.0 identity protocols.*
 
 ## Introduction
 
