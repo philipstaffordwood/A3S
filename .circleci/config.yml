@@ -76,7 +76,6 @@ jobs:
     # Use a Linux VM instead of docker environment. This is crucial for successful mounting of file systems into docker containers.
     # Note: Not specifying an image (for the machine) results in the circleci:classic image being pulled in. This contains docker-compose on it already.
     machine: true 
-    executor: newman/postman-newman-docker
     working_directory: ~/repo
     steps:
       - checkout
@@ -176,13 +175,13 @@ workflows:
               only: /^v*.*.*/
             branches:
               only: master
-      - postman-integration-tests
+      #- postman-integration-tests
       - a3s-docker-build-push:
           requires:
           - unit-test
           - static-analysis
           - license-headers
-          - postman-integration-tests
+          #- postman-integration-tests
           filters:
             tags:
               only: /^v*.*.*/
@@ -194,7 +193,7 @@ workflows:
           - unit-test
           - static-analysis
           - license-headers
-          - postman-integration-tests
+          #- postman-integration-tests
           filters:
             tags:
               only: /^v*.*.*/
