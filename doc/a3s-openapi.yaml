@@ -2628,7 +2628,7 @@ components:
           items:
             type: string
             format: uuid
-        dataPolicies:
+        dataPolicyIds:
           description: The ID's of the application data policies that are applied to this team.
           type: array
           items:
@@ -2655,7 +2655,7 @@ components:
           type: array
           items:
              $ref: '#/components/schemas/TeamId'
-        dataPolicies:
+        dataPolicyIds:
           description: The application data policies that are applied to this team.
           type: array
           items:
