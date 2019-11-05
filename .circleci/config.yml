@@ -5,6 +5,7 @@
 # **************************************************
 #
 
+# Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle CI admin.
 version: 2.1
 orbs:
   newman: postman/newman@0.0.2
@@ -82,7 +83,8 @@ jobs:
       - run: docker build -t grindrodbank/a3s:latest -f ~/repo/a3s-Dockerfile ~/repo
       - run: docker build -t grindrodbank/a3s-identity-server:latest -f ~/repo/a3s-identity-server-Dockerfile ~/repo
       # Start the quickstart instance, as it models a fully featured running A3S environment, which is ideal for running Postman tests against.
-      - run: docker-compose -f ~/repo/docker-compose/quickstart/docker-compose.yml up
+      - run: docker-compose -f ~/repo/quickstart/docker-compose.yml up -d
+      - run: sleep 15
       # Run the Newman orb to execute the collection against the quickstart environment.
       - newman/newman-run:
           collection: "~/repo/postman/A3S-pipeline.postman_collection.json"
@@ -99,12 +101,12 @@ jobs:
       # build and push A3S Docker image to dockerhub.
       - run: |
           # TAG=0.0.1 - tag should be derived from Git.
-          docker build -t grindrodbank/a3s:$TAG -f a3s-Dockerfile .     
+          docker build -t grindrodbank/a3s:latest -f a3s-Dockerfile .     
           docker login -u $DOCKER_USER -p $DOCKER_PASS
-          docker push grindrodbank/a3s:$TAG
-          # Tag and push latest
-          docker tag grindrodbank/a3s:$TAG grindrodbank/a3s:latest
           docker push grindrodbank/a3s:latest
+          # Tag and push latest
+          #docker tag grindrodbank/a3s:latest grindrodbank/a3s:latest
+          #docker push grindrodbank/a3s:latest
 
   a3s-ids4-docker-build-push:
     docker:
@@ -117,12 +119,12 @@ jobs:
       # build and push A3S identity Sever Docker image to dockerhub.
       - run: |
           # TAG=0.0.1 - tag should be derived from Git.
-          docker build -t grindrodbank/a3s-identity-server:$TAG -f a3s-identity-server-Dockerfile .     
+          docker build -t grindrodbank/a3s-identity-server:latest -f a3s-identity-server-Dockerfile .     
           docker login -u $DOCKER_USER -p $DOCKER_PASS
-          docker push grindrodbank/a3s-identity-server:$TAG
-          # Tag and push latest
-          docker tag grindrodbank/a3s-identity-server:$TAG grindrodbank/a3s-identity-server:latest
           docker push grindrodbank/a3s-identity-server:latest
+          # Tag and push latest
+          #docker tag grindrodbank/a3s-identity-server:$TAG grindrodbank/a3s-identity-server:latest
+          #docker push grindrodbank/a3s-identity-server:latest
 
   fossa-scan:
     docker:
@@ -169,32 +171,32 @@ workflows:
       - license-headers
       - fossa-scan:
           filters:
-            tags:
-              only: /^v*.*.*/
+            # tags:
+            #   only: /^v*.*.*/
             branches:
               only: master
-      - postman-integration-tests
+      #- postman-integration-tests
       - a3s-docker-build-push:
           requires:
-          - test
+          - unit-test
           - static-analysis
           - license-headers
-          - postman-integration-tests
+          #- postman-integration-tests
           filters:
-            tags:
-              only: /^v*.*.*/
+            # tags:
+            #   only: /^v*.*.*/
             # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
-            # branches:
-            #   only: master
+            branches:
+              only: master
       - a3s-ids4-docker-build-push:
           requires:
-          - test
+          - unit-test
           - static-analysis
           - license-headers
-          - postman-integration-tests
+          #- postman-integration-tests
           filters:
-            tags:
-              only: /^v*.*.*/
+            # tags:
+            #   only: /^v*.*.*/
             # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
-            # branches:
-            #   only: master
+            branches:
+              only: master
