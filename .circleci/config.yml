@@ -5,6 +5,7 @@
 # **************************************************
 #
 
+# Orbs need to be enabled as a security setting.
 version: 2.1
 orbs:
   newman: postman/newman@0.0.2
