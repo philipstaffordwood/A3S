@@ -101,12 +101,12 @@ jobs:
       # build and push A3S Docker image to dockerhub.
       - run: |
           # TAG=0.0.1 - tag should be derived from Git.
-          docker build -t grindrodbank/a3s:$TAG -f a3s-Dockerfile .     
+          docker build -t grindrodbank/a3s:latest -f a3s-Dockerfile .     
           docker login -u $DOCKER_USER -p $DOCKER_PASS
-          docker push grindrodbank/a3s:$TAG
-          # Tag and push latest
-          docker tag grindrodbank/a3s:$TAG grindrodbank/a3s:latest
           docker push grindrodbank/a3s:latest
+          # Tag and push latest
+          #docker tag grindrodbank/a3s:latest grindrodbank/a3s:latest
+          #docker push grindrodbank/a3s:latest
 
   a3s-ids4-docker-build-push:
     docker:
@@ -119,12 +119,12 @@ jobs:
       # build and push A3S identity Sever Docker image to dockerhub.
       - run: |
           # TAG=0.0.1 - tag should be derived from Git.
-          docker build -t grindrodbank/a3s-identity-server:$TAG -f a3s-identity-server-Dockerfile .     
+          docker build -t grindrodbank/a3s-identity-server:latest -f a3s-identity-server-Dockerfile .     
           docker login -u $DOCKER_USER -p $DOCKER_PASS
-          docker push grindrodbank/a3s-identity-server:$TAG
-          # Tag and push latest
-          docker tag grindrodbank/a3s-identity-server:$TAG grindrodbank/a3s-identity-server:latest
           docker push grindrodbank/a3s-identity-server:latest
+          # Tag and push latest
+          #docker tag grindrodbank/a3s-identity-server:$TAG grindrodbank/a3s-identity-server:latest
+          #docker push grindrodbank/a3s-identity-server:latest
 
   fossa-scan:
     docker:
@@ -171,8 +171,8 @@ workflows:
       - license-headers
       - fossa-scan:
           filters:
-            tags:
-              only: /^v*.*.*/
+            # tags:
+            #   only: /^v*.*.*/
             branches:
               only: master
       #- postman-integration-tests
