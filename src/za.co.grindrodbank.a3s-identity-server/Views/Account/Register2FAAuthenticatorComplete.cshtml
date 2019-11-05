@@ -1,0 +1,41 @@
+﻿@model RegisterTwoFactorAuthenticatorCompleteViewModel
+
+    <div class="login-page">
+        <div class="page-header">
+            <h1>Register Two Factor Authentication</h1>
+        </div>
+
+        <partial name="_ValidationSummary" />
+
+        <div class="row">
+        <div class="col-md-6 col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Authenticator App Registration Complete</h3>
+                </div>
+                <div class="panel-body">
+                    <p>Your two-factor authenticator app has now successfully been registered, and two-factor authentication has been switched on for your profile.</p>
+
+                    @if (Model.RecoveryCodes != null && Model.RecoveryCodes.Count() > 0)
+                    {
+                        <p>If you lose access to your authenticator app, you can use the following one-time recovery codes to recover access to your profile:</p>
+
+                        <ul>
+                            @foreach (string code in Model.RecoveryCodes)
+                            {
+                                <li>@code</li>
+                            }
+                        </ul>
+                    }
+                </div>
+            </div>
+
+            <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
+            <button class="btn btn-default" name="btnContinueWithRedirect" id="btnContinueWithRedirect" value="btnContinueWithRedirect">Continue with Redirect</button>
+        </div>
+
+    </div>
+
+@section scripts {
+    <script type="text/javascript" src="~/js/register-2fa-authenticator-complete.js"></script>
+}

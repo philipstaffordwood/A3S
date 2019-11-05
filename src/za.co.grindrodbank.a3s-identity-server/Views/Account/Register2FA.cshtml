@@ -1,0 +1,75 @@
+﻿@model RegisterTwoFactorViewModel
+
+    <div class="login-page">
+        <div class="page-header">
+            <h1>Register Two-Factor Authentication</h1>
+        </div>
+
+        <partial name="_ValidationSummary" />
+
+        @if (Model.TwoFACompulsary)
+        {
+            <p>Your organization requires two-factor authentication to be set up for your profile.</p>
+        }
+
+        @if (Model.AllowRegisterAuthenticator)
+        {
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        @if (Model.HasAuthenticator)
+                        {
+                            <h3 class="panel-title">Manage Authenticator App</h3>
+                        }
+                        else
+                        {
+                            <h3 class="panel-title">Register an Authenticator App</h3>
+                        }
+                    </div>
+                    <div class="panel-body">
+                        <p>This allows you to register A3S with an authenticator app, like Google Authenticator, Microsoft Authenticaor or FreeOTP Authenticator, that will generate one time passwords as a second security factor.</p>
+
+                        @if (Model.HasAuthenticator)
+                        {
+                            <button class="btn btn-primary" name="btnAuthenticator" id="btnAuthenticator" value="btnAuthenticator">Register Additional Authenticator</button>
+                            <button class="btn btn-default" name="btnResetRecoveryCodes" id="btnResetRecoveryCodes" value="btnResetRecoveryCodes">Reset Recovery Codes</button>
+                            <button class="btn btn-default" name="btnDeregisterAuthenticator" id="btnDeregisterAuthenticator" value="btnDeregisterAuthenticator">Remove Authenticator</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary" name="btnAuthenticator" id="btnAuthenticator" value="btnAuthenticator">Register Authenticator</button>
+                        }
+                    </div>
+                </div>
+                <input type="hidden" name="RegisterAuthenticatorUrl" id="RegisterAuthenticatorUrl" value="@Url.Action("Register2FAAuthenticator", new { redirectUrl = Model.RedirectUrl })" />
+                <input type="hidden" name="ResetRecoveryCodesUrl" id="ResetRecoveryCodesUrl" value="@Url.Action("ResetRecoveryCodes", new { redirectUrl = Model.RedirectUrl })" />
+                <input type="hidden" name="DeregisterAuthenticatorUrl" id="DeregisterAuthenticatorUrl" value="@Url.Action("Deregister2FAAuthenticator", new { redirectUrl = Model.RedirectUrl })" />
+            </div>
+        }
+    
+        <div class="row">
+        @if (Model.TwoFACompulsary)
+        {
+            <input type="hidden" name="Cancel2FARegistration" id="Cancel2FARegistrationUrl" value="@Url.Action("Cancel2FARegistration", new { redirectUrl = Model.RedirectUrl })" />
+            <button class="btn btn-default" name="btnCancel" id="btnCancel" value="btnCancel">Cancel</button>
+        }
+        else
+        {
+            <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
+            <button class="btn btn-default" name="btnContinueWithout" id="btnContinueWithout" value="btnContinueWithout">Continue with Redirect</button>
+        }
+
+        @if (!Model.AllowRegisterAuthenticator)
+        {
+            <div class="alert alert-warning">
+                <strong>Invalid two-factor request</strong>
+                There are no two-factor providers configured for this client.
+            </div>
+        }
+        
+        </div>
+    </div>
+
+@section scripts {
+    <script type="text/javascript" src="~/js/register-2fa.js"></script>
+}

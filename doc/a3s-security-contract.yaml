@@ -1,0 +1,282 @@
+# A3S Security Contract
+#
+# This file contains information allowing for configuration and declaration of almost all aspects of A3S.
+# More information at: https://github.com/GrindrodBank/A3S/blob/master/doc/security-contracts.md
+#
+name: A3S Security Contract
+generated: 2019-10-30 10:00:00 +02:00
+applications:
+    # This value will be used to create the client scope within the Identity Server. Therefore, it cannot contain any spaces, and should follow a fully smaller case convention.
+  - fullname: a3s   
+    applicationFunctions:
+      - name: a3s.users
+        description: Functionality to maintain users within the A3S User store.
+        permissions:
+          - name: a3s.users.read
+            description: View a list of users or a single user.
+          - name: a3s.users.create
+            description: Create a new user. Enables assigning roles to newly created users.
+          - name: a3s.users.delete
+            description: Removes a user, but only from the A3S User store.
+          - name: a3s.users.update
+            description: Updates a user. Also enables modifying roles assigned to the user.
+
+      - name: a3s.teams
+        description: Functionality to maintain teams.
+        permissions:
+          - name: a3s.teams.read
+            description: View list of teams. View a single team.
+          - name: a3s.teams.create
+            description: Create a new team. Grants ability to assign users to this team.
+          - name: a3s.teams.delete
+            description: Remove a team.
+          - name: a3s.teams.update
+            description: Update a team. Change which users are assigned to the team.
+
+      - name: a3s.roles
+        description: Functionality to manage roles and the functions assigned to roles.
+        permissions:
+          - name: a3s.roles.read
+            description: Enables reading lists of roles and individual roles.
+          - name: a3s.roles.create
+            description: Enables creation of roles. Enables assignment of functions to the created role.
+          - name: a3s.roles.delete
+            description: Enables deletion of a role.
+          - name: a3s.roles.update
+            description: Enables updating of a role. Enables updating of functions assinged to a role.
+
+      - name: a3s.applications
+        description: Functionality to manage applications within A3S.
+        permissions:
+          - name: a3s.applications.read
+            description: Enables reading lists of applications and individual applications. Enables viewing which functions and permissions are assigned to applications.
+            
+      - name: a3s.functions
+        description: Functionality to manage functions created by micro-services.
+        permissions:
+          - name: a3s.functions.read
+            description: Enables reading lists of functions, individual functions and the lists of permissions assigned to functions.
+          - name: a3s.functions.create
+            description: Enables the creation of new functions and the assignment of permissions to these functions.
+          - name: a3s.functions.update
+            description: Enables the updating of existing functions. Enables editing the permissions that are assigned to a function.
+          - name: a3s.functions.delete
+            description: Enables the deletion of functions.
+
+      - name: a3s.authenticationModes
+        description: Functionality to maintain authentication modes.
+        permissions:
+          - name: a3s.ldapAuthenticationModes.read
+            description: View list of authentication modes. View a single authentication mode.
+          - name: a3s.ldapAuthenticationModes.create
+            description: Create a new authentication mode.
+          - name: a3s.ldapAuthenticationModes.delete
+            description: Remove an authentication mode.
+          - name: a3s.ldapAuthenticationModes.update
+            description: Update an authentication mode.
+
+      - name: a3s.applicationFunctions
+        description: Functionality to manage application functions created by micro-services.
+        permissions:
+          - name: a3s.applicationFunctions.read
+            description: Enables reading lists of application functions, individual application functions and the lists of permissions assigned to application functions.
+        # Note: Only read permissions are specified here. The ability to create, update or remove applications functions directly via the API is prohibited. These operations are only permitted in the context of security contract application (this document).
+            
+      - name: a3s.permissions
+        description: Functionality to manage permissions created by micro-services.
+        permissions:
+          - name: a3s.permissions.read
+            description: Enables reading lists of permissions and individual permissions.
+        # Note: Only read permissions are specified here. The ability to create, update or remove permissions directly via the API is prohibited. These operations are only permitted in the context of security contract application.
+      - name: a3s.securityContracts
+        description: Functionality to apply security contracts for micro-services.
+        permissions:
+          - name: a3s.securityContracts.read
+            description: Enables fetching of a security contract definition.
+          - name: a3s.securityContracts.update
+            description: Enables idempotently applying (creating or updating) a security contract definition. This includes creation or updating of permissions, functions, applications and the relationships between them.
+
+      - name: a3s.clientRegistration
+        description: Functionality to create and update Oauth2.0 and Openid Connect clients.
+        permissions:
+          - name: a3s.clientRegistration.update
+            description: Enables idempotently applying (creating or updating) a client definition.
+
+    dataPolicies:
+      - name: a3s.viewYourTeamsOnly
+        description: Will only return teams that the accessing user is part of when retrieving lists of teams from the API.
+
+clients:
+  - clientId: test-client-api
+    name: "Test client"
+    allowedGrantTypes:
+      - authorization_code
+      - password
+    redirectUris:
+      - "https://www.getpostman.com/oauth2/callback"
+    postLogoutRedirectUris:
+      - "https://www.getpostman.com"
+    allowedCorsOrigins:
+      - "https://www.getpostman.com"
+    allowedScopes:
+      - "openid"
+      - "profile"
+      - "dokuti"
+      - "a3s"
+    clientSecrets:
+      - "secret"
+    allowedOfflineAccess: true
+
+
+defaultConfigurations:
+    # The name here is purely for human readability and separating the default configurations into logical components.
+  - name: A3S Default configuration
+
+    # Section to configure the default state of applications with respect to any business functions that need to be configured.
+    applications:
+        # The name of the application. This must already exist or be defined in the 'applications' section of this document. If not found, it will be ignored.
+      - name: a3s
+        # Default 'Business' functions that are to be created. Note: These are different from 'applicationFunctions' created in the 'applications' section of this document.
+        functions:
+            # Create a 'super admin' business function that contains all the possible application permissions.
+          - name: "a3s.SuperAdmin"
+            description: "A function that contains all possible permissions within the A3S micro-service."
+            permissions:
+              - a3s.users.read
+              - a3s.users.create
+              - a3s.users.update
+              - a3s.users.delete
+              - a3s.teams.read
+              - a3s.teams.create
+              - a3s.teams.update
+              - a3s.teams.delete
+              - a3s.roles.read
+              - a3s.roles.create
+              - a3s.roles.update
+              - a3s.roles.delete
+              - a3s.applications.read
+              - a3s.functions.read
+              - a3s.functions.create
+              - a3s.functions.update
+              - a3s.functions.delete
+              - a3s.ldapAuthenticationModes.read
+              - a3s.ldapAuthenticationModes.create
+              - a3s.ldapAuthenticationModes.update
+              - a3s.ldapAuthenticationModes.delete
+              - a3s.applicationFunctions.read
+              - a3s.permissions.read
+              - a3s.securityContracts.read
+              - a3s.securityContracts.update
+              - a3s.clientRegistration.update
+          - name: "a3s.userMaintenance"
+            description: "A function that contains all user related permissions within the A3S micro-service."
+            permissions:
+              - a3s.users.read
+              - a3s.users.create
+              - a3s.users.update
+              - a3s.users.delete
+          - name: "a3s.ldapMaintenance"
+            description: "A function that contains all ldap related permissions within the A3S micro-service."
+            permissions:
+              - a3s.ldapAuthenticationModes.read
+              - a3s.ldapAuthenticationModes.create
+              - a3s.ldapAuthenticationModes.update
+              - a3s.ldapAuthenticationModes.delete
+    # Default Roles to be created. Contains the functions that will be assigned to the Roles.
+    roles:
+      - name: "A3S Super Admin"
+        description: An A3S Role that has all the A3S functions associated with it.
+        # The server will attempt to assign these 'business' functions to the role. If the function does not exists, it will NOT be created, and will be simply NOT assigned to the Role. 
+        functions:
+          - "a3s.SuperAdmin"
+      - name: "A3S User Manager"
+        description: An A3S Role for managing users.
+        functions:
+          - "a3s.userMaintenance"
+      - name: "A3S LDAP Manager"
+        description: An A3S Role for managing ldap authentication methods.
+        functions:
+          - "a3s.ldapMaintenance"
+      - name: "A3S Authentication Manager Compound Role"
+        description: An A3S Role for managing ldap authentication methods and users.
+        roles:
+          - "A3S User Manager"
+          - "A3S LDAP Manager"
+    # Defines a section for declaring new LDAP Authentication Modes.
+    ldapAuthenticationModes:
+      - name: open-ldap-dev
+        hostName: localhost
+        port: 389
+        isLdaps: false
+        # Note: The admin account username for the LDAP profile.
+        account: "admin"
+        baseDn: "dc=bigbaobab,dc=org"
+        # The LDAP Attribute definitions
+        ldapAttributes:
+          - userField: "firstName"
+            ldapField: "givenName"
+          - userField: "surname"
+            ldapField: "sn"
+          - userField: "userName"
+            ldapField: "userPrincipalName"
+          - userField: "email"
+            ldapField: "mail"
+          - userField: "avatar"
+            ldapField: "jpegPhoto"
+    users:
+      - username: a3s-admin
+        name: a3s-admin
+        surname: system user
+        email: a3s-admin@localhost
+        # Note: Passwords require at least one capital, one number and one non-alpha-numeric character.
+        password: "Password1#"
+        # The roles in this list will be assigned to the user. If the roles don't exist, they will NOT be created and will simply be ignored.
+        roles:
+          - "A3S Super Admin"
+      - username: a3s-user1
+        name: a3s user 1
+        surname: some surname
+        email: a3s-user1@localhost
+        password: "Password1#"
+        roles:
+          - "A3S User Manager"
+      - username: a3s-ops-admin
+        name: a3s ops admin
+        surname: some surname
+        email: a3s-ops@localhost
+        password: "Password1#"
+        roles:
+          - "A3S Authentication Manager Compound Role"
+      - username: a3s-ldap-user
+        name: a3s ldap user
+        surname: some surname
+        email: a3s-ldap@localhost
+        password: "Password1#"
+        ldapAuthenticationMode: open-ldap-dev
+        roles:
+          - "A3S Authentication Manager Compound Role"
+
+    teams:
+      - name: default-team
+        description: A simple test default team.
+        users:
+          - a3s-user1
+          - a3s-ops-admin
+        # Data policies can be assigned to teams, applying all the associated policies to members of teams.
+        # Data policies are declared by micro-services within the 'applications' section of the security contract. Micro-services enforce data policies.
+        dataPolicies:
+          - a3s.viewYourTeamsOnly
+
+      - name: admin-team
+        description: A simple test admin team.
+        users:
+          - a3s-admin
+      - name: ops-team
+        description: A simple test ops team.
+        users:
+          - a3s-ops-admin
+      - name: special-team
+        description: A compound team
+        teams:
+          - admin-team
+          - ops-team

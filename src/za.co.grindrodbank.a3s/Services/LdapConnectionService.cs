@@ -1,0 +1,292 @@
+/**
+ * *************************************************
+ * Copyright (c) 2019, Grindrod Bank Limited
+ * License MIT: https://opensource.org/licenses/MIT
+ * **************************************************
+ */
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Novell.Directory.Ldap;
+using za.co.grindrodbank.a3s.Exceptions;
+using za.co.grindrodbank.a3s.Models;
+using za.co.grindrodbank.a3s.Repositories;
+
+namespace za.co.grindrodbank.a3s.Services
+{
+    public class LdapConnectionService : ILdapConnectionService
+    {
+        private readonly A3SContext a3SContext;
+        private readonly ILogger logger;
+        private readonly ILdapAuthenticationModeRepository ldapAuthenticationModeRepository; 
+        private readonly IUserRepository userRepository; 
+
+        public LdapConnectionService(A3SContext a3SContext, ILogger<LdapConnectionService> logger, ILdapAuthenticationModeRepository ldapAuthenticationModeRepository, IUserRepository userRepository)
+        {
+            this.a3SContext = a3SContext;
+            this.logger = logger;
+            this.ldapAuthenticationModeRepository = ldapAuthenticationModeRepository;
+            this.userRepository = userRepository;
+        }
+
+        public async Task<SignInResult> Login(UserModel appUser, string password)
+        {
+            if (await FindUser(appUser.UserName, appUser.LdapAuthenticationMode, password, true, true))
+                return SignInResult.Success;
+            else
+                return SignInResult.Failed;
+        }
+
+        public async Task<bool> CheckIfUserExist(string userName, Guid ldapAuthenticationModeId)
+        {
+            var ldapAuthMode = await ldapAuthenticationModeRepository.GetByIdAsync(ldapAuthenticationModeId, true);
+            if (ldapAuthMode == null)
+                throw new ItemNotFoundException($"LDAP Authentication Mode with Id {ldapAuthenticationModeId} could not be found.");
+
+            return await FindUser(userName, ldapAuthMode, string.Empty, false, false);
+        }
+
+        private async Task<bool> FindUser(string userName, LdapAuthenticationModeModel ldapAuthenticationMode, string password, bool testLogin, bool syncLdapAttributes)
+        {
+            try
+            {
+                var adminDistinguishedName = $"cn={ldapAuthenticationMode.Account},{ldapAuthenticationMode.BaseDn}";
+
+                using (var adminLdapConnection = new LdapConnection())
+                {
+                    // Search for user in directory
+                    var searchBase = $"{ldapAuthenticationMode.BaseDn}";
+                    var searchFilter = $"(cn = {userName})";
+
+                    try
+                    {
+                        logger.LogInformation($"Attempting to connect to LDAP connection. Hostname '{ldapAuthenticationMode.HostName}', Port '{ldapAuthenticationMode.Port}'");
+                        adminLdapConnection.Connect(ldapAuthenticationMode.HostName, ldapAuthenticationMode.Port);
+                        logger.LogInformation($"Attempting to bind with DN '{adminDistinguishedName}'");
+                        adminLdapConnection.Bind(adminDistinguishedName, ldapAuthenticationMode.Password);
+                    }
+                    catch (Exception ex)
+                    {
+                        // User not authenticated
+                        logger.LogError("LDAP admin account user not authenticated.", ex);
+                        return false;
+                    }
+
+                    LdapSearchResults lsc = adminLdapConnection.Search(searchBase, LdapConnection.SCOPE_SUB, searchFilter, null, false);
+
+                    while (lsc.hasMore())
+                    {
+                        LdapEntry ldapEntry;
+
+                        try
+                        {
+                            ldapEntry = lsc.next();
+                        }
+                        catch (LdapException ex)
+                        {
+                            logger.LogWarning("Warning on LDAP search: " + ex.LdapErrorMessage);
+                            continue;
+                        }
+
+                        // User found, try to log in
+                        if (testLogin)
+                        {
+                            using (var userLdapConnection = new LdapConnection())
+                            {
+                                try
+                                {
+                                    logger.LogInformation($"Attempting to connect to LDAP connection. Hostname '{ldapAuthenticationMode.HostName}', Port '{ldapAuthenticationMode.Port}'");
+                                    userLdapConnection.Connect(ldapAuthenticationMode.HostName, ldapAuthenticationMode.Port);
+                                    logger.LogInformation($"Attempting to bind with DN '{ldapEntry.DN}'");
+                                    userLdapConnection.Bind(ldapEntry.DN, password);
+                                }
+                                catch (Exception ex)
+                                {
+                                    // User not authenticated
+                                    logger.LogError("LDAP user not authenticated.", ex);
+                                    return false;
+                                }
+                            }
+                        }
+
+                        // Login successful. Sync attributes
+                        if (syncLdapAttributes)
+                        {
+                            LdapAttributeSet attributeSet = ldapEntry.getAttributeSet();
+                            System.Collections.IEnumerator ienum = attributeSet.GetEnumerator();
+                            var attributeValues = new Dictionary<string, string>();
+
+                            while (ienum.MoveNext())
+                            {
+                                var attribute = (LdapAttribute)ienum.Current;
+                                attributeValues.Add(attribute.Name, attribute.StringValue);
+                            }
+
+                            await SyncLdapAttributeToUserField(userName, ldapAuthenticationMode.LdapAttributes, attributeValues);
+                        }
+
+                        return true;
+                    }
+                }
+
+                // If we reached this point, we were not able authenticate the user
+                return false;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("General error during LDAP authentication process.", ex);
+                return false;
+            }
+        }
+
+        public bool TestLdapSettings(LdapAuthenticationModeModel ldapAuthenticationModeModel, ref List<string> returnMessages)
+        {
+
+            try
+            {
+                logger.LogInformation($"Testing LDAP connection.");
+
+                var distinguishedName = $"cn={ldapAuthenticationModeModel.Account},{ldapAuthenticationModeModel.BaseDn}";
+
+                using (var ldapConnection = new LdapConnection())
+                {
+                    logger.LogInformation($"Attempting to connect to LDAP connection. Hostname '{ldapAuthenticationModeModel.HostName}', Port '{ldapAuthenticationModeModel.Port}'");
+                    ldapConnection.Connect(ldapAuthenticationModeModel.HostName, ldapAuthenticationModeModel.Port);
+                    logger.LogInformation($"Attempting to bind with DN '{distinguishedName}'");
+                    ldapConnection.Bind(distinguishedName, ldapAuthenticationModeModel.Password);
+
+                    if (ldapAuthenticationModeModel.LdapAttributes != null && ldapAuthenticationModeModel.LdapAttributes.Count > 0)
+                        returnMessages.AddRange(TestLdapAttributes(ldapConnection, ldapAuthenticationModeModel));
+                }
+
+                return true;
+            }
+            catch (LdapException lEx)
+            {
+                logger.LogError(lEx.Message, lEx);
+                returnMessages.Add(lEx.Message);
+                return false;
+            }
+            catch (Exception ex)
+            {
+                string message = "Generic error during LDAP connection test.";
+                logger.LogError(message, ex);
+                returnMessages.Add(message);
+                return false;
+            }
+        }
+
+        private async Task SyncLdapAttributeToUserField(string userName, List<LdapAuthenticationModeLdapAttributeModel> ldapAttributes, Dictionary<string, string> attributeList)
+        {
+            var appUser = await userRepository.GetByUsernameAsync(userName, false);
+            if (appUser == null)
+                throw new ItemNotFoundException($"User with username {userName} could not be found.");
+
+            foreach (LdapAuthenticationModeLdapAttributeModel attributeMapping in ldapAttributes)
+            {
+                string ldapValue = string.Empty;
+
+                if (attributeList.TryGetValue(attributeMapping.LdapField, out ldapValue))
+                    UpdateUserField(appUser, attributeMapping.UserField, ldapValue);
+            }
+
+            a3SContext.SaveChanges();
+        }
+
+        private void UpdateUserField(UserModel appUser, string userField, string value)
+        {
+            switch (userField.ToLower())
+            {
+                case "username":
+                    appUser.UserName = value;
+                    a3SContext.Entry(appUser).State = EntityState.Modified;
+                    break;
+                case "firstname":
+                    appUser.FirstName = value;
+                    a3SContext.Entry(appUser).State = EntityState.Modified;
+                    break;
+                case "surname":
+                    appUser.Surname = value;
+                    a3SContext.Entry(appUser).State = EntityState.Modified;
+                    break;
+                case "email":
+                    appUser.Email = value;
+                    a3SContext.Entry(appUser).State = EntityState.Modified;
+                    break;
+                case "avatar":
+                    var binaryFormatter = new BinaryFormatter();
+
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        binaryFormatter.Serialize(memoryStream, value);
+                        appUser.Avatar = memoryStream.ToArray();
+                    }
+
+                    a3SContext.Entry(appUser).State = EntityState.Modified;
+                    break;
+            }
+        }
+
+        private List<string> TestLdapAttributes(LdapConnection ldapConnection, LdapAuthenticationModeModel ldapAuthenticationModeModel)
+        {
+            var resultMessages = new List<string>();
+
+            try
+            {
+                string searchBase = $"{ldapAuthenticationModeModel.BaseDn}";
+                string searchFilter = $"(cn = {ldapAuthenticationModeModel.Account})";
+
+                var ldapSearchResults = ldapConnection.Search(searchBase, LdapConnection.SCOPE_SUB, searchFilter, null, false);
+
+                while (ldapSearchResults.hasMore())
+                {
+                    try
+                    {
+                        var ldapEntry = ldapSearchResults.next();
+                        ProcessLdapSearchResult(ldapEntry, ldapAuthenticationModeModel, resultMessages);
+                    }
+                    catch (LdapException ex)
+                    {
+                        logger.LogWarning("Warning on LDAP search: " + ex.LdapErrorMessage);
+                    }
+                }
+            }
+            catch
+            {
+                throw new LdapException("Error verifying LDAP attributes.", LdapException.NO_SUCH_ATTRIBUTE, string.Empty);
+            }
+
+            return resultMessages;
+        }
+
+        private void ProcessLdapSearchResult(LdapEntry ldapEntry, LdapAuthenticationModeModel ldapAuthenticationModeModel, List<string> resultMessages)
+        {
+            var ldapAttributeSet = ldapEntry.getAttributeSet();
+            var ienum = ldapAttributeSet.GetEnumerator();
+            var attributeValues = new Dictionary<string, string>();
+
+            while (ienum.MoveNext())
+            {
+                var attribute = (LdapAttribute)ienum.Current;
+                attributeValues.Add(attribute.Name, attribute.StringValue);
+            }
+
+            foreach (LdapAuthenticationModeLdapAttributeModel attributeMapping in ldapAuthenticationModeModel.LdapAttributes)
+            {
+                var ldapValue = string.Empty;
+
+                if (!attributeValues.TryGetValue(attributeMapping.LdapField, out ldapValue))
+                {
+                    var message = $"LDAP attribute {attributeMapping.LdapField} not found.";
+                    logger.LogInformation(message);
+                    resultMessages.Add(message);
+                }
+            }
+        }
+    }
+}

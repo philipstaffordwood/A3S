@@ -1,0 +1,91 @@
+#
+# *************************************************
+# Copyright (c) 2019, Grindrod Bank Limited
+# License MIT: https://opensource.org/licenses/MIT
+# **************************************************
+#
+
+version: '3'
+services:
+  a3s-postgresql:
+    networks:
+      - a3s-quickstart
+    image: "postgres:10.7-alpine"
+    restart: always
+    ports:
+      # Use a non standard port mapping to avoid potential collisions with other Postgres instances running on the host.
+      - '5478:5432'
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=identity_server
+
+  a3s-identity-server:
+    networks:
+      - a3s-quickstart
+    image: "grindrodbank/a3s-identity-server"
+    restart: always
+    ports:
+      - 80:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - php-ldap-admin
+
+  a3s:
+    networks:
+      - a3s-quickstart
+    image: "grindrodbank/a3s"
+    restart: always
+    ports:
+      - 8081:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - FLYWAY_ENABLE=true
+      - DATABASE_SERVER=a3s-postgresql
+      - DATABASE_NAME=identity_server
+      - DATABASE_PORT=5432
+      - FLYWAY_USER=postgres
+      - FLYWAY_PASSWORD=postgres
+      - FLYWAY_CONNECTION_RETRIES=5
+    depends_on:
+      - a3s-postgresql
+
+  open-ldap:
+    networks:
+      - a3s-quickstart
+    image: "osixia/openldap:1.2.4"
+    ports:
+      # ldap port
+      - "389:389"
+      # ldap secure port
+      - "636:636"
+    environment:
+      - LDAP_ORGANISATION=Bigbaobab
+      - LDAP_DOMAIN=bigbaobab.org
+      - LDAP_ADMIN_PASSWORD=admin
+    depends_on:
+      - a3s
+
+  php-ldap-admin:
+    networks:
+      - a3s-quickstart
+    image: "osixia/phpldapadmin:0.8.0"
+    ports:
+      - "8085:80"
+      - "6443:443"
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=open-ldap
+      - PHPLDAPADMIN_HTTPS=false
+    depends_on:
+      - a3s
+
+  smtp:
+    networks:
+      - a3s-quickstart
+    image: "namshi/smtp:latest"
+    ports:
+      - "25:25"
+
+networks:
+  a3s-quickstart:

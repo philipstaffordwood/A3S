@@ -1,0 +1,79 @@
+#
+# *************************************************
+# Copyright (c) 2019, Grindrod Bank Limited
+# License MIT: https://opensource.org/licenses/MIT
+# **************************************************
+#
+
+version: '3'
+services:
+  a3s-development-postgresql:
+    networks:
+      - a3s-development
+    image: "postgres:10.7-alpine"
+    restart: always
+    ports:
+      # Use a non standard port mapping to avoid potential collisions with other Postgres instances running on the host.
+      - '5478:5432'
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=identity_server
+
+  flyway-development-a3s:
+    networks:
+      - a3s-development
+    image: "boxfuse/flyway:latest"
+    command: -url=jdbc:postgresql://a3s-development-postgresql:5432/identity_server -schemas=_a3s -baselineOnMigrate=true -baselineVersion=0 -locations=filesystem:/flyway/sql/migrations -user=postgres -password=postgres -connectRetries=60  migrate
+    volumes:
+      - ../db/sql/a3s:/flyway/sql/migrations
+    depends_on:
+      - a3s-development-postgresql
+
+  flyway-development-ids4:
+    networks:
+      - a3s-development
+    image: "boxfuse/flyway:latest"
+    command: -url=jdbc:postgresql://a3s-development-postgresql:5432/identity_server -schemas=_ids4 -baselineOnMigrate=true -baselineVersion=0 -locations=filesystem:/flyway/sql/migrations -user=postgres -password=postgres -connectRetries=60  migrate
+    volumes:
+      - ../db/sql/ids4:/flyway/sql/migrations
+    depends_on:
+      - a3s-development-postgresql
+
+  open-ldap:
+    networks:
+      - a3s-development
+    image: "osixia/openldap:1.2.4"
+    ports:
+      # ldap port
+      - "389:389"
+      # ldap secure port
+      - "636:636"
+    environment:
+      - LDAP_ORGANISATION=Bigbaobab
+      - LDAP_DOMAIN=bigbaobab.org
+      - LDAP_ADMIN_PASSWORD=admin
+   # For persistent LDAP data store, uncomment the volume lines below and create a folder called 'open-ldap-data' in the same folder as the docker-compose.yml file. Note, you will need to clear the data within that folder after a docker-compose down. 
+   #volumes:
+     #- ./open-ldap-data:/var/lib/ldap
+
+  php-ldap-admin:
+    networks:
+      - a3s-development
+    image: "osixia/phpldapadmin:0.8.0"
+    ports:
+      - "8085:80"
+      - "7443:443"
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=open-ldap
+      - PHPLDAPADMIN_HTTPS=false
+
+  smtp:
+    networks:
+      - a3s-development
+    image: "namshi/smtp:latest"
+    ports:
+      - "25:25"
+      
+networks:
+  a3s-development:
