@@ -183,11 +183,11 @@ workflows:
           - license-headers
           #- postman-integration-tests
           filters:
-            tags:
-              only: /^v*.*.*/
+            # tags:
+            #   only: /^v*.*.*/
             # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
-            # branches:
-            #   only: master
+            branches:
+              only: master
       - a3s-ids4-docker-build-push:
           requires:
           - unit-test
@@ -195,8 +195,8 @@ workflows:
           - license-headers
           #- postman-integration-tests
           filters:
-            tags:
-              only: /^v*.*.*/
+            # tags:
+            #   only: /^v*.*.*/
             # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
-            # branches:
-            #   only: master
+            branches:
+              only: master
