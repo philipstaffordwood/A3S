@@ -177,7 +177,7 @@ workflows:
       - postman-integration-tests
       - a3s-docker-build-push:
           requires:
-          - test
+          - unit-test
           - static-analysis
           - license-headers
           - postman-integration-tests
@@ -189,7 +189,7 @@ workflows:
             #   only: master
       - a3s-ids4-docker-build-push:
           requires:
-          - test
+          - unit-test
           - static-analysis
           - license-headers
           - postman-integration-tests
