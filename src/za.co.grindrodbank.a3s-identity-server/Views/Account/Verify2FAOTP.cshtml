@@ -1,0 +1,49 @@
+﻿@model TwoFactorViewModel
+
+    <div class="login-page">
+        <div class="page-header">
+            <h1>Login</h1>
+        </div>
+
+        <partial name="_ValidationSummary" />
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Your OTP code sent to your account is required:</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <form asp-action="Verify2FAOTP">
+                            <input type="hidden" asp-for="RedirectUrl" />
+                            <input type="hidden" asp-for="Username" />
+
+                            <fieldset>
+                                <div class="form-group">
+                                    <label asp-for="OTP"></label>
+                                    <input class="form-control" placeholder="OTP" asp-for="OTP" autofocus>
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary" name="button" value="validate">Validate OTP</button>
+                                    <button class="btn btn-default" name="button" value="cancel">Cancel</button>
+                                </div>
+                            </fieldset>
+                        </form>
+
+                        @if (Model.AuthenticatorConfigured)
+                        {
+                            <hr />
+                            <button class="btn btn-default" name="btnAlternate2fa" id="btnAlternate2fa" value="btnAlternate2fa">Use Authenticator</button>
+                            <input type="hidden" id="btnAlternate2faUrl" value="@Url.Action("Verify2FAAuthenticator", "Account", new { redirectUrl = Model.RedirectUrl, username = Model.Username })" />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section scripts {
+    <script type="text/javascript" src="~/js/verify-2fa.js"></script>
+}

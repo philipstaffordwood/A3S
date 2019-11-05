@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29001.49
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{17214C27-C00D-48A5-B943-759C3F574876}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{37F0D544-16D6-4F50-B6FF-B9ED929B6792}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "za.co.grindrodbank.a3s-identity-server", "src\za.co.grindrodbank.a3s-identity-server\za.co.grindrodbank.a3s-identity-server.csproj", "{9C14DD6E-D151-4D80-BEDD-D7BB0E8CDCF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "za.co.grindrodbank.a3s", "src\za.co.grindrodbank.a3s\za.co.grindrodbank.a3s.csproj", "{FD5DFA09-1D54-430B-98DA-EFAF77841EE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "za.co.grindrodbank.a3s.tests", "tests\za.co.grindrodbank.a3s.tests\za.co.grindrodbank.a3s.tests.csproj", "{2F095313-5E75-49C3-948B-B82F6BE63E8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "za.co.grindrodbank.a3s-identity-server.tests", "tests\za.co.grindrodbank.a3s-identity-server.tests\za.co.grindrodbank.a3s-identity-server.tests.csproj", "{47FB160E-87CB-4E86-9665-B1CB63A63F59}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9C14DD6E-D151-4D80-BEDD-D7BB0E8CDCF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C14DD6E-D151-4D80-BEDD-D7BB0E8CDCF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C14DD6E-D151-4D80-BEDD-D7BB0E8CDCF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C14DD6E-D151-4D80-BEDD-D7BB0E8CDCF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD5DFA09-1D54-430B-98DA-EFAF77841EE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD5DFA09-1D54-430B-98DA-EFAF77841EE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD5DFA09-1D54-430B-98DA-EFAF77841EE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD5DFA09-1D54-430B-98DA-EFAF77841EE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F095313-5E75-49C3-948B-B82F6BE63E8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F095313-5E75-49C3-948B-B82F6BE63E8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F095313-5E75-49C3-948B-B82F6BE63E8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F095313-5E75-49C3-948B-B82F6BE63E8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47FB160E-87CB-4E86-9665-B1CB63A63F59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47FB160E-87CB-4E86-9665-B1CB63A63F59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47FB160E-87CB-4E86-9665-B1CB63A63F59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47FB160E-87CB-4E86-9665-B1CB63A63F59}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F73A0D3B-D576-4E87-966F-353A9282B6E9}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9C14DD6E-D151-4D80-BEDD-D7BB0E8CDCF0} = {17214C27-C00D-48A5-B943-759C3F574876}
+		{FD5DFA09-1D54-430B-98DA-EFAF77841EE9} = {17214C27-C00D-48A5-B943-759C3F574876}
+		{2F095313-5E75-49C3-948B-B82F6BE63E8C} = {37F0D544-16D6-4F50-B6FF-B9ED929B6792}
+		{47FB160E-87CB-4E86-9665-B1CB63A63F59} = {37F0D544-16D6-4F50-B6FF-B9ED929B6792}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,1189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.2-beta" last-position="1654,0" last-zoom="1" max-obj-count="32"
+	 default-schema="public" default-owner="postgres">
+<database name="identity_server" encoding="UTF8" lc-collate="en_US.utf8" lc-ctype="en_US.utf8" is-template="false" allow-conns="true">
+	<role name="postgres"/>
+	<tablespace name="pg_default"/>
+</database>
+
+<schema name="public" layer="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="_a3s" layer="0" rect-visible="true" fill-color="#7ff719">
+	<role name="postgres"/>
+</schema>
+
+<table name="application" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Application resources that are protected by IDS4]]></comment>
+	<position x="580" y="1160"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_application" type="pk-constr" table="_a3s.application">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_application_name" type="uq-constr" table="_a3s.application">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="application_function" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[A grouping of permissions belonging to a specific application, as configured by the service developers.]]></comment>
+	<position x="720" y="860"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="application_id">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_application_function" type="pk-constr" table="_a3s.application_function">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_application_function_name" type="uq-constr" table="_a3s.application_function">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="application_function_permission" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Application Function and Permission link]]></comment>
+	<position x="760" y="600"/>
+	<column name="application_function_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="permission_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_application_function_permission" type="pk-constr" table="_a3s.application_function_permission">
+		<columns names="permission_id,application_function_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="application_user" layer="0" collapse-mode="2" max-obj-count="27">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Asp,net Identity User profile table.]]></comment>
+	<position x="2220" y="400"/>
+	<column name="id" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[Asp.Net Identity User ID. Must be string, although Guid is saved here.]]></comment>
+	</column>
+	<column name="user_name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="normalized_user_name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="email" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="normalized_email" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="email_confirmed" not-null="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="password_hash" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="security_stamp" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="concurrency_stamp" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="phone_number">
+		<type name="text" length="0"/>
+	</column>
+	<column name="phone_number_confirmed" not-null="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="two_factor_enabled" not-null="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="lockout_end">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<column name="lockout_enabled" not-null="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="access_failed_count" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="ldap_authentication_mode_id">
+		<type name="uuid" length="0"/>
+		<comment><![CDATA[Link to a LdapAuthenticationMode if applicable]]></comment>
+	</column>
+	<column name="first_name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="surname" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="avatar">
+		<type name="bytea" length="0"/>
+		<comment><![CDATA[Byte array of avatar image]]></comment>
+	</column>
+	<column name="is_deleted" not-null="true" default-value="false">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Indicates that the user has been marked as deleted. The system will treat this as a deleted record.]]></comment>
+	</column>
+	<column name="deleted_time">
+		<type name="timestamp with time zone" length="0" with-timezone="true"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" not-null="true" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_application_user" type="pk-constr" table="_a3s.application_user">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_application_user_username" type="uq-constr" table="_a3s.application_user">
+		<columns names="user_name" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_application_user_normalized_user_name" type="uq-constr" table="_a3s.application_user">
+		<columns names="normalized_user_name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="application_user_claim_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="application_user_claim" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Asp.Net identity user claims table.]]></comment>
+	<position x="2780" y="200"/>
+	<column name="id" not-null="true" sequence="_a3s.application_user_claim_id_seq">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="claim_type">
+		<type name="text" length="0"/>
+	</column>
+	<column name="claim_value">
+		<type name="text" length="0"/>
+	</column>
+	<column name="user_id">
+		<type name="text" length="0"/>
+	</column>
+	<column name="discriminator">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="pk_application_user_claim" type="pk-constr" table="_a3s.application_user_claim">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="aspnet_role" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Asp.Net identity default table. Not Used, but has to exist.]]></comment>
+	<position x="3060" y="760"/>
+	<column name="id" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="name">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="normalized_name">
+		<type name="character varying" length="256"/>
+	</column>
+	<column name="concurrency_stamp">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="pk_aspnet_role" type="pk-constr" table="_a3s.aspnet_role">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="aspnet_role_claim_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="aspnet_role_claim" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Asp.Net identity default table. Not Used, but has to exist.]]></comment>
+	<position x="3060" y="960"/>
+	<column name="id" not-null="true" sequence="_a3s.aspnet_role_claim_id_seq">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="role_id" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="claim_type">
+		<type name="text" length="0"/>
+	</column>
+	<column name="claim_value">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="pk_aspnet_role_claim" type="pk-constr" table="_a3s.aspnet_role_claim">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="aspnet_user_login" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Asp.Net identity default table. Not Used, but has to exist.]]></comment>
+	<position x="3000" y="400"/>
+	<column name="login_provider" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="provider_key" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="provider_display_name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="pk_aspnet_user_login" type="pk-constr" table="_a3s.aspnet_user_login">
+		<columns names="login_provider,provider_key" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="aspnet_user_role" layer="0" collapse-mode="2" max-obj-count="3">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Asp.Net identity default table. Not Used, but has to exist.]]></comment>
+	<position x="3000" y="580"/>
+	<column name="user_id" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="role_id" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="pk_aspnet_user_role" type="pk-constr" table="_a3s.aspnet_user_role">
+		<columns names="user_id,role_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="application_user_token" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Token provider link to Users]]></comment>
+	<position x="2220" y="200"/>
+	<column name="user_id" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="login_provider" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="value">
+		<type name="text" length="0"/>
+	</column>
+	<column name="is_verified" default-value="false">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Indicates that the user token provider lin has been verified by a user OTP]]></comment>
+	</column>
+	<constraint name="pk_aspnet_user_token" type="pk-constr" table="_a3s.application_user_token">
+		<columns names="user_id,login_provider,name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="function" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[A grouping of permissions belonging to a specific application, as created by business users within A3S. These are functions that are assigned to roles which result in users receiving the contained permissions.]]></comment>
+	<position x="1340" y="1080"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="application_id">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_function" type="pk-constr" table="_a3s.function">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_function_name" type="uq-constr" table="_a3s.function">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="function_permission" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Function and Permission link]]></comment>
+	<position x="1300" y="800"/>
+	<column name="function_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="permission_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_function_permission" type="pk-constr" table="_a3s.function_permission">
+		<columns names="permission_id,function_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="permission" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[ Specific permission inside an application, like read, write or delete]]></comment>
+	<position x="1380" y="620"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_permission" type="pk-constr" table="_a3s.permission">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_permission_name" type="uq-constr" table="_a3s.permission">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="role" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[A role a user belongs to]]></comment>
+	<position x="1820" y="720"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_role" type="pk-constr" table="_a3s.role">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_role_name" type="uq-constr" table="_a3s.role">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="role_function" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Role and Function link]]></comment>
+	<position x="1800" y="1080"/>
+	<column name="role_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="function_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_role_function" type="pk-constr" table="_a3s.role_function">
+		<columns names="role_id,function_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="team" layer="0" collapse-mode="2" max-obj-count="6">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Team that users belong to]]></comment>
+	<position x="1020" y="420"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_team" type="pk-constr" table="_a3s.team">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_team_name" type="uq-constr" table="_a3s.team">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="user_role" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[User and Role link]]></comment>
+	<position x="2240" y="980"/>
+	<column name="user_id" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="role_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_user_role" type="pk-constr" table="_a3s.user_role">
+		<columns names="role_id,user_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="user_team" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Users and Teams link]]></comment>
+	<position x="1560" y="240"/>
+	<column name="user_id" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="team_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_user_team" type="pk-constr" table="_a3s.user_team">
+		<columns names="team_id,user_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="ix_application_function_application_id" table="_a3s.application_function"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="application_id"/>
+		</idxelement>
+</index>
+
+<index name="ix_application_function_permission_application_function_id" table="_a3s.application_function_permission"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="application_function_id"/>
+		</idxelement>
+</index>
+
+<index name="ix_application_user_claim_user_id" table="_a3s.application_user_claim"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="user_id"/>
+		</idxelement>
+</index>
+
+<index name="ix_aspnet_role_claim_role_id" table="_a3s.aspnet_role_claim"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="role_id"/>
+		</idxelement>
+</index>
+
+<index name="ix_aspnet_user_login_user_id" table="_a3s.aspnet_user_login"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="user_id"/>
+		</idxelement>
+</index>
+
+<index name="ix_aspnet_user_role_role_id" table="_a3s.aspnet_user_role"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="role_id"/>
+		</idxelement>
+</index>
+
+<index name="ix_function_application_id" table="_a3s.function"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="application_id"/>
+		</idxelement>
+</index>
+
+<index name="ix_function_permission_function_id" table="_a3s.function_permission"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="function_id"/>
+		</idxelement>
+</index>
+
+<index name="ix_role_function_function_id" table="_a3s.role_function"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="function_id"/>
+		</idxelement>
+</index>
+
+<index name="ix_role_name" table="_a3s.role"
+	 concurrent="false" unique="true" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="name"/>
+		</idxelement>
+</index>
+
+<index name="ix_user_role_user_id" table="_a3s.user_role"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="user_id"/>
+		</idxelement>
+</index>
+
+<index name="ix_user_team_user_id" table="_a3s.user_team"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="user_id"/>
+		</idxelement>
+</index>
+
+<index name="role_name_index" table="_a3s.aspnet_role"
+	 concurrent="false" unique="true" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="normalized_name"/>
+		</idxelement>
+</index>
+
+<table name="team_team" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Team of Teams (compound teams) definition]]></comment>
+	<position x="980" y="220"/>
+	<column name="parent_team_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="child_team_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_team_team" type="pk-constr" table="_a3s.team_team">
+		<columns names="parent_team_id,child_team_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="ix_team_team_child_team_id" table="_a3s.team_team"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="child_team_id"/>
+		</idxelement>
+</index>
+
+<table name="role_role" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Role of Roles (compound role) definition]]></comment>
+	<position x="1740" y="460"/>
+	<column name="parent_role_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="child_role_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_role_role" type="pk-constr" table="_a3s.role_role">
+		<columns names="parent_role_id,child_role_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="ix_role_role_child_role_id" table="_a3s.role_role"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="child_role_id"/>
+		</idxelement>
+</index>
+
+<table name="ldap_authentication_mode" layer="0" collapse-mode="2" max-obj-count="12">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[LDAP Profile definitions]]></comment>
+	<position x="2660" y="940"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="host_name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="port" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="is_ldaps" not-null="true" default-value="true">
+		<type name="boolean" length="0"/>
+		<comment><![CDATA[Indicates that this utulizes a secure LDAP connection]]></comment>
+	</column>
+	<column name="account" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[Ldap admin username
+]]></comment>
+	</column>
+	<column name="password" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[Ldap admin password]]></comment>
+	</column>
+	<column name="base_dn" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[The LDAP Base DN Address]]></comment>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="ldap_authentication_mode_pkey" type="pk-constr" table="_a3s.ldap_authentication_mode">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_ldap_authentication_mode_name" type="uq-constr" table="_a3s.ldap_authentication_mode">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="ldap_authentication_mode_ldap_attribute_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="ldap_authentication_mode_ldap_attribute" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Attribute to User field mappings for Ldap detail synchronisation]]></comment>
+	<position x="2580" y="1220"/>
+	<column name="id" not-null="true" sequence="_a3s.ldap_authentication_mode_ldap_attribute_id_seq">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="ldap_authentication_mode_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="user_field" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[The field in the ApplicationUser table]]></comment>
+	</column>
+	<column name="ldap_field" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[The field in the LDAP directory]]></comment>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="ldap_authentication_mode_ldap_attribute_pkey" type="pk-constr" table="_a3s.ldap_authentication_mode_ldap_attribute">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_ldap_authentication_mode_ldap_attribute_1" type="uq-constr" table="_a3s.ldap_authentication_mode_ldap_attribute">
+		<columns names="ldap_authentication_mode_id,user_field,ldap_field" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<extension name="pgcrypto" cur-version="1.3">
+	<schema name="_a3s"/>
+	<comment><![CDATA[cryptographic functions]]></comment>
+</extension>
+
+<table name="application_data_policy" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Data policies defined for an application]]></comment>
+	<position x="240" y="580"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="name">
+		<type name="text" length="0"/>
+	</column>
+	<column name="description">
+		<type name="text" length="0"/>
+	</column>
+	<column name="application_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_application_data_policy" type="pk-constr" table="_a3s.application_data_policy">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_application_data_policy_name" type="uq-constr" table="_a3s.application_data_policy">
+		<columns names="name" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<index name="ix_application_data_policy_name" table="_a3s.application_data_policy"
+	 concurrent="false" unique="false" fast-update="false" buffering="false"
+	 index-type="btree" factor="90">
+		<idxelement use-sorting="false">
+			<column name="name"/>
+		</idxelement>
+</index>
+
+<table name="team_application_data_policy" layer="0" collapse-mode="2" max-obj-count="4">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Data policies and Teams link]]></comment>
+	<position x="280" y="260"/>
+	<column name="team_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="application_data_policy_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="pk_team_application_data_policy" type="pk-constr" table="_a3s.team_application_data_policy">
+		<columns names="team_id,application_data_policy_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="fk_application_function_application_application_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="RESTRICT" ref-table="_a3s.application" table="_a3s.application_function">
+	<columns names="application_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_application_function_permission_application_function_applic~" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.application_function" table="_a3s.application_function_permission">
+	<columns names="application_function_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_application_function_permission_permission_permission_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.permission" table="_a3s.application_function_permission">
+	<columns names="permission_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="application_user_ldap_authentication_mode_id_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="RESTRICT" ref-table="_a3s.ldap_authentication_mode" table="_a3s.application_user">
+	<columns names="ldap_authentication_mode_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_application_user_claim_application_user_user_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="RESTRICT" ref-table="_a3s.application_user" table="_a3s.application_user_claim">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_aspnet_role_claim_aspnet_role_role_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.aspnet_role" table="_a3s.aspnet_role_claim">
+	<columns names="role_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_aspnet_user_login_application_user_user_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.application_user" table="_a3s.aspnet_user_login">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_aspnet_user_role_application_user_user_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.application_user" table="_a3s.aspnet_user_role">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_aspnet_user_role_aspnet_role_role_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.aspnet_role" table="_a3s.aspnet_user_role">
+	<columns names="role_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_aspnet_user_token_application_user_user_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.application_user" table="_a3s.application_user_token">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_function_application_application_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="RESTRICT" ref-table="_a3s.application" table="_a3s.function">
+	<columns names="application_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_function_permission_function_function_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.function" table="_a3s.function_permission">
+	<columns names="function_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_function_permission_permission_permission_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.permission" table="_a3s.function_permission">
+	<columns names="permission_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_role_function_function_function_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.function" table="_a3s.role_function">
+	<columns names="function_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_role_function_role_role_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.role" table="_a3s.role_function">
+	<columns names="role_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_user_role_application_user_user_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.application_user" table="_a3s.user_role">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_user_role_role_role_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.role" table="_a3s.user_role">
+	<columns names="role_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_user_team_application_user_user_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.application_user" table="_a3s.user_team">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_user_team_team_team_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.team" table="_a3s.user_team">
+	<columns names="team_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_team_team_team_child_team_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.team" table="_a3s.team_team">
+	<columns names="child_team_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_team_team_team_parent_team_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.team" table="_a3s.team_team">
+	<columns names="parent_team_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_role_role_role_child_role_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.role" table="_a3s.role_role">
+	<columns names="child_role_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_role_role_role_parent_role_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.role" table="_a3s.role_role">
+	<columns names="parent_role_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="ldap_authentication_mode_ldap__ldap_authentication_mode_id_fkey" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="_a3s.ldap_authentication_mode" table="_a3s.ldap_authentication_mode_ldap_attribute">
+	<columns names="ldap_authentication_mode_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_application_data_policy_application_application_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.application" table="_a3s.application_data_policy">
+	<columns names="application_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_team_application_data_policy_team_team_id" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.team" table="_a3s.team_application_data_policy">
+	<columns names="team_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_team_application_data_policy_application_data_policy_applica" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.application_data_policy" table="_a3s.team_application_data_policy">
+	<columns names="application_data_policy_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_application_function_application" type="relfk" layer="0"
+	 custom-color="#1d89e2"
+	 src-table="_a3s.application_function"
+	 dst-table="_a3s.application" reference-fk="fk_application_function_application_application_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_application_function_permission_application_function" type="relfk" layer="0"
+	 custom-color="#3b353d"
+	 src-table="_a3s.application_function_permission"
+	 dst-table="_a3s.application_function" reference-fk="fk_application_function_permission_application_function_applic~"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_application_function_permission_permission" type="relfk" layer="0"
+	 custom-color="#a94949"
+	 src-table="_a3s.application_function_permission"
+	 dst-table="_a3s.permission" reference-fk="fk_application_function_permission_permission_permission_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_application_user_ldap_authentication_mode" type="relfk" layer="0"
+	 custom-color="#181e24"
+	 src-table="_a3s.application_user"
+	 dst-table="_a3s.ldap_authentication_mode" reference-fk="application_user_ldap_authentication_mode_id_fkey"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_application_user_claim_application_user" type="relfk" layer="0"
+	 custom-color="#f154f8"
+	 src-table="_a3s.application_user_claim"
+	 dst-table="_a3s.application_user" reference-fk="fk_application_user_claim_application_user_user_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_aspnet_role_claim_aspnet_role" type="relfk" layer="0"
+	 custom-color="#26adec"
+	 src-table="_a3s.aspnet_role_claim"
+	 dst-table="_a3s.aspnet_role" reference-fk="fk_aspnet_role_claim_aspnet_role_role_id"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="45.745" y="18.0143"/>
+	</label>
+</relationship>
+
+<relationship name="rel_aspnet_user_login_application_user" type="relfk" layer="0"
+	 custom-color="#63ebf6"
+	 src-table="_a3s.aspnet_user_login"
+	 dst-table="_a3s.application_user" reference-fk="fk_aspnet_user_login_application_user_user_id"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="12.1435" y="17.3587"/>
+	</label>
+</relationship>
+
+<relationship name="rel_aspnet_user_role_application_user" type="relfk" layer="0"
+	 custom-color="#e8da1f"
+	 src-table="_a3s.aspnet_user_role"
+	 dst-table="_a3s.application_user" reference-fk="fk_aspnet_user_role_application_user_user_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_aspnet_user_role_aspnet_role" type="relfk" layer="0"
+	 custom-color="#a81a7f"
+	 src-table="_a3s.aspnet_user_role"
+	 dst-table="_a3s.aspnet_role" reference-fk="fk_aspnet_user_role_aspnet_role_role_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_aspnet_user_token_application_user" type="relfk" layer="0"
+	 custom-color="#71d086"
+	 src-table="_a3s.application_user_token"
+	 dst-table="_a3s.application_user" reference-fk="fk_aspnet_user_token_application_user_user_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_function_application" type="relfk" layer="0"
+	 custom-color="#9c7fef"
+	 src-table="_a3s.function"
+	 dst-table="_a3s.application" reference-fk="fk_function_application_application_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_function_permission_function" type="relfk" layer="0"
+	 custom-color="#155f18"
+	 src-table="_a3s.function_permission"
+	 dst-table="_a3s.function" reference-fk="fk_function_permission_function_function_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_function_permission_permission" type="relfk" layer="0"
+	 custom-color="#66e185"
+	 src-table="_a3s.function_permission"
+	 dst-table="_a3s.permission" reference-fk="fk_function_permission_permission_permission_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_role_function_function" type="relfk" layer="0"
+	 custom-color="#1f7897"
+	 src-table="_a3s.role_function"
+	 dst-table="_a3s.function" reference-fk="fk_role_function_function_function_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_role_function_role" type="relfk" layer="0"
+	 custom-color="#9a09d7"
+	 src-table="_a3s.role_function"
+	 dst-table="_a3s.role" reference-fk="fk_role_function_role_role_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_user_role_application_user" type="relfk" layer="0"
+	 custom-color="#1346f4"
+	 src-table="_a3s.user_role"
+	 dst-table="_a3s.application_user" reference-fk="fk_user_role_application_user_user_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_user_role_role" type="relfk" layer="0"
+	 custom-color="#e717fb"
+	 src-table="_a3s.user_role"
+	 dst-table="_a3s.role" reference-fk="fk_user_role_role_role_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_user_team_application_user" type="relfk" layer="0"
+	 custom-color="#6baf31"
+	 src-table="_a3s.user_team"
+	 dst-table="_a3s.application_user" reference-fk="fk_user_team_application_user_user_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_user_team_team" type="relfk" layer="0"
+	 custom-color="#d6560c"
+	 src-table="_a3s.user_team"
+	 dst-table="_a3s.team" reference-fk="fk_user_team_team_team_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_team_team_team" type="relfk" layer="0"
+	 custom-color="#8a2b20"
+	 src-table="_a3s.team_team"
+	 dst-table="_a3s.team" reference-fk="fk_team_team_team_child_team_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_team_team_team1" type="relfk" layer="0"
+	 custom-color="#267695"
+	 src-table="_a3s.team_team"
+	 dst-table="_a3s.team" reference-fk="fk_team_team_team_parent_team_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_role_role_role" type="relfk" layer="0"
+	 custom-color="#4ed641"
+	 src-table="_a3s.role_role"
+	 dst-table="_a3s.role" reference-fk="fk_role_role_role_child_role_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_role_role_role1" type="relfk" layer="0"
+	 custom-color="#f683f8"
+	 src-table="_a3s.role_role"
+	 dst-table="_a3s.role" reference-fk="fk_role_role_role_parent_role_id"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="439.09" y="101.414"/>
+	</label>
+</relationship>
+
+<relationship name="rel_ldap_authentication_mode_ldap_attribute_ldap_authentication" type="relfk" layer="0"
+	 custom-color="#784373"
+	 src-table="_a3s.ldap_authentication_mode_ldap_attribute"
+	 dst-table="_a3s.ldap_authentication_mode" reference-fk="ldap_authentication_mode_ldap__ldap_authentication_mode_id_fkey"
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="8.56902" y="8.21434"/>
+	</label>
+</relationship>
+
+<relationship name="rel_application_data_policy_application" type="relfk" layer="0"
+	 custom-color="#2d09e2"
+	 src-table="_a3s.application_data_policy"
+	 dst-table="_a3s.application" reference-fk="fk_application_data_policy_application_application_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_team_application_data_policy_team" type="relfk" layer="0"
+	 custom-color="#c921ad"
+	 src-table="_a3s.team_application_data_policy"
+	 dst-table="_a3s.team" reference-fk="fk_team_application_data_policy_team_team_id"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_team_application_data_policy_application_data_policy" type="relfk" layer="0"
+	 custom-color="#68fe2b"
+	 src-table="_a3s.team_application_data_policy"
+	 dst-table="_a3s.application_data_policy" reference-fk="fk_team_application_data_policy_application_data_policy_applica"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>

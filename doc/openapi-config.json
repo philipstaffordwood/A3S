@@ -1,0 +1,13 @@
+{
+    "licenseUrl": "https://opensource.org/licenses/MIT",
+    "licenseName": "MIT",
+    "packageCopyright": "Copyright (c) 2019, Grindrod Bank Limited",
+    "packageTitle": "Authentication, Authorisation and Accounting for the enterprise.",
+    "packageName": "za.co.grindrodbank.a3s",
+    "packageVersion": "0.0.1",
+    "useSwashbuckle": "false",
+    "classModifier": "abstract",
+    "operationIsAsync": "true",
+    "operationResultTask": "false",
+    "modelClassModifier": "partial"
+}

@@ -1,0 +1,200 @@
+#
+# *************************************************
+# Copyright (c) 2019, Grindrod Bank Limited
+# License MIT: https://opensource.org/licenses/MIT
+# **************************************************
+#
+
+version: 2.1
+orbs:
+  newman: postman/newman@0.0.2
+jobs:
+  static-analysis:
+    docker:
+      - image: newtmitch/sonar-scanner:alpine
+    working_directory: ~/build
+    steps:
+      # Update, upgrade, then install git and openssh for a clean checkout
+      - run: apk update
+      - run: apk upgrade
+      - run: apk --no-cache add --update git openssh
+      - checkout
+      - run: |
+         sonar-scanner \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+          -Dsonar.projectName=$SONAR_PROJECT_KEY \
+          -Dsonar.organization=$SONAR_ORG \
+          -Dsonar.login=$SONAR_AUTH_TOKEN \
+          -Dsonar.branch.name=$CIRCLE_BRANCH \
+          -Dsonar.projectBaseDir=$CI_PROJECT_DIR \
+          -Dsonar.sourceEncoding=UTF-8 \
+          -Dsonar.test.inclusions=tests/**/* \
+          -Dsonar.sources=.
+  unit-test:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
+    working_directory: ~/build
+    
+    steps:
+      # Update, upgrade, then install  openssh and git for a clean checkout
+      # Im not sure that these components are required.
+      # - run: apk update
+      # - run: apk upgrade
+      # - run: apk --no-cache add --update git openssh
+
+      - checkout
+      - run: dotnet restore
+      - run: dotnet build
+      - run: dotnet test --no-build 
+
+  license-headers:
+    docker:
+      - image: maven:3.5.3-jdk-8-alpine
+    working_directory: ~/build
+    environment:
+      # Customize the JVM maximum heap limit
+      MAVEN_OPTS: "-Xmx3200m "
+    steps:
+      # Update, upgrade, then install openssh and git for a clean checkout
+      - run: apk update
+      - run: apk upgrade
+      - run: apk --no-cache add --update openssh git
+      - checkout
+      - restore_cache:
+          keys:
+            - a3s-build-lic-{{ checksum "pom-rat.xml" }}            
+      - run: mvn dependency:go-offline -f pom-rat.xml -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: a3s-build-lic-{{ checksum "pom-rat.xml" }} -f pom-rat.xml
+      - run: mvn clean -f pom-rat.xml license:check
+
+  postman-integration-tests:
+    # Use a Linux VM instead of docker environment. This is crucial for successful mounting of file systems into docker containers.
+    # Note: Not specifying an image (for the machine) results in the circleci:classic image being pulled in. This contains docker-compose on it already.
+    machine: true 
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # Build the two required docker images into the local docker image repo from this version of the code.
+      - run: docker build -t grindrodbank/a3s:latest -f ~/repo/a3s-Dockerfile ~/repo
+      - run: docker build -t grindrodbank/a3s-identity-server:latest -f ~/repo/a3s-identity-server-Dockerfile ~/repo
+      # Start the quickstart instance, as it models a fully featured running A3S environment, which is ideal for running Postman tests against.
+      - run: docker-compose -f ~/repo/docker-compose/quickstart/docker-compose.yml up
+      # Run the Newman orb to execute the collection against the quickstart environment.
+      - newman/newman-run:
+          collection: "~/repo/postman/A3S-pipeline.postman_collection.json"
+          environment: "~/repo/postman/A3S-quickstart.postman_environment.json"
+
+  a3s-docker-build-push:
+    docker:
+      - image: docker:18.09.3
+    working_directory: ~/build
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false
+      # build and push A3S Docker image to dockerhub.
+      - run: |
+          # TAG=0.0.1 - tag should be derived from Git.
+          docker build -t grindrodbank/a3s:$TAG -f a3s-Dockerfile .     
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+          docker push grindrodbank/a3s:$TAG
+          # Tag and push latest
+          docker tag grindrodbank/a3s:$TAG grindrodbank/a3s:latest
+          docker push grindrodbank/a3s:latest
+
+  a3s-ids4-docker-build-push:
+    docker:
+      - image: docker:18.09.3
+    working_directory: ~/build
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: false
+      # build and push A3S identity Sever Docker image to dockerhub.
+      - run: |
+          # TAG=0.0.1 - tag should be derived from Git.
+          docker build -t grindrodbank/a3s-identity-server:$TAG -f a3s-identity-server-Dockerfile .     
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
+          docker push grindrodbank/a3s-identity-server:$TAG
+          # Tag and push latest
+          docker tag grindrodbank/a3s-identity-server:$TAG grindrodbank/a3s-identity-server:latest
+          docker push grindrodbank/a3s-identity-server:latest
+
+  fossa-scan:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
+    working_directory: ~/build
+    steps:
+      # Update, upgrade, then install su, curl, bash, git and openssh
+      - run: apk update
+      - run: apk upgrade
+      - run: set -ex && apk --no-cache add sudo
+      - run: apk --no-cache add --update curl bash git openssh
+      # Install Fossa
+      - run: |
+          curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | sudo bash -s v1.0.0          
+      # Install Maven
+      - checkout
+      - run: FOSSA_API_KEY=$FOSSA_API_KEY fossa init
+      - run: FOSSA_API_KEY=$FOSSA_API_KEY fossa analyze
+      # Note: The 'fossa test' command must be run after the analyze command has been run, as it is dependent on the previous scan.
+      - run: FOSSA_API_KEY=$FOSSA_API_KEY fossa test
+  vulnerability-test:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
+    working_directory: ~/build
+    steps:
+      # Update, upgrade, then install sudo, nodejs, npm, git and openssh
+      - run: apk update
+      - run: apk upgrade
+      - run: set -ex && apk --no-cache add sudo
+      - run: apk --no-cache add --update nodejs npm git openssh
+      - checkout 
+      - run: dotnet restore
+      - run: sudo npm_config_unsafe_perm=true npm install -g npm@latest
+      - run: sudo npm_config_unsafe_perm=true npm install -g snyk@latest
+      - run: sudo snyk auth $SNYK_TOKEN
+      - run: sudo snyk monitor --file=A3Service.sln || true
+workflows:
+  version: 2
+  build_test_and_push:
+    jobs:
+      - unit-test
+      - static-analysis
+      - vulnerability-test
+      - license-headers
+      - fossa-scan:
+          filters:
+            tags:
+              only: /^v*.*.*/
+            branches:
+              only: master
+      - postman-integration-tests
+      - a3s-docker-build-push:
+          requires:
+          - test
+          - static-analysis
+          - license-headers
+          - postman-integration-tests
+          filters:
+            tags:
+              only: /^v*.*.*/
+            # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
+            # branches:
+            #   only: master
+      - a3s-ids4-docker-build-push:
+          requires:
+          - test
+          - static-analysis
+          - license-headers
+          - postman-integration-tests
+          filters:
+            tags:
+              only: /^v*.*.*/
+            # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
+            # branches:
+            #   only: master

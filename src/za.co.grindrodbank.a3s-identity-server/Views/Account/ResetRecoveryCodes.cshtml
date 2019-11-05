@@ -1,0 +1,39 @@
+﻿@model ResetRecoveryCodesModel
+
+    <div class="login-page">
+        <div class="page-header">
+            <h1>Register Two Factor Authentication</h1>
+        </div>
+
+        <partial name="_ValidationSummary" />
+
+        <div class="row">
+        <div class="col-md-6 col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Recovery Codes Regenerated</h3>
+                </div>
+                <div class="panel-body">
+                    <p>Your one-time recovery codes have been regenerated.</p>
+
+                    <p>If you lose access to your authenticator app, you can use the following one-time recovery codes to recover access to your profile:</p>
+
+                    <ul>
+                        @foreach (string code in Model.RecoveryCodes)
+                        {
+                            <li>@code</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <input type="hidden" name="RedirectUrl" id="RedirectUrl" value="@Model.RedirectUrl" />
+            <button class="btn btn-default" name="btnReturn" id="btnReturn" value="btnReturn">Return</button>
+            <input type="hidden" name="ReturnTo2FAUrl" id="ReturnTo2FAUrl" value="@Url.Action("Register2FA", new { redirectUrl = Model.RedirectUrl })" />
+        </div>
+
+    </div>
+
+@section scripts {
+    <script type="text/javascript" src="~/js/reset-recovery-codes.js"></script>
+}

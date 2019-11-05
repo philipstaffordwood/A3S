@@ -1,0 +1,3295 @@
+openapi: 3.0.0
+info:
+  description: >-
+    API Definition for the A3S. This service allows authentication, authorisation and accounting.
+  version: 0.2.0
+  title: A3S
+paths:
+  #region - User
+  '/users':
+    get:
+      tags:
+        - User
+      description: Search for users.
+      summary: Search for users.
+      operationId: listUsers
+      parameters:
+        - name: teams
+          in: query
+          required: false
+          description: Whether to fill in the teams member field
+          schema:
+            type: boolean
+            default: false
+        - name: roles
+          in: query
+          required: false
+          description: Whether to fill in the roles member field
+          schema:
+            type: boolean
+            default: false
+        - name: functions
+          in: query
+          required: false
+          description: Whether to fill in the functions member field
+          schema:
+            type: boolean
+            default: false
+        - name: locale
+          in: query
+          required: false
+          description: |
+            If this field is set, translate all applicable fields to a specific locale
+          schema:
+            type: string
+            maxLength: 5
+            minLength: 2
+            default: en
+            example:
+              - en-za
+              - en-us
+              - af-za
+              - en
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 0
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            format: int32
+            default: 10
+        - name: filterName
+          in: query
+          required: false
+          description: A search query filter on the User's name.
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityType
+        - name: filterUsername
+          in: query
+          required: false
+          description: A search query filter on the User's username
+          schema:
+            type: string
+        - name: orderBy
+          in: query
+          required: false
+          style: form
+          explode: false
+          description: >-
+            a comma separated list of fields in their sort order. Ascending
+            order is assumed. Append desc after a field to indicate descending
+            order.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden -  You are not authorized to access the list of users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User list not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - User
+      summary: Create a User.
+      description: Create a new User.
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSubmit'
+      responses:
+        '200':
+          description: Successful. User created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSubmit'
+        '400':
+          description: Invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Not authorized to create a user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Related user entity (such as role or team) not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible entity. The request was correctly structured, but some business rules were violated, preventing the user creation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/users/{userId}':
+    get:
+      tags:
+        - User
+      description: Get a user.
+      summary: Get a user by its UUID.
+      operationId: getUser
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The UUID of the user
+          schema:
+            $ref: '#/components/schemas/UserId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access this user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - User
+      summary: Update a user.
+      description: Update a user and its associations to teams and roles.
+      operationId: updateUser
+      parameters:
+        - name: userId
+          description: The user to update.
+          required: true
+          in: path
+          schema:
+            $ref: '#/components/schemas/UserId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSubmit'
+
+      responses:
+        '200':
+          description: Successful. User Updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Not authorized to update users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User or related entity not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible entity. The request was correctly structured, but some business rules were violated, preventing the user update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - User
+      summary: Delete a user.
+      description: Mark a user as deleted.
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          description: The user to delete.
+          required: true
+          in: path
+          schema:
+            $ref: '#/components/schemas/UserId'
+
+      responses:
+        '204':
+          description: No Content.
+        '400':
+          description: Invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Not authorized to delete users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/users/{userId}/changePassword':
+    put:
+      tags:
+        - User
+      description: Change a user password.
+      summary: Change a user password.
+      operationId: changeUserPassword
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The UUID of the user.
+          schema:
+            $ref: '#/components/schemas/UserId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPasswordChangeSubmit'
+      responses:
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized update user passwords.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  #endregion - User
+  #region - Role
+  '/roles':
+    get:
+      tags:
+        - Role
+      description: Search for Roles.
+      summary: Search for Roles.
+      operationId: listRoles
+      parameters:
+        - name: users
+          in: query
+          required: false
+          description: Whether to fill in the users member field
+          schema:
+            type: boolean
+            default: false
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 0
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            format: int32
+            default: 10
+        - name: filterDescription
+          in: query
+          required: false
+          description: A search query filter on the role's description.
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityType
+        - name: orderBy
+          in: query
+          required: false
+          style: form
+          explode: false
+          description: >-
+            a comma separated list of fields in their sort order. Ascending
+            order is assumed. Append desc after a field to indicate descending
+            order.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK.
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the list of roles.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Roles list not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Role
+      summary: Create a Role.
+      description: Create a new Role.
+      operationId: createRole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleSubmit'
+      responses:
+        '200':
+          description: Successful. Role created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoleSubmit'
+        '400':
+          description: Invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Not authorized to create a Role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Role related entity not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the creation of the role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/roles/{roleId}':
+    get:
+      tags:
+        - Role
+      summary: Get a role.
+      description: Get a role by its UUID.
+      operationId: getRole
+      parameters:
+        - name: roleId
+          in: path
+          description: The UUID of the role.
+          required: true
+          schema:
+            $ref: '#/components/schemas/RoleId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access this role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Role not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Role
+      summary: Update a role.
+      description: Update a role by its UUID.
+      operationId: updateRole
+      parameters:
+        - name: roleId
+          in: path
+          description: The UUID of the role.
+          required: true
+          schema:
+            $ref: '#/components/schemas/RoleId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleSubmit'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update a role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Role related entity not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the updating of the role.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  #endregion - Role
+  #region - Teams
+  '/teams':
+    get:
+      tags:
+        - Team
+      description: Search for teams.
+      summary: Search for teams.
+      operationId: listTeams
+      parameters:
+        - name: users
+          in: query
+          required: false
+          description: Whether to fill in the users member field
+          schema:
+            type: boolean
+            default: false
+        - name: teams
+          in: query
+          required: false
+          description: Whether to fill in the teams member field
+          schema:
+            type: boolean
+            default: false
+        - name: policies
+          in: query
+          required: false
+          description: Whether to fill in the policies member field
+          schema:
+            type: boolean
+            default: false
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 0
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            format: int32
+            default: 10
+        - name: filterDesciption
+          in: query
+          required: false
+          description: A search query filter on the team's description
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityType
+        - name: orderBy
+          in: query
+          required: false
+          style: form
+          explode: false
+          description: >-
+            a comma separated list of fields in their sort order. Ascending
+            order is assumed. Append desc after a field to indicate descending
+            order.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK.
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the list of teams.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Teams list not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Team
+      summary: Creates a new team.
+      description: Create a new team.
+      operationId: createTeam
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamSubmit'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to create the team.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Team related entity not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the creation of the team.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/teams/{teamId}':
+    get:
+      tags:
+        - Team
+      summary: Get a team.
+      description: Get a team by its UUID.
+      operationId: getTeam
+      parameters:
+        - name: teamId
+          in: path
+          description: team
+          required: true
+          schema:
+            $ref: '#/components/schemas/TeamId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the team.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Team not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Team
+      summary: Update a team.
+      description: Update a team by its UUID.
+      operationId: updateTeam
+      parameters:
+        - name: teamId
+          in: path
+          description: The UUID of the team.
+          required: true
+          schema:
+            $ref: '#/components/schemas/TeamId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamSubmit'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update the team.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Teams not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  #endregion
+  #region - Policy
+  '/policies':
+    get:
+      tags:
+        - Policy
+      description: Search for policies
+      summary: Search for policies
+      operationId: listPolicies
+      parameters:
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            format: int32
+            default: 10
+        - name: filterDescription
+          in: query
+          required: false
+          description: A search query filter on the description
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityType
+        - name: orderBy
+          in: query
+          required: false
+          style: form
+          explode: false
+          description: >-
+            a comma separated list of fields in their sort order. Ascending
+            order is assumed. Append desc after a field to indicate descending
+            order.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the list of policies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Policy list not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/policies/{policyId}':
+    get:
+      tags:
+        - Policy
+      summary: Get a policy.
+      description: Get a policy by its UUID.
+      operationId: getPolicy
+      parameters:
+        - name: policyId
+          in: path
+          description: policy
+          required: true
+          schema:
+            $ref: '#/components/schemas/PolicyId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policy'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the policy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Policy not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Policy
+      summary: Update a policy.
+      description: Update a policy by its UUID.
+      operationId: updatePolicy
+      parameters:
+        - name: policyId
+          in: path
+          description: The UUID of the policy.
+          required: true
+          schema:
+            $ref: '#/components/schemas/PolicyId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicySubmit'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policy'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update the policy.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Policy not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  #endregion - Policy
+  #region - Applications
+  '/applications':
+    get:
+      tags:
+        - Application
+      description: Search for applications.
+      summary: Search for applications.
+      operationId: listApplications
+      parameters:
+        - name: permissions
+          in: query
+          required: false
+          description: |
+            If this field is set, then fill in the permissions member field
+          schema:
+            type: boolean
+            default: false
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 0
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            format: int32
+            default: 10
+        - name: filterDescription
+          in: query
+          required: false
+          description: A search query filter on the description
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityType
+        - name: orderBy
+          in: query
+          required: false
+          style: form
+          explode: false
+          description: >-
+            a comma separated list of fields in their sort order. Ascending
+            order is assumed. Append desc after a field to indicate descending
+            order.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the list of applications.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Application list not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  #endregion - Application
+  #region - Permissions
+  '/permissions':
+    get:
+      tags:
+        - Permission
+      description: Search for permissions.
+      summary: Search for permissions.
+      operationId: listPermissions
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 0
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            format: int32
+            default: 10
+        - name: filterDescription
+          in: query
+          required: false
+          description: A search query filter on the description
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityType
+        - name: orderBy
+          in: query
+          required: false
+          style: form
+          explode: false
+          description: >-
+            a comma separated list of fields in their sort order. Ascending
+            order is assumed. Append desc after a field to indicate descending
+            order.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Permission'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the list of permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Permission list not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/permissions/{permissionId}':
+    get:
+      tags:
+        - Permission
+      summary: Get a permission.
+      description: Get a permission by its UUID.
+      operationId: getPermission
+      parameters:
+        - name: permissionId
+          in: path
+          description: permission
+          required: true
+          schema:
+            $ref: '#/components/schemas/PermissionId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the permission.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Permission not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  #endregion
+  
+  
+  # Region - Functions
+  '/functions':
+    get:
+      tags:
+        - Function
+      description: Search for functions.
+      summary: Search for functions.
+      operationId: listFunctions
+      parameters:
+        - name: permissions
+          in: query
+          required: false
+          description: |
+            If this field is set, then the permission list is filled in
+          schema:
+            type: boolean
+            default: false
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 0
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            format: int32
+            default: 10
+        - name: filterDescription
+          in: query
+          required: false
+          description: A search query filter on the description
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityType
+        - name: orderBy
+          in: query
+          required: false
+          style: form
+          explode: false
+          description: >-
+            a comma separated list of fields in their sort order. Ascending
+            order is assumed. Append desc after a field to indicate descending
+            order.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Function'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the list of functions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Function list not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - Function
+      summary: Create a new function.
+      description: Create a new function.
+      operationId: createFunction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FunctionSubmit'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Function'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to create functions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Function related entity (such as permissions) not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/functions/{functionId}':
+    get:
+      tags:
+        - Function
+      summary: Get a function.
+      description: Get a function by its UUID.
+      operationId: getFunction
+      parameters:
+        - name: functionId
+          in: path
+          description: function
+          required: true
+          schema:
+            $ref: '#/components/schemas/FunctionId'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Function'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the function.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Function not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - Function
+      summary: Update a function.
+      description: Update a function by its UUID.
+      operationId: updateFunction
+      parameters:
+        - name: functionId
+          in: path
+          description: The UUID of the function.
+          required: true
+          schema:
+            $ref: '#/components/schemas/FunctionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FunctionSubmit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Function'
+        '204':
+          description: No Content.
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update the function.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Functions not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Function
+      summary: Delete a function.
+      description: Deletes a function from A3S.
+      operationId: deleteFunction
+      parameters:
+        - name: functionId
+          description: The UUID of the function to delete.
+          required: true
+          in: path
+          schema:
+            $ref: '#/components/schemas/FunctionId'
+      responses:
+        '204':
+          description: No Content.
+        '400':
+          description: Invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Not authorized to delete functions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Function not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  # Endregion - Functions
+  
+  # Region  - ApplicationFunctions
+  '/applicationFunctions':
+    get:
+      tags:
+        - Application Function
+      description: Search for application functions.
+      summary: Search for application functions.
+      operationId: listApplicationFunctions
+      parameters:
+        - name: permissions
+          in: query
+          required: false
+          description: |
+            If this field is set, then the permission list is filled in
+          schema:
+            type: boolean
+            default: false
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 0
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            format: int32
+            default: 10
+        - name: filterDescription
+          in: query
+          required: false
+          description: A search query filter on the description
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityType
+        - name: orderBy
+          in: query
+          required: false
+          style: form
+          explode: false
+          description: >-
+            a comma separated list of fields in their sort order. Ascending
+            order is assumed. Append desc after a field to indicate descending
+            order.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK.
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApplicationFunction'
+
+        '204':
+          description: No Content.
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the list of functions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Application list not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # End Region  - ApplicationFunctions
+  
+  # Region - Security Contracts
+  '/securityContracts':
+    get:
+      tags:    
+        - SecurityContract
+      summary: Returns the entire security contract.
+      description: Returns the entire security contract for the current state of A3S.
+      operationId: getSecurityContract
+      responses:
+        '200':
+          description: OK
+          content:
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/SecurityContract'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityContract'
+        '204':
+          description: No Content.
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the security contract.
+          content:
+            application/json:
+              schema:    
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Security contract not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - SecurityContract
+      summary: Idempotently applies a security contract definition.
+      description: Idempotently applies a security contract definition to the A3S instance.
+      operationId: applySecurityContract
+      requestBody:
+        content:
+          application/x-yaml:
+            schema:
+              $ref: '#/components/schemas/SecurityContract'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/x-yaml:
+              schema:
+                $ref: '#/components/schemas/SecurityContract'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityContract'
+        '204':
+          description: No Content.
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible Entity - The security contract was correctly structured, but there are business rule or constraint violations, preventing it from being applied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Not authorized to apply Security Contracts.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  # End Region - Security Contracts
+    
+  #region - AuthenticationModes    
+  '/authenticationModes/ldap':
+    get:
+      tags:    
+        - LdapAuthenticationMode
+      description: Search for LDAP Authentication Modes.
+      summary: Search for LDAP Authentication Modes.
+      operationId: listLdapAuthenticationModes
+      parameters:
+        - name: orderBy
+          in: query
+          required: false
+          style: form
+          explode: false
+          description: >-
+            a comma separated list of fields in their sort order. Ascending
+            order is assumed. Append desc after a field to indicate descending
+            order.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LdapAuthenticationMode'
+
+        '204':
+          description: No Content.
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the list of LDAP Authentication modes.
+          content:
+            application/json:
+              schema:    
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: LDAP Authentication mode list not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - LdapAuthenticationMode
+      summary: Create a LDAP Authentication Mode.
+      description: Create a new LDAP Authentication Mode.
+      operationId: createLdapAuthenticationMode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LdapAuthenticationModeSubmit'
+      responses:
+        '200':    
+          description: Successful. LDAP Authentication Mode created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LdapAuthenticationMode'
+        '400':
+          description: Invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Not authorized to create a LDAP Authentication Mode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: LDAP Authentication mode not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible request. The request was correctly structured but some business rules were violated, preventing the creation of the LDAP Authentication Mode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/authenticationModes/ldap/{ldapAuthenticationModeId}':
+    get:
+      tags:
+        - LdapAuthenticationMode
+      summary: Get a ldapAuthenticationMode
+      description: Get a ldapAuthenticationMode by its UUID
+      operationId: getLdapAuthenticationMode
+      parameters:
+        - name: ldapAuthenticationModeId
+          in: path
+          description: The UUID of the LDAP Authentication Mode.
+          required: true
+          schema:
+            $ref: '#/components/schemas/LdapAuthenticationModeId'
+      responses:
+        '200':    
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LdapAuthenticationMode'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to read LDAP Authentication Modes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: LDAP Auth Mode not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - LdapAuthenticationMode
+      summary: Update a LDAP Authentication Mode.
+      description: Update a LDAP Authentication Mode by its UUID.
+      operationId: updateLdapAuthenticationMode
+      parameters:
+        - name: ldapAuthenticationModeId
+          in: path
+          description: The UUID of the LDAP Authentication Mode.
+          required: true
+          schema:
+            $ref: '#/components/schemas/LdapAuthenticationModeId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LdapAuthenticationModeSubmit'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LdapAuthenticationMode'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:    
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update LDAP Authentication Modes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: LDAP Authentication Mode not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible request. The request was correctly structured but some business rules were violated, preventing the update of the LDAP Authentication Mode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - LdapAuthenticationMode
+      summary: Deletes a LDAP Authentication Mode.
+      description: Deletes a LDAP Authentication Mode, but only if there are no users currently using this Authentication Mode.
+      operationId: deleteLdapAuthenticationMode
+      parameters:
+        - name: ldapAuthenticationModeId
+          in: path
+          description: The UUID of the LDAP Authentication Mode.
+          required: true
+          schema:
+            $ref: '#/components/schemas/LdapAuthenticationModeId'
+      responses:
+        '204':
+          description: No Content.
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:    
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to delete LDAP Authentication Modes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: LDAP Authentication Mode not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Non-Processible request. Most likely returned as a result of there still being users assigned to the LDAP Auth Mode that a deletion attempt was made for.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/authenticationModes/ldap/test':
+    post:
+      tags:
+        - LdapAuthenticationMode
+      summary: Test a LDAP Authentication Mode.
+      description: Test a LDAP Authentication Mode.
+      operationId: testLdapAuthenticationMode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LdapAuthenticationModeSubmit'
+      responses:
+        '200':    
+          description: Successful. LDAP Authentication Model successfully tested.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LdapAuthenticationModeTestResult'
+        '400':
+          description: Invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Not authorized to test a LDAP Authentication Mode.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: LDAP Authentication Mode not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    #endregion - LdapAuthenticationModes
+    
+components:
+  schemas:
+    #region Policy
+    PolicyType:
+      description: |
+        Enumeration to describe with what policy type you're busy with
+      type: string
+      enum:
+        - IP
+        - CRON
+        - DATA
+
+    PolicyId:
+      type: string
+      format: uuid
+
+    Policy:
+      description: |
+        A policy can be time based, IP based, role based
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/PolicyId'
+        name:
+          type: string
+        description:
+          type: string
+        value1:
+          type: string
+        value2:
+          type: string
+        value3:
+          type: string
+
+    PolicySubmit:
+      description: |
+        Create or update a policy
+      type: object
+      properties:
+        value1:
+          type: string
+        value2:
+          type: string
+        value3:
+          type: string
+    #endregion
+
+    #region Role
+    RoleId:
+      type: string
+      format: uuid
+
+    Role:
+      description: |
+        A Role within A3S. Roles can have functions assigned to them. Roles can be assigned to users.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/RoleId'
+        name:
+          type: string
+        description:
+          type: string
+        functionIds:
+          type: array
+          items:
+            description: The UUIDS of the functions assigned to this role.
+            type: string
+            format: uuid
+        userIds:
+          description: The UUIDs of the users attached to the role
+          type: array
+          items:
+            type: string
+            format: uuid
+        roleIds:
+          description: The UUIDs of the child roles attached to the role.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleId'
+          
+    RoleSubmit:
+      description: |
+        Model used to create or update a Role.
+      required:
+        - uuid
+        - name
+        - description
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        uuid:
+          type: string
+          format: uuid
+        roleIds:
+          description: The UUIDs of the child roles attached to the role.
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleId'
+        userIds:
+          type: array
+          items:
+            description: The UUIDS of the users this role is assigned to.
+            type: string
+            format: uuid
+        functionIds:
+          type: array
+          items:
+            description: The UUIDS of the functions assigned to this role.
+            type: string
+            format: uuid
+        
+    #endregion
+
+    #region - Application
+    ApplicationId:
+      type: string
+      description: The UUID of an application.
+      format: uuid
+
+    Application:
+      description: |
+        An application
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/ApplicationId'
+        name:
+          type: string
+        description:
+          type: string
+        functions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Function'
+        dataPolicies:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationDataPolicy'
+    #endregion
+
+    # Region - Permissions
+    PermissionId:
+      type: string
+      format: uuid
+
+    Permission:
+      description: |
+        Permission for an application
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/PermissionId'
+        name:
+          type: string
+        description:
+          type: string
+
+    # End Region - Permissions      
+          
+    # Region - Functions
+
+    FunctionId:
+      type: string
+      format: uuid
+
+    Function:
+      description: |
+        A Function - A collection of permissions to denote a piece of functionality in an application. Must be assigned to an application.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/FunctionId'
+        name:
+          type: string
+        description:
+          type: string
+        applicationId:
+          $ref: '#/components/schemas/ApplicationId'
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+
+    FunctionSubmit:
+      description: |
+        Model used to create an new function or update an existing Function.
+      required:
+        - uuid
+        - name
+        - description
+        - applicationId
+        - permissions
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/FunctionId'
+        name:
+          type: string
+          description: The name of the function.
+        description:
+          description: A brief description of the function.
+          type: string
+        applicationId:
+          $ref: '#/components/schemas/ApplicationId'
+        permissions:
+          description: A list of permission UUIDs that are to be added to the function.
+          type: array
+          items:
+            type: string
+            format: uuid
+    # End Region - Functions
+    
+    # Region - Application Function
+    ApplicationFunctionId:
+      description: The UUID of an application function.
+      type: string
+      format: uuid
+
+    ApplicationFunction:
+      description: |
+        An Application Function - a collection of permissions to denote a piece of functionality in an application. Defined by micro-services only.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/ApplicationFunctionId'
+        name:
+          description: The name of the application function.
+          type: string
+        description:
+          description: A brief description of the application function.
+          type: string
+        permissions:
+          description: An array of permissions that the application function is composed of.
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+    # End Region - Application Function
+
+    #region User
+    UserId:
+      type: string
+      format: uuid
+    User:
+      description: |
+        A user
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/UserId'
+        name:
+          type: string
+        surname:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+          nullable: true
+        avatar:
+          type: string
+          nullable: true
+        isDeleted:
+          type: boolean
+          description: True if this user is considered deleted.
+        ldapAuthenticationModeId:
+          type: string
+          format: uuid
+          nullable: true
+          $ref: '#/components/schemas/LdapAuthenticationModeId'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/Team'
+
+    UserSubmit:
+      description: |
+        Used to update a user
+      type: object
+      required:
+        - uuid
+        - name
+        - username
+        - surname
+        - email
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        surname:
+          type: string
+        username:
+          type: string
+        password:
+          description: A plain text password field used to create or update the user password. Required for create. If omitted on update, password will not be affected 
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+          nullable: true
+        avatar:
+          type: string
+          nullable: true
+        ldapAuthenticationModeId:
+          type: string
+          format: uuid
+          nullable: true
+        roleIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        teamIds:
+          type: array
+          items:
+            type: string
+            format: uuid            
+    UserPasswordChangeSubmit:
+      description: |
+        Used to change a user's password
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        newPassword:
+          type: string
+        newPasswordConfirmed:
+          type: string
+        oldPassword:
+          type: string
+    #endregion
+
+    #region Team
+    TeamId:
+      type: string
+      format: uuid
+
+    Team:
+      description: |
+        Models a team.
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TeamId'
+        name:
+          type: string
+        description:
+          type: string
+        teamIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        userIds:
+          description: The UUIDs of the users attached to the team
+          type: array
+          items:
+            type: string
+            format: uuid
+        dataPolicies:
+          description: The ID's of the application data policies that are applied to this team.
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationDataPolicyId'
+        
+
+    TeamSubmit:
+      description: |
+        Model used for creating or updating a team.
+      required:
+        - uuid
+        - name
+        - description
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TeamId'
+        name:
+          type: string
+        description:
+          type: string
+        teamIds:
+          description: The UUIDs of the child teams (in the case of a compound team)
+          type: array
+          items:
+             $ref: '#/components/schemas/TeamId'
+        dataPolicies:
+          description: The application data policies that are applied to this team.
+          type: array
+          items:
+            $ref: '#/components/schemas/ApplicationDataPolicyId'
+    #endregion
+    
+    # Region -  Clients
+    Oauth2ClientSubmit:
+      description: |
+        Models a client definition required to create or update an Oauth2 or OpenID Connect client.
+      type: object
+      required:
+        - clientId
+        - name
+        - allowedGrantTypes
+        - allowedScopes
+        - allowedOfflineAccess
+      properties:
+        clientId:
+          type: string
+          description: The unique ID of the client.
+        name:
+          type: string
+          description: Client display name. Used for logging and the consent screen.
+        allowedGrantTypes:
+          type: array
+          items:
+            type: string
+          description: The Oauth2 grant types that the client will be permitted to use.
+        redirectUris:
+          description: Specifies the allowed URIs to return tokens or authorisation codes to.
+          type: array
+          items:
+            type: string
+            format: url
+        allowedCorsOrigins:
+          description: Sets the allowed CORS origins for JavaScript clients.
+          type: array
+          items:
+            type: string
+            format: url
+        postLogoutRedirectUris:
+          description: Specifies the allowed URIs to redirect to after logout.
+          type: array
+          items:
+            type: string
+            format: url
+        allowedScopes:
+          description: Specifies the scopes that the client is allowed to access. If empty, the client cannot access any scopes.
+          type: array
+          items:
+            type: string
+        clientSecrets:
+          description: Client secrets for flows (grant types) that require one.
+          type: array
+          items:
+            type: string
+        hashedClientSecrets:
+          description: An optional array containing already hashed client secrets for flows (grant types) that require one. If used, the clientSecrets will be ignored.
+          type: array
+          items:
+            type: string
+        allowedOfflineAccess:
+          description: Defines whether offline access with refresh tokens is permitted for this client.
+          type: boolean
+            
+    Oauth2Client:
+      description: |
+        Models an Oauth2 or OpenID Connect client.
+      type: object
+      required:
+        - clientId
+        - name
+        - allowedGrantTypes
+        - allowedScopes
+        - allowedOfflineAccess
+      properties:
+        clientId:
+          type: string
+          description: The unique ID of the client.
+        name:
+          type: string
+          description: Client display name. Used for logging and the consent screen.
+        allowedGrantTypes:
+          type: array
+          items:
+            type: string
+          description: The Oauth2 grant types that the client will be permitted to use.
+        redirectUris:
+          description: Specifies the allowed URIs to return tokens or authorisation codes to.
+          type: array
+          items:
+            type: string
+            format: url
+        allowedCorsOrigins:
+          description: Sets the allowed CORS origins for JavaScript clients.
+          type: array
+          items:
+            type: string
+            format: url
+        postLogoutRedirectUris:
+          description: Specifies the allowed URIs to redirect to after logout.
+          type: array
+          items:
+            type: string
+            format: url
+        allowedScopes:
+          description: Specifies the scopes that the client is allowed to access. If empty, the client cannot access any scopes.
+          type: array
+          items:
+            type: string
+        allowedOfflineAccess:
+          description: Defines whether offline access with refresh tokens is permitted for this client.
+          type: boolean
+    # End Region - Clients
+    
+    # Begin Region - Application Security Definition
+    SecurityContractPermission:
+      description: |
+          Models an application's permissions.
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          description: The name of the application permission.
+        description:
+          type: string
+          description: A description of the application permission.
+    
+    SecurityContractFunction:
+      description: |
+          Models an application's functions. These contain permissions.
+      type: object
+      required:
+        - name
+        - description
+        - permissions
+      properties:
+        name:
+          type: string
+          description: The name of the application function.
+        description:
+          type: string
+          description: A description of the application function.
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityContractPermission'
+          
+    SecurityContractApplication:
+      description: |
+        Models an application's functions and the corresponding permissions.
+      type: object
+      required:
+        - fullname
+        - applicationFunctions
+      properties:
+        fullname:
+          type: string
+          description: The name of the application function.
+        applicationFunctions:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityContractFunction'
+        dataPolicies:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityContractApplicationDataPolicy'
+            
+    SecurityContractApplicationDataPolicy:
+      description: |
+          Models an applications data policy with the context of security contracts.
+      type: object
+      required:
+        - name
+        - description
+        - permissions
+      properties:
+        name:
+          type: string
+          description: The name of the application data policy.
+        description:
+          type: string
+          description: A description of the application data policy.
+        
+    # End Region - Application Security Definition
+    
+    # Begin Region - Configuration Defaults
+    SecurityContractDefaultConfigurationRole:
+      description: |
+          Models a role definition within the roles section of the default configuration.
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          description: The name of the role.
+        description:
+          type: string
+          description: A description of the role.
+        functions:
+          type: array
+          description: An array of all the function names that are to be added to the role. The functions must already exist or be defined in other sections of the security contract.
+          items:
+            type: string
+        roles:
+          type: array
+          description: An array of all the child roles that are to be added to the role. The roles must already exist or be defined in other sections of the security contract.
+          items:
+            type: string
+            
+    SecurityContractDefaultConfigurationUser:
+      description: |
+          Models a default user definition within a default configuration.
+      required:
+        - name
+        - username
+        - surname
+        - email
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: The unique Id of the user.
+        username:
+          type: string
+          description: The username of the user.
+        name:
+          type: string
+          description: The name of the user.
+        surname:
+          type: string
+          description: The surname of the user.
+        email:
+          type: string
+          format: email
+          description: The user's email.
+        phoneNumber:
+          type: string
+          nullable: true
+          description: The user's phone number.
+        password:
+          type: string
+          description: The user's plain text password.
+        hashedPassword:
+          type: string
+          description: An optional field containing the user's salted and hashed password. If used, the password field will be ignored.
+        isDeleted:
+          type: boolean
+          description: True if this user is considered deleted.
+        deletedTime:
+          type: string
+          format: date-time
+          nullable: true
+          description: Populated with user delete date and time.
+        avatar:
+          type: string
+          nullable: true
+          description: The user's avatar image in base64 format
+        ldapAuthenticationMode:
+          type: string
+          nullable: true
+          description: The user's linked LDAP Authentication Mode name, if applicable
+        roles:
+          type: array
+          description: An array of all the role names that are to be added to the user. The user must already exist or be defined in other sections of the security contract.
+          items:
+            type: string
+      
+    SecurityContractDefaultConfigurationLdapAttributeLink:
+      description: |
+        An LdapAttributeLink - A LDAP attribute link definition
+      type: object
+      properties:
+        userField:
+          type: string
+        ldapField:
+          type: string
+          
+    SecurityContractDefaultConfigurationLdapAuthMode:
+      description: |
+        Model a default LDAP Authentication Mode
+      required:
+        - name
+        - hostName
+        - port
+        - isLdaps
+        - account
+        - password
+        - baseDn
+      type: object
+      properties:
+        name:
+          type: string
+        hostName:
+          type: string
+        port:
+          type: integer
+          format: int32
+        isLdaps:
+          type: boolean
+        account:
+          type: string
+        baseDn:
+          type: string
+        ldapAttributes:
+          type: array
+          description: A list of LDAP attribute to user field mappings
+          items:
+            $ref: '#/components/schemas/SecurityContractDefaultConfigurationLdapAttributeLink'
+
+    SecurityContractDefaultConfigurationTeam:
+      description: |
+          Models a default team definition within a default configuration.
+      required:
+        - name
+        - description
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: The unique Id of the team.
+        name:
+          type: string
+          description: The name of the team.
+        description:
+          type: string
+          description: A description of the team.
+        users:
+          type: array
+          description: An array of all the user names that are to be added to the team. The user must already exist or be defined in other sections of the security contract.
+          items:
+            type: string
+        teams:
+          type: array
+          description: An array of all the teams that are to be added to the team. The teams must already exist or be defined in other sections of the security contract.
+          items:
+            type: string
+        dataPolicies:
+          type: array
+          description: An array of application data policy names that are to be applied to the team.
+          items:
+            type: string
+            
+    SecurityContractDefaultConfigurationApplication:
+      required:
+        - name
+        - functions
+      properties:
+        name:
+          type: string
+          description: The name of the application that defaults are being configured for.
+        functions:
+          type: array
+          items:
+              $ref: '#/components/schemas/SecurityContractDefaultConfigurationFunction'
+            
+    SecurityContractDefaultConfigurationFunction:
+      description: Models a section of the default configuration for the creation of default functions.
+      type: object
+      required:
+        - name
+        - description
+        - permissions
+      properties:
+        name:
+          type: string
+          description: The name of the function.
+        description:
+          type: string
+          description: A description of the function.
+        permissions:
+          type: array
+          description: A list of permissions to add to the function.
+          items:
+            type: string 
+            
+    SecurityContractDefaultConfiguration:
+      description: Models the default configuration section of a security contract.
+      properties:
+        name:
+          type: string
+          description: The name of the default configuration.
+        applications:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityContractDefaultConfigurationApplication'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityContractDefaultConfigurationRole'
+        ldapAuthenticationModes:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityContractDefaultConfigurationLdapAuthMode'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityContractDefaultConfigurationUser'
+        teams:
+          type: array
+          items:
+            $ref: '#/components/schemas/SecurityContractDefaultConfigurationTeam'
+    # End Region - Configuration Defaults
+    
+    # Begin Region - Security Contract
+    SecurityContract:
+      description: |
+        Models a security contract definition.
+      type: object
+      properties:
+        clients:
+          type: array
+          items:
+            $ref: '#/components/schemas/Oauth2ClientSubmit'
+        applications:
+          type: array
+          items:
+             $ref: '#/components/schemas/SecurityContractApplication'
+        defaultConfigurations:
+          type: array
+          items:
+             $ref: '#/components/schemas/SecurityContractDefaultConfiguration'
+    # End Region - Security Contract
+    
+    #region - Authentication Model
+    LdapAuthenticationModeId:
+      type: string
+      format: uuid
+    UserFieldType:
+      description: |
+        Enumeration to describe with what user field you're busy with
+      type: string
+      enum:
+        - userName
+        - firstName
+        - surname
+        - email
+        - avatar
+    LdapAttributeLink:
+      description: |
+        An LdapAttributeLink - A LDAP attribute link definition
+      type: object
+      properties:
+        userField:
+          $ref: '#/components/schemas/UserFieldType'
+        ldapField:
+          type: string
+    LdapAuthenticationMode:
+      description: |
+        An LdapAuthenticationMode - An LDAP connection definition
+      type: object
+      required:
+        - uuid
+        - name
+        - hostName
+        - port
+        - isLdaps
+        - account
+        - baseDn
+      properties:
+        uuid:
+          $ref: '#/components/schemas/LdapAuthenticationModeId'
+        name:
+          type: string
+        hostName:
+          type: string
+        port:
+          type: integer
+          format: int32
+        isLdaps:
+          type: boolean
+          nullable: false
+        account:
+          type: string
+        baseDn:
+          type: string
+        ldapAttributes:
+          type: array
+          description: A list of LDAP attribute to user field mappings
+          items:
+            $ref: '#/components/schemas/LdapAttributeLink'
+    LdapAuthenticationModeSubmit:
+      description: |
+        Create a new or update an existing LdapAuthenticationMode
+      required:
+        - uuid
+        - name
+        - hostName
+        - port
+        - isLdaps
+        - account
+        - password
+        - baseDn
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        hostName:
+          type: string
+        port:
+          type: integer
+          format: int32
+        isLdaps:
+          type: boolean
+        account:
+          type: string
+        password:
+          type: string
+        baseDn:
+          type: string
+        ldapAttributes:
+          type: array
+          description: A list of LDAP attribute to user field mappings
+          items:
+            $ref: '#/components/schemas/LdapAttributeLink'
+    LdapAuthenticationModeTestResult:
+      description: |
+        An LdapAuthenticationMode test result
+      type: object
+      properties:
+        success:
+          type: boolean
+        messages:
+          type: array
+          items:
+            type: string           
+    #endregion
+    
+    # Begin Region Application Data Policies
+    # This is the same model as the 'SecurityContractApplicationDataPolicy', but for use outside of the context of security contracts.    
+    ApplicationDataPolicy:
+      description: |
+          Models an applications data policy.
+      type: object
+      required:
+        - name
+        - description
+        - uuid
+      properties:
+        uuid:
+          $ref: '#/components/schemas/ApplicationDataPolicyId'
+        name:
+          type: string
+          description: The name of the application data policy.
+        description:
+          type: string
+          description: A description of the application data policy.
+          
+    ApplicationDataPolicyId:
+      type: string
+      format: uuid
+    # End Regions - Application Data Policies
+
+    #region Responses
+    ErrorResponse:
+      description: Error response object to give more info with HTTP status code
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    PaginationHeaderResponse:
+      description: >-
+        This is the standard response for requests that have paginated
+        collections
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int32
+          minimum: 1
+          description: The total number of pages in the result set
+        count:
+          type: integer
+          format: int32
+          minimum: 1
+          description: The total number of results in the result set
+        size:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 20
+          default: 10
+          description: >-
+            The number items to include in a page of results. The page size for
+            the result set
+        current:
+          type: integer
+          format: int32
+          minimum: 1
+          description: >-
+            The position of the page in the paged result set that is being
+            returned
+        first:
+          type: string
+          format: url
+          description: >-
+            The link to the first page of results containing [size] results.
+            This link includes the page, size, filter, orderBy and fields query
+            parameters.
+        last:
+          type: string
+          format: url
+          description: >-
+            The link to the last page of results containing [size] results. This
+            link includes the page, size, filter, orderBy and fields query
+            parameters. If this is the first page in the result set then this
+            will be [null].
+        prev:
+          type: string
+          format: url
+          description: >-
+            The link to the previous page of results containing [size] results.
+            This link includes the page, size, filter, orderBy and fields query
+            parameters. If this is the first page in the result set then this
+            will be [null].
+        next:
+          type: string
+          format: url
+          description: >-
+            The link to the next page of results containing [size] results. This
+            link includes the page, size, filter, orderBy and fields query
+            parameters. If this is the last page in the result set then this will
+            be [null].
+
+
+    #endregion
+
