@@ -1,5 +1,5 @@
 [![CircleCI](https://circleci.com/gh/GrindrodBank/A3S.svg?style=svg)](https://circleci.com/gh/GrindrodBank/A3S)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FGrindrodBank%2FA3S.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FGrindrodBank%2FA3S?ref=badge_shield)
+<!-- [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FGrindrodBank%2FA3S.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FGrindrodBank%2FA3S?ref=badge_shield) -->
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=A3S&metric=alert_status)](https://sonarcloud.io/dashboard?id=A3S)
 
 # A3S
