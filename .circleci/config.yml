@@ -5,7 +5,7 @@
 # **************************************************
 #
 
-# Orbs need to be enabled as a security setting.
+# Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle admin.
 version: 2.1
 orbs:
   newman: postman/newman@0.0.2
