@@ -8,7 +8,7 @@
 # Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle CI admin.
 version: 2.1
 orbs:
-  newman: postman/newman@0.0.2
+  newman: postman/newman@1.0.0
 jobs:
   static-analysis:
     docker:
@@ -167,7 +167,7 @@ workflows:
     jobs:
       - unit-test
       - static-analysis
-      #- vulnerability-test
+      - vulnerability-test
       - license-headers
       - fossa-scan:
           filters:
