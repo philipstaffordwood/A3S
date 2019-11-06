@@ -16,14 +16,8 @@
       <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
       <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.0" PrivateAssets="all">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" PrivateAssets="All" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.4" />
     <PackageReference Include="IdentityServer4.EntityFramework" Version="2.5.3" />
-    <PackageReference Include="MailKit" Version="2.3.2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
@@ -33,20 +27,9 @@
     <Folder Include="Stores\" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="identityserver4_log.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Remove="Views\Account\Verify2FAOtp.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Update="nlog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Services\Rfc6238AuthenticationService.cs" />
-    <Compile Remove="Data\A3SContext.cs" />
-    <Compile Remove="Repositories\IUserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\za.co.grindrodbank.a3s\Models\PermissionModel.cs">
