@@ -175,7 +175,10 @@ workflows:
       - static-analysis
       - vulnerability-test
       - license-headers
-      - fossa-scan
+      - fossa-scan:
+          filters:    
+            branches:    
+              only: master
       #- postman-integration-tests
       - a3s-docker-build-push:
           requires:
