@@ -64,8 +64,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// The application data policies that are applied to this team.
         /// </summary>
         /// <value>The application data policies that are applied to this team.</value>
-        [DataMember(Name="dataPolicies", EmitDefaultValue=false)]
-        public List<Guid> DataPolicies { get; set; }
+        [DataMember(Name="dataPolicyIds", EmitDefaultValue=false)]
+        public List<Guid> DataPolicyIds { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -79,7 +79,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  TeamIds: ").Append(TeamIds).Append("\n");
-            sb.Append("  DataPolicies: ").Append(DataPolicies).Append("\n");
+            sb.Append("  DataPolicyIds: ").Append(DataPolicyIds).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -138,10 +138,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     TeamIds.SequenceEqual(other.TeamIds)
                 ) && 
                 (
-                    DataPolicies == other.DataPolicies ||
-                    DataPolicies != null &&
-                    other.DataPolicies != null &&
-                    DataPolicies.SequenceEqual(other.DataPolicies)
+                    DataPolicyIds == other.DataPolicyIds ||
+                    DataPolicyIds != null &&
+                    other.DataPolicyIds != null &&
+                    DataPolicyIds.SequenceEqual(other.DataPolicyIds)
                 );
         }
 
@@ -163,8 +163,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Description.GetHashCode();
                     if (TeamIds != null)
                     hashCode = hashCode * 59 + TeamIds.GetHashCode();
-                    if (DataPolicies != null)
-                    hashCode = hashCode * 59 + DataPolicies.GetHashCode();
+                    if (DataPolicyIds != null)
+                    hashCode = hashCode * 59 + DataPolicyIds.GetHashCode();
                 return hashCode;
             }
         }

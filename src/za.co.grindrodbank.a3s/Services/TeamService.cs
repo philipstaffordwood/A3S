@@ -43,7 +43,7 @@ namespace za.co.grindrodbank.a3s.Services
                 teamModel.ChangedBy = createdById;
 
                 await AssignTeamsToTeamFromTeamIdList(teamModel, teamSubmit.TeamIds);
-                await AssignApplicationDataPoliciesToTeamFromDataPolicyIdList(teamModel, teamSubmit.DataPolicies);
+                await AssignApplicationDataPoliciesToTeamFromDataPolicyIdList(teamModel, teamSubmit.DataPolicyIds);
 
                 // All successful
                 CommitAllTransactions();
@@ -94,7 +94,7 @@ namespace za.co.grindrodbank.a3s.Services
                 existingTeam.ChangedBy = updatedById;
 
                 await AssignTeamsToTeamFromTeamIdList(existingTeam, teamSubmit.TeamIds);
-                await AssignApplicationDataPoliciesToTeamFromDataPolicyIdList(existingTeam, teamSubmit.DataPolicies);
+                await AssignApplicationDataPoliciesToTeamFromDataPolicyIdList(existingTeam, teamSubmit.DataPolicyIds);
 
                 // All successful
                 CommitAllTransactions();

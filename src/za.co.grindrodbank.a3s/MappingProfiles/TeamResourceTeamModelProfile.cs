@@ -19,7 +19,7 @@ namespace za.co.grindrodbank.a3s.MappingProfiles
             CreateMap<TeamModel, Team>().ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id))
                                         .ForMember(dest => dest.TeamIds, opt => opt.MapFrom(src => src.ChildTeams.Select(ct => ct.ChildTeam.Id)))
                                         .ForMember(dest => dest.UserIds, opt => opt.MapFrom(src => src.UserTeams.Select(ut => ut.User.Id)))
-                                        .ForMember(dest => dest.DataPolicies, opt => opt.MapFrom(src => src.ApplicationDataPolicies.Select(tdp => tdp.ApplicationDataPolicy.Id)));
+                                        .ForMember(dest => dest.DataPolicyIds, opt => opt.MapFrom(src => src.ApplicationDataPolicies.Select(tdp => tdp.ApplicationDataPolicy.Id)));
         }
     }
 }
