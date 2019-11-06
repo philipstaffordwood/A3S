@@ -128,11 +128,6 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             {
                 Uuid = Guid.NewGuid(),
                 Name = "Test Role Name",
-                UserIds = new List<Guid>()
-                {
-                    new Guid(),
-                    new Guid()
-                }, 
                 FunctionIds = new List<Guid>()
                 {
                     new Guid(),
@@ -145,7 +140,6 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
                 {
                     Uuid = inputModel.Uuid,
                     Name = inputModel.Name,
-                    UserIds = inputModel.UserIds,
                     FunctionIds = inputModel.FunctionIds
                 }
                 );
@@ -163,9 +157,6 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             Assert.NotNull(role);
             Assert.True(role.Uuid == inputModel.Uuid, $"Retrieved Id {role.Uuid} not the same as sample id {inputModel.Uuid}.");
             Assert.True(role.Name == inputModel.Name, $"Retrieved Name {role.Name} not the same as sample Name {inputModel.Name}.");
-            Assert.True(role.UserIds.Count == 2, $"Retrieved UserIds count {role.UserIds.Count} not the same as sample UserIds count {inputModel.UserIds.Count}.");
-            Assert.True(role.UserIds[0] == inputModel.UserIds[0], $"Retrieved user id {role.UserIds[0]} not the same as sample user id {inputModel.UserIds[0]}.");
-            Assert.True(role.UserIds[1] == inputModel.UserIds[1], $"Retrieved user id {role.UserIds[1]} not the same as sample user id {inputModel.UserIds[1]}.");
             Assert.True(role.FunctionIds[0] == inputModel.FunctionIds[0], $"Retrieved function id {role.FunctionIds[0]} not the same as sample function id {inputModel.FunctionIds[0]}.");
             Assert.True(role.FunctionIds[1] == inputModel.FunctionIds[1], $"Retrieved function id {role.FunctionIds[1]} not the same as sample function id {inputModel.FunctionIds[1]}.");
         }
