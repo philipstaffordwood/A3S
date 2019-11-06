@@ -45,7 +45,6 @@ namespace za.co.grindrodbank.a3s.Services
                 RoleModel newRole = mapper.Map<RoleModel>(roleSubmit);
                 newRole.ChangedBy = createdById;
 
-                await AssignUsersToRoleFromUserIdList(newRole, roleSubmit.UserIds);
                 await AssignFunctionsToRoleFromFunctionIdList(newRole, roleSubmit.FunctionIds);
                 await AssignRolesToRoleFromRolesIdList(newRole, roleSubmit.RoleIds);
 
@@ -98,7 +97,6 @@ namespace za.co.grindrodbank.a3s.Services
                 role.Description = roleSubmit.Description;
                 role.ChangedBy = updatedById;
 
-                await AssignUsersToRoleFromUserIdList(role, roleSubmit.UserIds);
                 await AssignFunctionsToRoleFromFunctionIdList(role, roleSubmit.FunctionIds);
                 await AssignRolesToRoleFromRolesIdList(role, roleSubmit.RoleIds);
 
@@ -112,32 +110,6 @@ namespace za.co.grindrodbank.a3s.Services
                 logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
-            }
-        }
-
-        private async Task AssignUsersToRoleFromUserIdList(RoleModel role, List<Guid> userIds)
-        {
-            // The user associations for this role are going to be created or overwritten, its easier to rebuild it that apply a diff.
-            role.UserRoles = new List<UserRoleModel>();
-
-            if (userIds != null && userIds.Count > 0)
-            {
-                foreach (var userId in userIds)
-                {
-                    var user = await userRepository.GetByIdAsync(userId, false);
-
-                    if (user == null)
-                    {
-                        logger.Warn($"Unable to find a user with ID: '{userId}' when attempting to assign the user to role '{role.Name}'.");
-                        break;
-                    }
-
-                    role.UserRoles.Add(new UserRoleModel
-                    {
-                        Role = role,
-                        User = user
-                    });
-                }
             }
         }
 
