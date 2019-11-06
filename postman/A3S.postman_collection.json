@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bc395d90-1989-404f-a118-5b9b728d4329",
+		"_postman_id": "f16141ec-6f36-476f-97dc-0de934e9b550",
 		"name": "A3S",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -653,7 +653,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"test-role-new\",\n    \"userIds\": [\"{{user-guid}}\"],\n    \"description\": \"Test new role description\",\n    \"functionIds\": [\"{{function-guid}}\"],\n    \"roleIds\": []\n}"
+							"raw": "{\n    \"name\": \"test-role-new\",\n    \"description\": \"Test new role description\",\n    \"functionIds\": [\"{{function-guid}}\"],\n    \"roleIds\": []\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/roles",

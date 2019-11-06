@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "d57388c0-41ab-4475-8cdb-ab4ed0f1f679",
+		"_postman_id": "bc02515e-5673-40fc-b67f-377ee7a2f7cb",
 		"name": "A3S - Pipeline",
 		"description": "A Postman collection desgined to be executed remotely using Newman within the CI/CD context.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -2145,7 +2145,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"uuid\": \"{{role-guid}}\",\n    \"name\": \"test-role-new\",\n    \"description\" : \"test-role-description-updated\",\n    \"userIds\": [],\n    \"roleIds\": [],\n    \"functionIds\": []\n}"
+							"raw": "{\n\t\"uuid\": \"{{role-guid}}\",\n    \"name\": \"test-role-new\",\n    \"description\" : \"test-role-description-updated\",\n    \"roleIds\": [],\n    \"functionIds\": []\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/roles/{{role-guid}}",
@@ -2289,7 +2289,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"test-role-updated\",\n    \"description\" : \"test-updated-role-description\",\n    \"functionIds\": [],\n    \"userIds\": [],\n    \"roleIds\": []\n}"
+							"raw": "{\n    \"name\": \"test-role-updated\",\n    \"description\" : \"test-updated-role-description\",\n    \"functionIds\": [],\n    \"roleIds\": []\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/roles/{{role-guid}}",
@@ -2386,7 +2386,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"uuid\": \"{{role-guid}}\",\n    \"name\": \"test-role-updated\",\n    \"description\" : \"test-role-description-updated\",\n    \"userIds\": [],\n    \"roleIds\": [],\n    \"functionIds\": []\n}"
+							"raw": "{\n\t\"uuid\": \"{{role-guid}}\",\n    \"name\": \"test-role-updated\",\n    \"description\" : \"test-role-description-updated\",\n    \"roleIds\": [],\n    \"functionIds\": []\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/roles/{{role-guid}}",
