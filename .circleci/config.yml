@@ -169,7 +169,7 @@ jobs:
       - run: sudo snyk monitor --file=A3Service.sln || true
 workflows:
   version: 2
-  build_test_and_push:
+  untagged_build_test:
     jobs:
       - unit-test
       - static-analysis
@@ -179,6 +179,14 @@ workflows:
           filters:    
             branches:    
               only: master
+      
+  tagged_build_push:
+    jobs:
+      - unit-test: *only-tags
+      - static-analysis: *only-tags
+      - vulnerability-test: *only-tags
+      - license-headers: *only-tags
+      - fossa-scan: *only-tags
       #- postman-integration-tests
       - a3s-docker-build-push:
           requires:
