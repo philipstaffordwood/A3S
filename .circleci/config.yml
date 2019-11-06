@@ -101,12 +101,12 @@ jobs:
       # build and push A3S Docker image to dockerhub.
       - run: |
           # TAG=0.0.1 - tag should be derived from Git.
-          docker build -t grindrodbank/a3s:latest -f a3s-Dockerfile .     
+          docker build -t grindrodbank/a3s:$CIRCLE_TAG -f a3s-Dockerfile .     
           docker login -u $DOCKER_USER -p $DOCKER_PASS
-          docker push grindrodbank/a3s:latest
+          docker push grindrodbank/a3s:$CIRCLE_TAG
           # Tag and push latest
-          #docker tag grindrodbank/a3s:latest grindrodbank/a3s:latest
-          #docker push grindrodbank/a3s:latest
+          docker tag grindrodbank/a3s:$CIRCLE_TAG grindrodbank/a3s:latest
+          docker push grindrodbank/a3s:latest
 
   a3s-ids4-docker-build-push:
     docker:
@@ -118,13 +118,12 @@ jobs:
           docker_layer_caching: false
       # build and push A3S identity Sever Docker image to dockerhub.
       - run: |
-          # TAG=0.0.1 - tag should be derived from Git.
-          docker build -t grindrodbank/a3s-identity-server:latest -f a3s-identity-server-Dockerfile .     
+          docker build -t grindrodbank/a3s-identity-server:$CIRCLE_TAG -f a3s-identity-server-Dockerfile .     
           docker login -u $DOCKER_USER -p $DOCKER_PASS
-          docker push grindrodbank/a3s-identity-server:latest
+          docker push grindrodbank/a3s-identity-server:$CIRCLE_TAG
           # Tag and push latest
-          #docker tag grindrodbank/a3s-identity-server:$TAG grindrodbank/a3s-identity-server:latest
-          #docker push grindrodbank/a3s-identity-server:latest
+          docker tag grindrodbank/a3s-identity-server:$CIRCLE_TAG grindrodbank/a3s-identity-server:latest
+          docker push grindrodbank/a3s-identity-server:latest
 
   fossa-scan:
     docker:
@@ -172,7 +171,7 @@ workflows:
       - fossa-scan:
           filters:
             # tags:
-            #   only: /^v*.*.*/
+            #   only: /^v.*/
             branches:
               only: master
       #- postman-integration-tests
@@ -183,11 +182,10 @@ workflows:
           - license-headers
           #- postman-integration-tests
           filters:
-            # tags:
-            #   only: /^v*.*.*/
-            # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
-            branches:
-              only: master
+            tags:
+              only: /^v.*/
+            # branches:
+            #   only: master
       - a3s-ids4-docker-build-push:
           requires:
           - unit-test
@@ -195,8 +193,8 @@ workflows:
           - license-headers
           #- postman-integration-tests
           filters:
-            # tags:
-            #   only: /^v*.*.*/
+            tags:
+              only: /^v.*/
             # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
-            branches:
-              only: master
+            # branches:
+            #   only: master
