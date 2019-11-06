@@ -9,8 +9,6 @@ only-tags: &only-tags
   filters:
     tags:
       only: /^.*/
-    branches:
-      ignore: /.*/
 
 # Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle CI admin.
 version: 2.1
