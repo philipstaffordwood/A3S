@@ -5,6 +5,13 @@
 # **************************************************
 #
 
+only-tags: &only-tags
+  filters:
+    tags:
+      only: /^.*/
+    branches:
+      ignore: /.*/
+
 # Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle CI admin.
 version: 2.1
 orbs:
@@ -181,9 +188,7 @@ workflows:
           - static-analysis
           - license-headers
           #- postman-integration-tests
-          filters:
-            tags:
-              only: /^v.*/
+          <<: *only-tags
             # branches:
             #   only: master
       - a3s-ids4-docker-build-push:
@@ -192,9 +197,7 @@ workflows:
           - static-analysis
           - license-headers
           #- postman-integration-tests
-          filters:
-            tags:
-              only: /^v.*/
+          <<: *only-tags
             # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
             # branches:
             #   only: master
