@@ -178,6 +178,7 @@ workflows:
       - static-analysis
       - vulnerability-test
       - license-headers
+      - postman-integration-tests
       - fossa-scan:
           filters:    
             branches:    
