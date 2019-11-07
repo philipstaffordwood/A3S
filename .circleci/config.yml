@@ -77,9 +77,6 @@ jobs:
     # Use a Linux VM instead of docker environment. This is crucial for successful mounting of file systems into docker containers.
     # Note: Not specifying an image (for the machine) results in the circleci:classic image being pulled in. This contains docker-compose on it already.
     machine: true
-    # hosts:
-    #   a3s-identity-servert: 127.0.0.1
-    #   open-ldap: 127.0.0.1
     working_directory: ~/repo
     steps:
       # Install NPM.
@@ -91,8 +88,6 @@ jobs:
       # Add the required hostname entries for the integration tests.
       - run: echo 127.0.0.1 a3s-identity-server | sudo tee -a /etc/hosts
       - run: echo 127.0.0.1 open-ldap | sudo tee -a /etc/hosts
-      # - run: sudo echo "127.0.0.1 a3s-identity-server" >> /etc/hosts
-      # - run: sudo echo "127.0.0.1 open-ldap" >> /etc/hosts
       # Checkout the repository
       - checkout
       # # Build the two required docker images into the local docker image repo from this version of the code.
@@ -106,9 +101,6 @@ jobs:
       - run: sleep 5
       # # Run the Newman orb to execute the collection against the quickstart environment.
       - run: newman run ~/repo/postman/A3S-pipeline.postman_collection.json -r cli -e ~/repo/postman/A3S-quickstart.postman_environment.json
-      # - newman/newman-run:
-      #     collection: "~/repo/postman/A3S-pipeline.postman_collection.json"
-      #     environment: "~/repo/postman/A3S-quickstart.postman_environment.json"
 
   a3s-docker-build-push:
     docker:
