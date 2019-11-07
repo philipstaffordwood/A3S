@@ -83,9 +83,9 @@ jobs:
     # Use a Linux VM instead of docker environment. This is crucial for successful mounting of file systems into docker containers.
     # Note: Not specifying an image (for the machine) results in the circleci:classic image being pulled in. This contains docker-compose on it already.
     machine: true
-      hosts:
-        a3s-identity-servert: 127.0.0.1
-        open-ldap: 127.0.0.1
+    hosts:
+      a3s-identity-servert: 127.0.0.1
+      open-ldap: 127.0.0.1
     working_directory: ~/repo
     steps:
       # Install NPM.
