@@ -1,0 +1,5372 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "description" : "API Definition for the A3S. This service allows authentication, authorisation and accounting.",
+    "title" : "A3S",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "paths" : {
+    "/users" : {
+      "get" : {
+        "description" : "Search for users.",
+        "operationId" : "listUsers",
+        "parameters" : [ {
+          "description" : "Whether to fill in the teams member field",
+          "explode" : true,
+          "in" : "query",
+          "name" : "teams",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Whether to fill in the roles member field",
+          "explode" : true,
+          "in" : "query",
+          "name" : "roles",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Whether to fill in the functions member field",
+          "explode" : true,
+          "in" : "query",
+          "name" : "functions",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "If this field is set, translate all applicable fields to a specific locale\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "locale",
+          "required" : false,
+          "schema" : {
+            "default" : "en",
+            "example" : "[\"en-za\",\"en-us\",\"af-za\",\"en\"]",
+            "maxLength" : 5,
+            "minLength" : 2,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The page to view.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The size of a page.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 10,
+            "format" : "int32",
+            "maximum" : 20,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the User's name.",
+          "example" : "FilterByEntityType",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterName",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the User's username",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterUsername",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
+          "explode" : false,
+          "in" : "query",
+          "name" : "orderBy",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/User"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK",
+            "headers" : {
+              "X-Pagination" : {
+                "description" : "Pagination header.",
+                "explode" : false,
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationHeaderResponse"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden -  You are not authorized to access the list of users."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "User list not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Search for users.",
+        "tags" : [ "User" ]
+      },
+      "post" : {
+        "description" : "Create a new User.",
+        "operationId" : "createUser",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserSubmit"
+                }
+              }
+            },
+            "description" : "Successful. User created."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Invalid parameters."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - Not authorized to create a user."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Related user entity (such as role or team) not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible entity. The request was correctly structured, but some business rules were violated, preventing the user creation."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Create a User.",
+        "tags" : [ "User" ]
+      }
+    },
+    "/users/{userId}" : {
+      "delete" : {
+        "description" : "Mark a user as deleted.",
+        "operationId" : "deleteUser",
+        "parameters" : [ {
+          "description" : "The user to delete.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "userId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UserId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Invalid parameters."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - Not authorized to delete users."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "User not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Delete a user.",
+        "tags" : [ "User" ]
+      },
+      "get" : {
+        "description" : "Get a user.",
+        "operationId" : "getUser",
+        "parameters" : [ {
+          "description" : "The UUID of the user",
+          "explode" : false,
+          "in" : "path",
+          "name" : "userId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UserId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/User"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access this user."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "User not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Get a user by its UUID.",
+        "tags" : [ "User" ]
+      },
+      "put" : {
+        "description" : "Update a user and its associations to teams and roles.",
+        "operationId" : "updateUser",
+        "parameters" : [ {
+          "description" : "The user to update.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "userId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UserId"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/User"
+                }
+              }
+            },
+            "description" : "Successful. User Updated."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Invalid parameters."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - Not authorized to update users."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "User or related entity not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible entity. The request was correctly structured, but some business rules were violated, preventing the user update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Update a user.",
+        "tags" : [ "User" ]
+      }
+    },
+    "/users/{userId}/changePassword" : {
+      "put" : {
+        "description" : "Change a user password.",
+        "operationId" : "changeUserPassword",
+        "parameters" : [ {
+          "description" : "The UUID of the user.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "userId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UserId"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserPasswordChangeSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized update user passwords."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "User not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Change a user password.",
+        "tags" : [ "User" ]
+      }
+    },
+    "/roles" : {
+      "get" : {
+        "description" : "Search for Roles.",
+        "operationId" : "listRoles",
+        "parameters" : [ {
+          "description" : "Whether to fill in the users member field",
+          "explode" : true,
+          "in" : "query",
+          "name" : "users",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The page to view.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The size of a page.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 10,
+            "format" : "int32",
+            "maximum" : 20,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the role's description.",
+          "example" : "FilterByEntityType",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterDescription",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
+          "explode" : false,
+          "in" : "query",
+          "name" : "orderBy",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Role"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK.",
+            "headers" : {
+              "X-Pagination" : {
+                "description" : "Pagination header.",
+                "explode" : false,
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationHeaderResponse"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the list of roles."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Roles list not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Search for Roles.",
+        "tags" : [ "Role" ]
+      },
+      "post" : {
+        "description" : "Create a new Role.",
+        "operationId" : "createRole",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RoleSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RoleSubmit"
+                }
+              }
+            },
+            "description" : "Successful. Role created."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Invalid parameters."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - Not authorized to create a Role."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Role related entity not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the creation of the role."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Create a Role.",
+        "tags" : [ "Role" ]
+      }
+    },
+    "/roles/{roleId}" : {
+      "get" : {
+        "description" : "Get a role by its UUID.",
+        "operationId" : "getRole",
+        "parameters" : [ {
+          "description" : "The UUID of the role.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "roleId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/RoleId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Role"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access this role."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Role not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred"
+          }
+        },
+        "summary" : "Get a role.",
+        "tags" : [ "Role" ]
+      },
+      "put" : {
+        "description" : "Update a role by its UUID.",
+        "operationId" : "updateRole",
+        "parameters" : [ {
+          "description" : "The UUID of the role.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "roleId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/RoleId"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/RoleSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Role"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update a role."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Role related entity not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the updating of the role."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Update a role.",
+        "tags" : [ "Role" ]
+      }
+    },
+    "/teams" : {
+      "get" : {
+        "description" : "Search for teams.",
+        "operationId" : "listTeams",
+        "parameters" : [ {
+          "description" : "Whether to fill in the users member field",
+          "explode" : true,
+          "in" : "query",
+          "name" : "users",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Whether to fill in the teams member field",
+          "explode" : true,
+          "in" : "query",
+          "name" : "teams",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "Whether to fill in the policies member field",
+          "explode" : true,
+          "in" : "query",
+          "name" : "policies",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The page to view.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The size of a page.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 10,
+            "format" : "int32",
+            "maximum" : 20,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the team's description",
+          "example" : "FilterByEntityType",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterDesciption",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
+          "explode" : false,
+          "in" : "query",
+          "name" : "orderBy",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Team"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK.",
+            "headers" : {
+              "X-Pagination" : {
+                "description" : "Pagination header.",
+                "explode" : false,
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationHeaderResponse"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the list of teams."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Teams list not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Search for teams.",
+        "tags" : [ "Team" ]
+      },
+      "post" : {
+        "description" : "Create a new team.",
+        "operationId" : "createTeam",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TeamSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Team"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to create the team."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Team related entity not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity. The request was correctly structured, but some business rules were violated, preventing the creation of the team."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred"
+          }
+        },
+        "summary" : "Creates a new team.",
+        "tags" : [ "Team" ]
+      }
+    },
+    "/teams/{teamId}" : {
+      "get" : {
+        "description" : "Get a team by its UUID.",
+        "operationId" : "getTeam",
+        "parameters" : [ {
+          "description" : "team",
+          "explode" : false,
+          "in" : "path",
+          "name" : "teamId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TeamId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Team"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the team."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Team not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Get a team.",
+        "tags" : [ "Team" ]
+      },
+      "put" : {
+        "description" : "Update a team by its UUID.",
+        "operationId" : "updateTeam",
+        "parameters" : [ {
+          "description" : "The UUID of the team.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "teamId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TeamId"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TeamSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Team"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update the team."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Teams not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The requests was correctly structured, but some business rules were violated, preventing the update."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Update a team.",
+        "tags" : [ "Team" ]
+      }
+    },
+    "/policies" : {
+      "get" : {
+        "description" : "Search for policies",
+        "operationId" : "listPolicies",
+        "parameters" : [ {
+          "description" : "The size of a page.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 10,
+            "format" : "int32",
+            "maximum" : 20,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the description",
+          "example" : "FilterByEntityType",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterDescription",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
+          "explode" : false,
+          "in" : "query",
+          "name" : "orderBy",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Team"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK",
+            "headers" : {
+              "X-Pagination" : {
+                "description" : "Pagination header.",
+                "explode" : false,
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationHeaderResponse"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the list of policies."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Policy list not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Search for policies",
+        "tags" : [ "Policy" ]
+      }
+    },
+    "/policies/{policyId}" : {
+      "get" : {
+        "description" : "Get a policy by its UUID.",
+        "operationId" : "getPolicy",
+        "parameters" : [ {
+          "description" : "policy",
+          "explode" : false,
+          "in" : "path",
+          "name" : "policyId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/PolicyId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Policy"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the policy."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Policy not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Get a policy.",
+        "tags" : [ "Policy" ]
+      },
+      "put" : {
+        "description" : "Update a policy by its UUID.",
+        "operationId" : "updatePolicy",
+        "parameters" : [ {
+          "description" : "The UUID of the policy.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "policyId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/PolicyId"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/PolicySubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Policy"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update the policy."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Policy not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Update a policy.",
+        "tags" : [ "Policy" ]
+      }
+    },
+    "/applications" : {
+      "get" : {
+        "description" : "Search for applications.",
+        "operationId" : "listApplications",
+        "parameters" : [ {
+          "description" : "If this field is set, then fill in the permissions member field\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "permissions",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The page to view.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The size of a page.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 10,
+            "format" : "int32",
+            "maximum" : 20,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the description",
+          "example" : "FilterByEntityType",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterDescription",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
+          "explode" : false,
+          "in" : "query",
+          "name" : "orderBy",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Application"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK",
+            "headers" : {
+              "X-Pagination" : {
+                "description" : "Pagination header.",
+                "explode" : false,
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationHeaderResponse"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the list of applications."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Application list not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Search for applications.",
+        "tags" : [ "Application" ]
+      }
+    },
+    "/permissions" : {
+      "get" : {
+        "description" : "Search for permissions.",
+        "operationId" : "listPermissions",
+        "parameters" : [ {
+          "description" : "The page to view.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The size of a page.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 10,
+            "format" : "int32",
+            "maximum" : 20,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the description",
+          "example" : "FilterByEntityType",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterDescription",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
+          "explode" : false,
+          "in" : "query",
+          "name" : "orderBy",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Permission"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK",
+            "headers" : {
+              "X-Pagination" : {
+                "description" : "Pagination header.",
+                "explode" : false,
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationHeaderResponse"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the list of permissions."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Permission list not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Search for permissions.",
+        "tags" : [ "Permission" ]
+      }
+    },
+    "/permissions/{permissionId}" : {
+      "get" : {
+        "description" : "Get a permission by its UUID.",
+        "operationId" : "getPermission",
+        "parameters" : [ {
+          "description" : "permission",
+          "explode" : false,
+          "in" : "path",
+          "name" : "permissionId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/PermissionId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Permission"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the permission."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Permission not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred"
+          }
+        },
+        "summary" : "Get a permission.",
+        "tags" : [ "Permission" ]
+      }
+    },
+    "/functions" : {
+      "get" : {
+        "description" : "Search for functions.",
+        "operationId" : "listFunctions",
+        "parameters" : [ {
+          "description" : "If this field is set, then the permission list is filled in\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "permissions",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The page to view.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The size of a page.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 10,
+            "format" : "int32",
+            "maximum" : 20,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the description",
+          "example" : "FilterByEntityType",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterDescription",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
+          "explode" : false,
+          "in" : "query",
+          "name" : "orderBy",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/Function"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK",
+            "headers" : {
+              "X-Pagination" : {
+                "description" : "Pagination header.",
+                "explode" : false,
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationHeaderResponse"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the list of functions."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Function list not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Search for functions.",
+        "tags" : [ "Function" ]
+      },
+      "post" : {
+        "description" : "Create a new function.",
+        "operationId" : "createFunction",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/FunctionSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Function"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to create functions."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Function related entity (such as permissions) not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Create a new function.",
+        "tags" : [ "Function" ]
+      }
+    },
+    "/functions/{functionId}" : {
+      "delete" : {
+        "description" : "Deletes a function from A3S.",
+        "operationId" : "deleteFunction",
+        "parameters" : [ {
+          "description" : "The UUID of the function to delete.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "functionId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/FunctionId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Invalid parameters."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - Not authorized to delete functions."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Function not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Delete a function.",
+        "tags" : [ "Function" ]
+      },
+      "get" : {
+        "description" : "Get a function by its UUID.",
+        "operationId" : "getFunction",
+        "parameters" : [ {
+          "description" : "function",
+          "explode" : false,
+          "in" : "path",
+          "name" : "functionId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/FunctionId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Function"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the function."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Function not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Get a function.",
+        "tags" : [ "Function" ]
+      },
+      "put" : {
+        "description" : "Update a function by its UUID.",
+        "operationId" : "updateFunction",
+        "parameters" : [ {
+          "description" : "The UUID of the function.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "functionId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/FunctionId"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/FunctionSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Function"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "204" : {
+            "description" : "No Content."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update the function."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Functions not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Update a function.",
+        "tags" : [ "Function" ]
+      }
+    },
+    "/applicationFunctions" : {
+      "get" : {
+        "description" : "Search for application functions.",
+        "operationId" : "listApplicationFunctions",
+        "parameters" : [ {
+          "description" : "If this field is set, then the permission list is filled in\n",
+          "explode" : true,
+          "in" : "query",
+          "name" : "permissions",
+          "required" : false,
+          "schema" : {
+            "default" : false,
+            "type" : "boolean"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The page to view.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The size of a page.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 10,
+            "format" : "int32",
+            "maximum" : 20,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the description",
+          "example" : "FilterByEntityType",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterDescription",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
+          "explode" : false,
+          "in" : "query",
+          "name" : "orderBy",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/ApplicationFunction"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK.",
+            "headers" : {
+              "X-Pagination" : {
+                "description" : "Pagination header.",
+                "explode" : false,
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationHeaderResponse"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the list of functions."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Application list not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Search for application functions.",
+        "tags" : [ "Application Function" ]
+      }
+    },
+    "/securityContracts" : {
+      "get" : {
+        "description" : "Returns the entire security contract for the current state of A3S.",
+        "operationId" : "getSecurityContract",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/x-yaml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SecurityContract"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SecurityContract"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "204" : {
+            "description" : "No Content."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the security contract."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Security contract not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Returns the entire security contract.",
+        "tags" : [ "SecurityContract" ]
+      },
+      "put" : {
+        "description" : "Idempotently applies a security contract definition to the A3S instance.",
+        "operationId" : "applySecurityContract",
+        "requestBody" : {
+          "content" : {
+            "application/x-yaml" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SecurityContract"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/x-yaml" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SecurityContract"
+                }
+              },
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SecurityContract"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "204" : {
+            "description" : "No Content."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible Entity - The security contract was correctly structured, but there are business rule or constraint violations, preventing it from being applied."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - Not authorized to apply Security Contracts."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Idempotently applies a security contract definition.",
+        "tags" : [ "SecurityContract" ]
+      }
+    },
+    "/authenticationModes/ldap" : {
+      "get" : {
+        "description" : "Search for LDAP Authentication Modes.",
+        "operationId" : "listLdapAuthenticationModes",
+        "parameters" : [ {
+          "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
+          "explode" : false,
+          "in" : "query",
+          "name" : "orderBy",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/LdapAuthenticationMode"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK",
+            "headers" : {
+              "X-Pagination" : {
+                "description" : "Pagination header.",
+                "explode" : false,
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationHeaderResponse"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "204" : {
+            "description" : "No Content."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the list of LDAP Authentication modes."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "LDAP Authentication mode list not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Search for LDAP Authentication Modes.",
+        "tags" : [ "LdapAuthenticationMode" ]
+      },
+      "post" : {
+        "description" : "Create a new LDAP Authentication Mode.",
+        "operationId" : "createLdapAuthenticationMode",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LdapAuthenticationModeSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LdapAuthenticationMode"
+                }
+              }
+            },
+            "description" : "Successful. LDAP Authentication Mode created."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Invalid parameters."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - Not authorized to create a LDAP Authentication Mode."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "LDAP Authentication mode not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible request. The request was correctly structured but some business rules were violated, preventing the creation of the LDAP Authentication Mode."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Create a LDAP Authentication Mode.",
+        "tags" : [ "LdapAuthenticationMode" ]
+      }
+    },
+    "/authenticationModes/ldap/{ldapAuthenticationModeId}" : {
+      "delete" : {
+        "description" : "Deletes a LDAP Authentication Mode, but only if there are no users currently using this Authentication Mode.",
+        "operationId" : "deleteLdapAuthenticationMode",
+        "parameters" : [ {
+          "description" : "The UUID of the LDAP Authentication Mode.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "ldapAuthenticationModeId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/LdapAuthenticationModeId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to delete LDAP Authentication Modes."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "LDAP Authentication Mode not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible request. Most likely returned as a result of there still being users assigned to the LDAP Auth Mode that a deletion attempt was made for."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Deletes a LDAP Authentication Mode.",
+        "tags" : [ "LdapAuthenticationMode" ]
+      },
+      "get" : {
+        "description" : "Get a ldapAuthenticationMode by its UUID",
+        "operationId" : "getLdapAuthenticationMode",
+        "parameters" : [ {
+          "description" : "The UUID of the LDAP Authentication Mode.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "ldapAuthenticationModeId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/LdapAuthenticationModeId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LdapAuthenticationMode"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to read LDAP Authentication Modes."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "LDAP Auth Mode not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Get a ldapAuthenticationMode",
+        "tags" : [ "LdapAuthenticationMode" ]
+      },
+      "put" : {
+        "description" : "Update a LDAP Authentication Mode by its UUID.",
+        "operationId" : "updateLdapAuthenticationMode",
+        "parameters" : [ {
+          "description" : "The UUID of the LDAP Authentication Mode.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "ldapAuthenticationModeId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/LdapAuthenticationModeId"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LdapAuthenticationModeSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LdapAuthenticationMode"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update LDAP Authentication Modes."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "LDAP Authentication Mode not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Non-Processible request. The request was correctly structured but some business rules were violated, preventing the update of the LDAP Authentication Mode."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Update a LDAP Authentication Mode.",
+        "tags" : [ "LdapAuthenticationMode" ]
+      }
+    },
+    "/authenticationModes/ldap/test" : {
+      "post" : {
+        "description" : "Test a LDAP Authentication Mode.",
+        "operationId" : "testLdapAuthenticationMode",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/LdapAuthenticationModeSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/LdapAuthenticationModeTestResult"
+                }
+              }
+            },
+            "description" : "Successful. LDAP Authentication Model successfully tested."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Invalid parameters."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - Not authorized to test a LDAP Authentication Mode."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "LDAP Authentication Mode not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Test a LDAP Authentication Mode.",
+        "tags" : [ "LdapAuthenticationMode" ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "PolicyType" : {
+        "description" : "Enumeration to describe with what policy type you're busy with\n",
+        "enum" : [ "IP", "CRON", "DATA" ],
+        "type" : "string"
+      },
+      "PolicyId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "Policy" : {
+        "description" : "A policy can be time based, IP based, role based\n",
+        "example" : {
+          "value2" : "value2",
+          "value1" : "value1",
+          "value3" : "value3",
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "value1" : {
+            "type" : "string"
+          },
+          "value2" : {
+            "type" : "string"
+          },
+          "value3" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "PolicySubmit" : {
+        "description" : "Create or update a policy\n",
+        "example" : {
+          "value2" : "value2",
+          "value1" : "value1",
+          "value3" : "value3"
+        },
+        "properties" : {
+          "value1" : {
+            "type" : "string"
+          },
+          "value2" : {
+            "type" : "string"
+          },
+          "value3" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "RoleId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "Role" : {
+        "description" : "A Role within A3S. Roles can have functions assigned to them. Roles can be assigned to users.\n",
+        "example" : {
+          "roleIds" : [ null, null ],
+          "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+          "name" : "name",
+          "description" : "description",
+          "functionIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "functionIds" : {
+            "items" : {
+              "description" : "The UUIDS of the functions assigned to this role.",
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "userIds" : {
+            "description" : "The UUIDs of the users attached to the role",
+            "items" : {
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "roleIds" : {
+            "description" : "The UUIDs of the child roles attached to the role.",
+            "items" : {
+              "$ref" : "#/components/schemas/RoleId"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "RoleSubmit" : {
+        "description" : "Model used to create or update a Role.\n",
+        "example" : {
+          "roleIds" : [ null, null ],
+          "name" : "name",
+          "description" : "description",
+          "functionIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roleIds" : {
+            "description" : "The UUIDs of the child roles attached to the role.",
+            "items" : {
+              "$ref" : "#/components/schemas/RoleId"
+            },
+            "type" : "array"
+          },
+          "functionIds" : {
+            "items" : {
+              "description" : "The UUIDS of the functions assigned to this role.",
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "description", "name", "uuid" ],
+        "type" : "object"
+      },
+      "ApplicationId" : {
+        "description" : "The UUID of an application.",
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "Application" : {
+        "description" : "An application\n",
+        "example" : {
+          "functions" : [ {
+            "permissions" : [ {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            }, {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            } ],
+            "name" : "name",
+            "description" : "description",
+            "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          }, {
+            "permissions" : [ {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            }, {
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+            } ],
+            "name" : "name",
+            "description" : "description",
+            "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          } ],
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "dataPolicies" : [ {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          }, {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          } ]
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "The UUID of an application.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "functions" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Function"
+            },
+            "type" : "array"
+          },
+          "dataPolicies" : {
+            "items" : {
+              "$ref" : "#/components/schemas/ApplicationDataPolicy"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "PermissionId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "Permission" : {
+        "description" : "Permission for an application\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "FunctionId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "Function" : {
+        "description" : "A Function - A collection of permissions to denote a piece of functionality in an application. Must be assigned to an application.\n",
+        "example" : {
+          "permissions" : [ {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          }, {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          } ],
+          "name" : "name",
+          "description" : "description",
+          "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "applicationId" : {
+            "description" : "The UUID of an application.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "permissions" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Permission"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "FunctionSubmit" : {
+        "description" : "Model used to create an new function or update an existing Function.\n",
+        "example" : {
+          "permissions" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+          "name" : "name",
+          "description" : "description",
+          "applicationId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "The name of the function.",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "A brief description of the function.",
+            "type" : "string"
+          },
+          "applicationId" : {
+            "description" : "The UUID of an application.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "permissions" : {
+            "description" : "A list of permission UUIDs that are to be added to the function.",
+            "items" : {
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "applicationId", "description", "name", "permissions", "uuid" ],
+        "type" : "object"
+      },
+      "ApplicationFunctionId" : {
+        "description" : "The UUID of an application function.",
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "ApplicationFunction" : {
+        "description" : "An Application Function - a collection of permissions to denote a piece of functionality in an application. Defined by micro-services only.\n",
+        "example" : {
+          "permissions" : [ {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          }, {
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          } ],
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "The UUID of an application function.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "The name of the application function.",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "A brief description of the application function.",
+            "type" : "string"
+          },
+          "permissions" : {
+            "description" : "An array of permissions that the application function is composed of.",
+            "items" : {
+              "$ref" : "#/components/schemas/Permission"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "UserId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "User" : {
+        "description" : "A user\n",
+        "example" : {
+          "phoneNumber" : "phoneNumber",
+          "isDeleted" : true,
+          "teams" : [ {
+            "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "dataPolicyIds" : [ null, null ],
+            "teamIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ]
+          }, {
+            "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "dataPolicyIds" : [ null, null ],
+            "teamIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ]
+          } ],
+          "surname" : "surname",
+          "roles" : [ {
+            "roleIds" : [ null, null ],
+            "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+            "name" : "name",
+            "description" : "description",
+            "functionIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          }, {
+            "roleIds" : [ null, null ],
+            "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+            "name" : "name",
+            "description" : "description",
+            "functionIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          } ],
+          "name" : "name",
+          "avatar" : "avatar",
+          "ldapAuthenticationModeId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "email" : "email",
+          "username" : "username"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "username" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "phoneNumber" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "avatar" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "isDeleted" : {
+            "description" : "True if this user is considered deleted.",
+            "type" : "boolean"
+          },
+          "ldapAuthenticationModeId" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "roles" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Role"
+            },
+            "type" : "array"
+          },
+          "teams" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Team"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "UserSubmit" : {
+        "description" : "Used to update a user\n",
+        "example" : {
+          "password" : "password",
+          "phoneNumber" : "phoneNumber",
+          "roleIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+          "surname" : "surname",
+          "name" : "name",
+          "avatar" : "avatar",
+          "ldapAuthenticationModeId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "email" : "email",
+          "teamIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+          "username" : "username"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "surname" : {
+            "type" : "string"
+          },
+          "username" : {
+            "type" : "string"
+          },
+          "password" : {
+            "description" : "A plain text password field used to create or update the user password. Required for create. If omitted on update, password will not be affected",
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "phoneNumber" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "avatar" : {
+            "nullable" : true,
+            "type" : "string"
+          },
+          "ldapAuthenticationModeId" : {
+            "format" : "uuid",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "roleIds" : {
+            "items" : {
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "teamIds" : {
+            "items" : {
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "email", "name", "surname", "username", "uuid" ],
+        "type" : "object"
+      },
+      "UserPasswordChangeSubmit" : {
+        "description" : "Used to change a user's password\n",
+        "example" : {
+          "oldPassword" : "oldPassword",
+          "newPassword" : "newPassword",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "newPasswordConfirmed" : "newPasswordConfirmed"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "newPassword" : {
+            "type" : "string"
+          },
+          "newPasswordConfirmed" : {
+            "type" : "string"
+          },
+          "oldPassword" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TeamId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "Team" : {
+        "description" : "Models a team.\n",
+        "example" : {
+          "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "dataPolicyIds" : [ null, null ],
+          "teamIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ]
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "teamIds" : {
+            "items" : {
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "userIds" : {
+            "description" : "The UUIDs of the users attached to the team",
+            "items" : {
+              "format" : "uuid",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "dataPolicyIds" : {
+            "description" : "The ID's of the application data policies that are applied to this team.",
+            "items" : {
+              "$ref" : "#/components/schemas/ApplicationDataPolicyId"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "TeamSubmit" : {
+        "description" : "Model used for creating or updating a team.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "dataPolicyIds" : [ null, null ],
+          "teamIds" : [ null, null ]
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "teamIds" : {
+            "description" : "The UUIDs of the child teams (in the case of a compound team)",
+            "items" : {
+              "$ref" : "#/components/schemas/TeamId"
+            },
+            "type" : "array"
+          },
+          "dataPolicyIds" : {
+            "description" : "The application data policies that are applied to this team.",
+            "items" : {
+              "$ref" : "#/components/schemas/ApplicationDataPolicyId"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "description", "name", "uuid" ],
+        "type" : "object"
+      },
+      "Oauth2ClientSubmit" : {
+        "description" : "Models a client definition required to create or update an Oauth2 or OpenID Connect client.\n",
+        "example" : {
+          "allowedOfflineAccess" : true,
+          "allowedGrantTypes" : [ "allowedGrantTypes", "allowedGrantTypes" ],
+          "clientId" : "clientId",
+          "clientSecrets" : [ "clientSecrets", "clientSecrets" ],
+          "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+          "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
+          "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+          "name" : "name",
+          "redirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+          "allowedScopes" : [ "allowedScopes", "allowedScopes" ]
+        },
+        "properties" : {
+          "clientId" : {
+            "description" : "The unique ID of the client.",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "Client display name. Used for logging and the consent screen.",
+            "type" : "string"
+          },
+          "allowedGrantTypes" : {
+            "description" : "The Oauth2 grant types that the client will be permitted to use.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "redirectUris" : {
+            "description" : "Specifies the allowed URIs to return tokens or authorisation codes to.",
+            "items" : {
+              "format" : "url",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "allowedCorsOrigins" : {
+            "description" : "Sets the allowed CORS origins for JavaScript clients.",
+            "items" : {
+              "format" : "url",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "postLogoutRedirectUris" : {
+            "description" : "Specifies the allowed URIs to redirect to after logout.",
+            "items" : {
+              "format" : "url",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "allowedScopes" : {
+            "description" : "Specifies the scopes that the client is allowed to access. If empty, the client cannot access any scopes.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "clientSecrets" : {
+            "description" : "Client secrets for flows (grant types) that require one.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "hashedClientSecrets" : {
+            "description" : "An optional array containing already hashed client secrets for flows (grant types) that require one. If used, the clientSecrets will be ignored.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "allowedOfflineAccess" : {
+            "description" : "Defines whether offline access with refresh tokens is permitted for this client.",
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "allowedGrantTypes", "allowedOfflineAccess", "allowedScopes", "clientId", "name" ],
+        "type" : "object"
+      },
+      "Oauth2Client" : {
+        "description" : "Models an Oauth2 or OpenID Connect client.\n",
+        "properties" : {
+          "clientId" : {
+            "description" : "The unique ID of the client.",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "Client display name. Used for logging and the consent screen.",
+            "type" : "string"
+          },
+          "allowedGrantTypes" : {
+            "description" : "The Oauth2 grant types that the client will be permitted to use.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "redirectUris" : {
+            "description" : "Specifies the allowed URIs to return tokens or authorisation codes to.",
+            "items" : {
+              "format" : "url",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "allowedCorsOrigins" : {
+            "description" : "Sets the allowed CORS origins for JavaScript clients.",
+            "items" : {
+              "format" : "url",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "postLogoutRedirectUris" : {
+            "description" : "Specifies the allowed URIs to redirect to after logout.",
+            "items" : {
+              "format" : "url",
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "allowedScopes" : {
+            "description" : "Specifies the scopes that the client is allowed to access. If empty, the client cannot access any scopes.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "allowedOfflineAccess" : {
+            "description" : "Defines whether offline access with refresh tokens is permitted for this client.",
+            "type" : "boolean"
+          }
+        },
+        "required" : [ "allowedGrantTypes", "allowedOfflineAccess", "allowedScopes", "clientId", "name" ],
+        "type" : "object"
+      },
+      "SecurityContractPermission" : {
+        "description" : "Models an application's permissions.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "The name of the application permission.",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "A description of the application permission.",
+            "type" : "string"
+          }
+        },
+        "required" : [ "description", "name" ],
+        "type" : "object"
+      },
+      "SecurityContractFunction" : {
+        "description" : "Models an application's functions. These contain permissions.\n",
+        "example" : {
+          "permissions" : [ {
+            "name" : "name",
+            "description" : "description"
+          }, {
+            "name" : "name",
+            "description" : "description"
+          } ],
+          "name" : "name",
+          "description" : "description"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "The name of the application function.",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "A description of the application function.",
+            "type" : "string"
+          },
+          "permissions" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractPermission"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "description", "name", "permissions" ],
+        "type" : "object"
+      },
+      "SecurityContractApplication" : {
+        "description" : "Models an application's functions and the corresponding permissions.\n",
+        "example" : {
+          "fullname" : "fullname",
+          "applicationFunctions" : [ {
+            "permissions" : [ {
+              "name" : "name",
+              "description" : "description"
+            }, {
+              "name" : "name",
+              "description" : "description"
+            } ],
+            "name" : "name",
+            "description" : "description"
+          }, {
+            "permissions" : [ {
+              "name" : "name",
+              "description" : "description"
+            }, {
+              "name" : "name",
+              "description" : "description"
+            } ],
+            "name" : "name",
+            "description" : "description"
+          } ],
+          "dataPolicies" : [ {
+            "name" : "name",
+            "description" : "description"
+          }, {
+            "name" : "name",
+            "description" : "description"
+          } ]
+        },
+        "properties" : {
+          "fullname" : {
+            "description" : "The name of the application function.",
+            "type" : "string"
+          },
+          "applicationFunctions" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractFunction"
+            },
+            "type" : "array"
+          },
+          "dataPolicies" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractApplicationDataPolicy"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "applicationFunctions", "fullname" ],
+        "type" : "object"
+      },
+      "SecurityContractApplicationDataPolicy" : {
+        "description" : "Models an applications data policy with the context of security contracts.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "The name of the application data policy.",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "A description of the application data policy.",
+            "type" : "string"
+          }
+        },
+        "required" : [ "description", "name", "permissions" ],
+        "type" : "object"
+      },
+      "SecurityContractDefaultConfigurationRole" : {
+        "description" : "Models a role definition within the roles section of the default configuration.\n",
+        "example" : {
+          "functions" : [ "functions", "functions" ],
+          "roles" : [ "roles", "roles" ],
+          "name" : "name",
+          "description" : "description"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "The name of the role.",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "A description of the role.",
+            "type" : "string"
+          },
+          "functions" : {
+            "description" : "An array of all the function names that are to be added to the role. The functions must already exist or be defined in other sections of the security contract.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "roles" : {
+            "description" : "An array of all the child roles that are to be added to the role. The roles must already exist or be defined in other sections of the security contract.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "description", "name" ]
+      },
+      "SecurityContractDefaultConfigurationUser" : {
+        "description" : "Models a default user definition within a default configuration.\n",
+        "example" : {
+          "hashedPassword" : "hashedPassword",
+          "roles" : [ "roles", "roles" ],
+          "avatar" : "avatar",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "password" : "password",
+          "phoneNumber" : "phoneNumber",
+          "ldapAuthenticationMode" : "ldapAuthenticationMode",
+          "isDeleted" : true,
+          "surname" : "surname",
+          "name" : "name",
+          "deletedTime" : "2000-01-23T04:56:07.000+00:00",
+          "email" : "email",
+          "username" : "username"
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "The unique Id of the user.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "username" : {
+            "description" : "The username of the user.",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "The name of the user.",
+            "type" : "string"
+          },
+          "surname" : {
+            "description" : "The surname of the user.",
+            "type" : "string"
+          },
+          "email" : {
+            "description" : "The user's email.",
+            "format" : "email",
+            "type" : "string"
+          },
+          "phoneNumber" : {
+            "description" : "The user's phone number.",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "password" : {
+            "description" : "The user's plain text password.",
+            "type" : "string"
+          },
+          "hashedPassword" : {
+            "description" : "An optional field containing the user's salted and hashed password. If used, the password field will be ignored.",
+            "type" : "string"
+          },
+          "isDeleted" : {
+            "description" : "True if this user is considered deleted.",
+            "type" : "boolean"
+          },
+          "deletedTime" : {
+            "description" : "Populated with user delete date and time.",
+            "format" : "date-time",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "avatar" : {
+            "description" : "The user's avatar image in base64 format",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "ldapAuthenticationMode" : {
+            "description" : "The user's linked LDAP Authentication Mode name, if applicable",
+            "nullable" : true,
+            "type" : "string"
+          },
+          "roles" : {
+            "description" : "An array of all the role names that are to be added to the user. The user must already exist or be defined in other sections of the security contract.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "email", "name", "surname", "username" ]
+      },
+      "SecurityContractDefaultConfigurationLdapAttributeLink" : {
+        "description" : "An LdapAttributeLink - A LDAP attribute link definition\n",
+        "example" : {
+          "userField" : "userField",
+          "ldapField" : "ldapField"
+        },
+        "properties" : {
+          "userField" : {
+            "type" : "string"
+          },
+          "ldapField" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "SecurityContractDefaultConfigurationLdapAuthMode" : {
+        "description" : "Model a default LDAP Authentication Mode\n",
+        "example" : {
+          "hostName" : "hostName",
+          "ldapAttributes" : [ {
+            "userField" : "userField",
+            "ldapField" : "ldapField"
+          }, {
+            "userField" : "userField",
+            "ldapField" : "ldapField"
+          } ],
+          "port" : 0,
+          "name" : "name",
+          "isLdaps" : true,
+          "baseDn" : "baseDn",
+          "account" : "account"
+        },
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "hostName" : {
+            "type" : "string"
+          },
+          "port" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "isLdaps" : {
+            "type" : "boolean"
+          },
+          "account" : {
+            "type" : "string"
+          },
+          "baseDn" : {
+            "type" : "string"
+          },
+          "ldapAttributes" : {
+            "description" : "A list of LDAP attribute to user field mappings",
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractDefaultConfigurationLdapAttributeLink"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "account", "baseDn", "hostName", "isLdaps", "name", "password", "port" ],
+        "type" : "object"
+      },
+      "SecurityContractDefaultConfigurationTeam" : {
+        "description" : "Models a default team definition within a default configuration.\n",
+        "example" : {
+          "teams" : [ "teams", "teams" ],
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "users" : [ "users", "users" ],
+          "dataPolicies" : [ "dataPolicies", "dataPolicies" ]
+        },
+        "properties" : {
+          "uuid" : {
+            "description" : "The unique Id of the team.",
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "The name of the team.",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "A description of the team.",
+            "type" : "string"
+          },
+          "users" : {
+            "description" : "An array of all the user names that are to be added to the team. The user must already exist or be defined in other sections of the security contract.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "teams" : {
+            "description" : "An array of all the teams that are to be added to the team. The teams must already exist or be defined in other sections of the security contract.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "dataPolicies" : {
+            "description" : "An array of application data policy names that are to be applied to the team.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "description", "name" ]
+      },
+      "SecurityContractDefaultConfigurationApplication" : {
+        "example" : {
+          "functions" : [ {
+            "permissions" : [ "permissions", "permissions" ],
+            "name" : "name",
+            "description" : "description"
+          }, {
+            "permissions" : [ "permissions", "permissions" ],
+            "name" : "name",
+            "description" : "description"
+          } ],
+          "name" : "name"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "The name of the application that defaults are being configured for.",
+            "type" : "string"
+          },
+          "functions" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractDefaultConfigurationFunction"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "functions", "name" ]
+      },
+      "SecurityContractDefaultConfigurationFunction" : {
+        "description" : "Models a section of the default configuration for the creation of default functions.",
+        "example" : {
+          "permissions" : [ "permissions", "permissions" ],
+          "name" : "name",
+          "description" : "description"
+        },
+        "properties" : {
+          "name" : {
+            "description" : "The name of the function.",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "A description of the function.",
+            "type" : "string"
+          },
+          "permissions" : {
+            "description" : "A list of permissions to add to the function.",
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "description", "name", "permissions" ],
+        "type" : "object"
+      },
+      "SecurityContractDefaultConfiguration" : {
+        "description" : "Models the default configuration section of a security contract.",
+        "example" : {
+          "teams" : [ {
+            "teams" : [ "teams", "teams" ],
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "users" : [ "users", "users" ],
+            "dataPolicies" : [ "dataPolicies", "dataPolicies" ]
+          }, {
+            "teams" : [ "teams", "teams" ],
+            "name" : "name",
+            "description" : "description",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "users" : [ "users", "users" ],
+            "dataPolicies" : [ "dataPolicies", "dataPolicies" ]
+          } ],
+          "roles" : [ {
+            "functions" : [ "functions", "functions" ],
+            "roles" : [ "roles", "roles" ],
+            "name" : "name",
+            "description" : "description"
+          }, {
+            "functions" : [ "functions", "functions" ],
+            "roles" : [ "roles", "roles" ],
+            "name" : "name",
+            "description" : "description"
+          } ],
+          "name" : "name",
+          "ldapAuthenticationModes" : [ {
+            "hostName" : "hostName",
+            "ldapAttributes" : [ {
+              "userField" : "userField",
+              "ldapField" : "ldapField"
+            }, {
+              "userField" : "userField",
+              "ldapField" : "ldapField"
+            } ],
+            "port" : 0,
+            "name" : "name",
+            "isLdaps" : true,
+            "baseDn" : "baseDn",
+            "account" : "account"
+          }, {
+            "hostName" : "hostName",
+            "ldapAttributes" : [ {
+              "userField" : "userField",
+              "ldapField" : "ldapField"
+            }, {
+              "userField" : "userField",
+              "ldapField" : "ldapField"
+            } ],
+            "port" : 0,
+            "name" : "name",
+            "isLdaps" : true,
+            "baseDn" : "baseDn",
+            "account" : "account"
+          } ],
+          "users" : [ {
+            "hashedPassword" : "hashedPassword",
+            "roles" : [ "roles", "roles" ],
+            "avatar" : "avatar",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "password" : "password",
+            "phoneNumber" : "phoneNumber",
+            "ldapAuthenticationMode" : "ldapAuthenticationMode",
+            "isDeleted" : true,
+            "surname" : "surname",
+            "name" : "name",
+            "deletedTime" : "2000-01-23T04:56:07.000+00:00",
+            "email" : "email",
+            "username" : "username"
+          }, {
+            "hashedPassword" : "hashedPassword",
+            "roles" : [ "roles", "roles" ],
+            "avatar" : "avatar",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "password" : "password",
+            "phoneNumber" : "phoneNumber",
+            "ldapAuthenticationMode" : "ldapAuthenticationMode",
+            "isDeleted" : true,
+            "surname" : "surname",
+            "name" : "name",
+            "deletedTime" : "2000-01-23T04:56:07.000+00:00",
+            "email" : "email",
+            "username" : "username"
+          } ],
+          "applications" : [ {
+            "functions" : [ {
+              "permissions" : [ "permissions", "permissions" ],
+              "name" : "name",
+              "description" : "description"
+            }, {
+              "permissions" : [ "permissions", "permissions" ],
+              "name" : "name",
+              "description" : "description"
+            } ],
+            "name" : "name"
+          }, {
+            "functions" : [ {
+              "permissions" : [ "permissions", "permissions" ],
+              "name" : "name",
+              "description" : "description"
+            }, {
+              "permissions" : [ "permissions", "permissions" ],
+              "name" : "name",
+              "description" : "description"
+            } ],
+            "name" : "name"
+          } ]
+        },
+        "properties" : {
+          "name" : {
+            "description" : "The name of the default configuration.",
+            "type" : "string"
+          },
+          "applications" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractDefaultConfigurationApplication"
+            },
+            "type" : "array"
+          },
+          "roles" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractDefaultConfigurationRole"
+            },
+            "type" : "array"
+          },
+          "ldapAuthenticationModes" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractDefaultConfigurationLdapAuthMode"
+            },
+            "type" : "array"
+          },
+          "users" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractDefaultConfigurationUser"
+            },
+            "type" : "array"
+          },
+          "teams" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractDefaultConfigurationTeam"
+            },
+            "type" : "array"
+          }
+        }
+      },
+      "SecurityContract" : {
+        "description" : "Models a security contract definition.\n",
+        "example" : {
+          "clients" : [ {
+            "allowedOfflineAccess" : true,
+            "allowedGrantTypes" : [ "allowedGrantTypes", "allowedGrantTypes" ],
+            "clientId" : "clientId",
+            "clientSecrets" : [ "clientSecrets", "clientSecrets" ],
+            "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
+            "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "name" : "name",
+            "redirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "allowedScopes" : [ "allowedScopes", "allowedScopes" ]
+          }, {
+            "allowedOfflineAccess" : true,
+            "allowedGrantTypes" : [ "allowedGrantTypes", "allowedGrantTypes" ],
+            "clientId" : "clientId",
+            "clientSecrets" : [ "clientSecrets", "clientSecrets" ],
+            "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
+            "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "name" : "name",
+            "redirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "allowedScopes" : [ "allowedScopes", "allowedScopes" ]
+          } ],
+          "defaultConfigurations" : [ {
+            "teams" : [ {
+              "teams" : [ "teams", "teams" ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "users" : [ "users", "users" ],
+              "dataPolicies" : [ "dataPolicies", "dataPolicies" ]
+            }, {
+              "teams" : [ "teams", "teams" ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "users" : [ "users", "users" ],
+              "dataPolicies" : [ "dataPolicies", "dataPolicies" ]
+            } ],
+            "roles" : [ {
+              "functions" : [ "functions", "functions" ],
+              "roles" : [ "roles", "roles" ],
+              "name" : "name",
+              "description" : "description"
+            }, {
+              "functions" : [ "functions", "functions" ],
+              "roles" : [ "roles", "roles" ],
+              "name" : "name",
+              "description" : "description"
+            } ],
+            "name" : "name",
+            "ldapAuthenticationModes" : [ {
+              "hostName" : "hostName",
+              "ldapAttributes" : [ {
+                "userField" : "userField",
+                "ldapField" : "ldapField"
+              }, {
+                "userField" : "userField",
+                "ldapField" : "ldapField"
+              } ],
+              "port" : 0,
+              "name" : "name",
+              "isLdaps" : true,
+              "baseDn" : "baseDn",
+              "account" : "account"
+            }, {
+              "hostName" : "hostName",
+              "ldapAttributes" : [ {
+                "userField" : "userField",
+                "ldapField" : "ldapField"
+              }, {
+                "userField" : "userField",
+                "ldapField" : "ldapField"
+              } ],
+              "port" : 0,
+              "name" : "name",
+              "isLdaps" : true,
+              "baseDn" : "baseDn",
+              "account" : "account"
+            } ],
+            "users" : [ {
+              "hashedPassword" : "hashedPassword",
+              "roles" : [ "roles", "roles" ],
+              "avatar" : "avatar",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "password" : "password",
+              "phoneNumber" : "phoneNumber",
+              "ldapAuthenticationMode" : "ldapAuthenticationMode",
+              "isDeleted" : true,
+              "surname" : "surname",
+              "name" : "name",
+              "deletedTime" : "2000-01-23T04:56:07.000+00:00",
+              "email" : "email",
+              "username" : "username"
+            }, {
+              "hashedPassword" : "hashedPassword",
+              "roles" : [ "roles", "roles" ],
+              "avatar" : "avatar",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "password" : "password",
+              "phoneNumber" : "phoneNumber",
+              "ldapAuthenticationMode" : "ldapAuthenticationMode",
+              "isDeleted" : true,
+              "surname" : "surname",
+              "name" : "name",
+              "deletedTime" : "2000-01-23T04:56:07.000+00:00",
+              "email" : "email",
+              "username" : "username"
+            } ],
+            "applications" : [ {
+              "functions" : [ {
+                "permissions" : [ "permissions", "permissions" ],
+                "name" : "name",
+                "description" : "description"
+              }, {
+                "permissions" : [ "permissions", "permissions" ],
+                "name" : "name",
+                "description" : "description"
+              } ],
+              "name" : "name"
+            }, {
+              "functions" : [ {
+                "permissions" : [ "permissions", "permissions" ],
+                "name" : "name",
+                "description" : "description"
+              }, {
+                "permissions" : [ "permissions", "permissions" ],
+                "name" : "name",
+                "description" : "description"
+              } ],
+              "name" : "name"
+            } ]
+          }, {
+            "teams" : [ {
+              "teams" : [ "teams", "teams" ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "users" : [ "users", "users" ],
+              "dataPolicies" : [ "dataPolicies", "dataPolicies" ]
+            }, {
+              "teams" : [ "teams", "teams" ],
+              "name" : "name",
+              "description" : "description",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "users" : [ "users", "users" ],
+              "dataPolicies" : [ "dataPolicies", "dataPolicies" ]
+            } ],
+            "roles" : [ {
+              "functions" : [ "functions", "functions" ],
+              "roles" : [ "roles", "roles" ],
+              "name" : "name",
+              "description" : "description"
+            }, {
+              "functions" : [ "functions", "functions" ],
+              "roles" : [ "roles", "roles" ],
+              "name" : "name",
+              "description" : "description"
+            } ],
+            "name" : "name",
+            "ldapAuthenticationModes" : [ {
+              "hostName" : "hostName",
+              "ldapAttributes" : [ {
+                "userField" : "userField",
+                "ldapField" : "ldapField"
+              }, {
+                "userField" : "userField",
+                "ldapField" : "ldapField"
+              } ],
+              "port" : 0,
+              "name" : "name",
+              "isLdaps" : true,
+              "baseDn" : "baseDn",
+              "account" : "account"
+            }, {
+              "hostName" : "hostName",
+              "ldapAttributes" : [ {
+                "userField" : "userField",
+                "ldapField" : "ldapField"
+              }, {
+                "userField" : "userField",
+                "ldapField" : "ldapField"
+              } ],
+              "port" : 0,
+              "name" : "name",
+              "isLdaps" : true,
+              "baseDn" : "baseDn",
+              "account" : "account"
+            } ],
+            "users" : [ {
+              "hashedPassword" : "hashedPassword",
+              "roles" : [ "roles", "roles" ],
+              "avatar" : "avatar",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "password" : "password",
+              "phoneNumber" : "phoneNumber",
+              "ldapAuthenticationMode" : "ldapAuthenticationMode",
+              "isDeleted" : true,
+              "surname" : "surname",
+              "name" : "name",
+              "deletedTime" : "2000-01-23T04:56:07.000+00:00",
+              "email" : "email",
+              "username" : "username"
+            }, {
+              "hashedPassword" : "hashedPassword",
+              "roles" : [ "roles", "roles" ],
+              "avatar" : "avatar",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "password" : "password",
+              "phoneNumber" : "phoneNumber",
+              "ldapAuthenticationMode" : "ldapAuthenticationMode",
+              "isDeleted" : true,
+              "surname" : "surname",
+              "name" : "name",
+              "deletedTime" : "2000-01-23T04:56:07.000+00:00",
+              "email" : "email",
+              "username" : "username"
+            } ],
+            "applications" : [ {
+              "functions" : [ {
+                "permissions" : [ "permissions", "permissions" ],
+                "name" : "name",
+                "description" : "description"
+              }, {
+                "permissions" : [ "permissions", "permissions" ],
+                "name" : "name",
+                "description" : "description"
+              } ],
+              "name" : "name"
+            }, {
+              "functions" : [ {
+                "permissions" : [ "permissions", "permissions" ],
+                "name" : "name",
+                "description" : "description"
+              }, {
+                "permissions" : [ "permissions", "permissions" ],
+                "name" : "name",
+                "description" : "description"
+              } ],
+              "name" : "name"
+            } ]
+          } ],
+          "applications" : [ {
+            "fullname" : "fullname",
+            "applicationFunctions" : [ {
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description"
+              }, {
+                "name" : "name",
+                "description" : "description"
+              } ],
+              "name" : "name",
+              "description" : "description"
+            }, {
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description"
+              }, {
+                "name" : "name",
+                "description" : "description"
+              } ],
+              "name" : "name",
+              "description" : "description"
+            } ],
+            "dataPolicies" : [ {
+              "name" : "name",
+              "description" : "description"
+            }, {
+              "name" : "name",
+              "description" : "description"
+            } ]
+          }, {
+            "fullname" : "fullname",
+            "applicationFunctions" : [ {
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description"
+              }, {
+                "name" : "name",
+                "description" : "description"
+              } ],
+              "name" : "name",
+              "description" : "description"
+            }, {
+              "permissions" : [ {
+                "name" : "name",
+                "description" : "description"
+              }, {
+                "name" : "name",
+                "description" : "description"
+              } ],
+              "name" : "name",
+              "description" : "description"
+            } ],
+            "dataPolicies" : [ {
+              "name" : "name",
+              "description" : "description"
+            }, {
+              "name" : "name",
+              "description" : "description"
+            } ]
+          } ]
+        },
+        "properties" : {
+          "clients" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Oauth2ClientSubmit"
+            },
+            "type" : "array"
+          },
+          "applications" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractApplication"
+            },
+            "type" : "array"
+          },
+          "defaultConfigurations" : {
+            "items" : {
+              "$ref" : "#/components/schemas/SecurityContractDefaultConfiguration"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "LdapAuthenticationModeId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "UserFieldType" : {
+        "description" : "Enumeration to describe with what user field you're busy with\n",
+        "enum" : [ "userName", "firstName", "surname", "email", "avatar" ],
+        "type" : "string"
+      },
+      "LdapAttributeLink" : {
+        "description" : "An LdapAttributeLink - A LDAP attribute link definition\n",
+        "example" : {
+          "ldapField" : "ldapField"
+        },
+        "properties" : {
+          "userField" : {
+            "$ref" : "#/components/schemas/UserFieldType"
+          },
+          "ldapField" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "LdapAuthenticationMode" : {
+        "description" : "An LdapAuthenticationMode - An LDAP connection definition\n",
+        "example" : {
+          "hostName" : "hostName",
+          "ldapAttributes" : [ {
+            "ldapField" : "ldapField"
+          }, {
+            "ldapField" : "ldapField"
+          } ],
+          "port" : 0,
+          "name" : "name",
+          "isLdaps" : true,
+          "baseDn" : "baseDn",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "account" : "account"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "hostName" : {
+            "type" : "string"
+          },
+          "port" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "isLdaps" : {
+            "nullable" : false,
+            "type" : "boolean"
+          },
+          "account" : {
+            "type" : "string"
+          },
+          "baseDn" : {
+            "type" : "string"
+          },
+          "ldapAttributes" : {
+            "description" : "A list of LDAP attribute to user field mappings",
+            "items" : {
+              "$ref" : "#/components/schemas/LdapAttributeLink"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "account", "baseDn", "hostName", "isLdaps", "name", "port", "uuid" ],
+        "type" : "object"
+      },
+      "LdapAuthenticationModeSubmit" : {
+        "description" : "Create a new or update an existing LdapAuthenticationMode\n",
+        "example" : {
+          "hostName" : "hostName",
+          "password" : "password",
+          "ldapAttributes" : [ {
+            "ldapField" : "ldapField"
+          }, {
+            "ldapField" : "ldapField"
+          } ],
+          "port" : 0,
+          "name" : "name",
+          "isLdaps" : true,
+          "baseDn" : "baseDn",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "account" : "account"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "hostName" : {
+            "type" : "string"
+          },
+          "port" : {
+            "format" : "int32",
+            "type" : "integer"
+          },
+          "isLdaps" : {
+            "type" : "boolean"
+          },
+          "account" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          },
+          "baseDn" : {
+            "type" : "string"
+          },
+          "ldapAttributes" : {
+            "description" : "A list of LDAP attribute to user field mappings",
+            "items" : {
+              "$ref" : "#/components/schemas/LdapAttributeLink"
+            },
+            "type" : "array"
+          }
+        },
+        "required" : [ "account", "baseDn", "hostName", "isLdaps", "name", "password", "port", "uuid" ],
+        "type" : "object"
+      },
+      "LdapAuthenticationModeTestResult" : {
+        "description" : "An LdapAuthenticationMode test result\n",
+        "example" : {
+          "success" : true,
+          "messages" : [ "messages", "messages" ]
+        },
+        "properties" : {
+          "success" : {
+            "type" : "boolean"
+          },
+          "messages" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "ApplicationDataPolicy" : {
+        "description" : "Models an applications data policy.\n",
+        "example" : {
+          "name" : "name",
+          "description" : "description",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "name" : {
+            "description" : "The name of the application data policy.",
+            "type" : "string"
+          },
+          "description" : {
+            "description" : "A description of the application data policy.",
+            "type" : "string"
+          }
+        },
+        "required" : [ "description", "name", "uuid" ],
+        "type" : "object"
+      },
+      "ApplicationDataPolicyId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "ErrorResponse" : {
+        "description" : "Error response object to give more info with HTTP status code",
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "message" ],
+        "type" : "object"
+      },
+      "PaginationHeaderResponse" : {
+        "description" : "This is the standard response for requests that have paginated collections",
+        "properties" : {
+          "total" : {
+            "description" : "The total number of pages in the result set",
+            "format" : "int32",
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "count" : {
+            "description" : "The total number of results in the result set",
+            "format" : "int32",
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "size" : {
+            "default" : 10,
+            "description" : "The number items to include in a page of results. The page size for the result set",
+            "format" : "int32",
+            "maximum" : 20,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "current" : {
+            "description" : "The position of the page in the paged result set that is being returned",
+            "format" : "int32",
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "first" : {
+            "description" : "The link to the first page of results containing [size] results. This link includes the page, size, filter, orderBy and fields query parameters.",
+            "format" : "url",
+            "type" : "string"
+          },
+          "last" : {
+            "description" : "The link to the last page of results containing [size] results. This link includes the page, size, filter, orderBy and fields query parameters. If this is the first page in the result set then this will be [null].",
+            "format" : "url",
+            "type" : "string"
+          },
+          "prev" : {
+            "description" : "The link to the previous page of results containing [size] results. This link includes the page, size, filter, orderBy and fields query parameters. If this is the first page in the result set then this will be [null].",
+            "format" : "url",
+            "type" : "string"
+          },
+          "next" : {
+            "description" : "The link to the next page of results containing [size] results. This link includes the page, size, filter, orderBy and fields query parameters. If this is the last page in the result set then this will be [null].",
+            "format" : "url",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      }
+    }
+  }
+}

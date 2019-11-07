@@ -37,19 +37,11 @@ cp -rf src/za.co.grindrodbank.a3s/temp/src/za.co.grindrodbank.a3s/Attributes/*.c
 echo "Copying generated converters to 'src/za.co.grindrodbank.a3s/Converters'"
 cp -rf src/za.co.grindrodbank.a3s/temp/src/za.co.grindrodbank.a3s/Converters/*.cs src/za.co.grindrodbank.a3s/Converters
 
+echo "Copying generated wwwroot artifacts (including openapi-original.json) to 'src/za.co.grindrodbank.a3s/wwwroot'"
+cp -rf src/za.co.grindrodbank.a3s/temp/src/za.co.grindrodbank.a3s/wwwroot/index.html src/za.co.grindrodbank.a3s/wwwroot/index.html
+cp -rf src/za.co.grindrodbank.a3s/temp/src/za.co.grindrodbank.a3s/wwwroot/openapi-original.json src/za.co.grindrodbank.a3s/wwwroot/openapi-original.json
+
 echoBold "Manually Cleaning up generation errors"
-
-# The generator creates abstract interfaces with the 'async' keyword, which is invalid for dotnet, remove these here.
-#echo "Removing incorrectly generated 'async' keywords from generated abstract controllers."
-#find ${PWD}/src/za.co.grindrodbank.a3s/AbstractApiControllers \( -type d -name .cs -prune \) -o -type f -print0 | xargs -0 sed -i '' 's/public abstract async/public abstract/g'
-
-# The generator creates un-terminated ']' brackets for generated ranges, try fix these here.
-#echo "Manually terminating un-terminated ']' parenthesis for range values"
-#find ${PWD}/src/za.co.grindrodbank.a3s/AbstractApiControllers \( -type d -name .cs -prune \) -o -type f -print0 | xargs -0 sed -i '' 's/)string/)]string/g'
-
-# The generator does not Postfix async defined controller interfaces with Async, which is convention. Attempt to do this here.
-#echo "Manually postfix 'Async' to generated controller interface method definitions"
-#find ${PWD}/src/za.co.grindrodbank.a3s/AbstractApiControllers \( -type d -name .cs -prune \) -o -type f -print0 | xargs -0 sed -i '' 's/(\[/Async(\[/g'
 
 # The generator imposes the structure of the application and therefore the namespaces generated fro certain components. Tweaking here to fit the current structure of A3S.
 echo "Tweaking auto-generated namespace of 'Models' to 'A3SApiResources' to match the desired a3s application structure."

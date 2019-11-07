@@ -6,33 +6,35 @@ This guide will assist a developer with viewing the A3S [OAS3](https://swagger.i
 
 This guide assumes that you have Docker installed, and that the A3S repository has been checked out. For more information, look at the [Quickstart guide](../quickstart/README.md).
 
-## 1. Start Swagger Editor
+## 1. Start the A3S Quickstart
 
-Start the Swagger Editor docker container with the following command:
+Start the A3S quickstart:
 
 ```bash
-docker run -d -p 8080:8080 swaggerapi/swagger-editor
+cd A3S/quickstart
+
+docker-compose up
 ```
 
-## 2. Open Swagger Editor
+## 2. Open Swagger UI
 
-Launch the Swagger Editor on the following URL on your web browser:
+Launch the Swagger UI on the following URL on your web browser:
 
-    http://localhost:8080/
+    http://localhost:8081/swagger
 
-The default swagger Petstore API is displayed:
+The A3S API is displayed:
 
-![swagger-editor](img/swagger-editor-1.png "Swagger Editor")
+![swagger-ui](img/swagger-ui-1.png "Swagger UI")
 
-## 3. Import the A3S OAS3 specification file
+## 3. Open Swagger JSON Specification
 
-Click on File -> Import File, and browse and select the A3S OAS3 spec file located at:
+Optionally, you can also access the Swagger JSON specification at:
 
-    {{a3s-source-folder}}/doc/a3s-openapi.yaml
+    http://localhost:8081/openapi-original.json
 
-The default swagger Petstore API is replaced by the A3S API definition:
+The A3S API is displayed:
 
-![swagger-editor](img/swagger-editor-2.png "Swagger Editor")
+![swagger-json-spec](img/swagger-json-spec.png "Swagger JSON Spec")
 
 ## Conclusion
 
@@ -40,16 +42,11 @@ You are now able to view the entire A3S OAS API specification with each endpoint
 
 ## Cleanup
 
-Once you are finished, you can shut down the Swagger editor with the following commands (replace the container id with the one displayed for your instance):
+To stop all the containers, simply type ctrl + c within the terminal that you ran docker-compose up in. This will terminate the environment, but preserve the state of the stack. To restore a previously terminated environment, simply run
 
-```bash
-$ docker container list
-CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS                            NAMES
-6a385c498c78        swaggerapi/swagger-editor   "sh /usr/share/nginx…"   58 minutes ago      Up 58 minutes       80/tcp, 0.0.0.0:8080->8080/tcp   boring_bell
+docker-compose up
+To completely clean up all trace of the environment, including any possible state, run
 
-$ docker container stop 6a385c498c78
-6a385c498c78
+docker-compose down
+within the ./docker-compose/quickstart folder.
 
-$ docker container rm 6a385c498c78
-6a385c498c78
-```
