@@ -45,12 +45,6 @@ jobs:
     working_directory: ~/build
     
     steps:
-      # Update, upgrade, then install  openssh and git for a clean checkout
-      # Im not sure that these components are required.
-      # - run: apk update
-      # - run: apk upgrade
-      # - run: apk --no-cache add --update git openssh
-
       - checkout
       - run: dotnet restore
       - run: dotnet build
@@ -82,20 +76,31 @@ jobs:
   postman-integration-tests:
     # Use a Linux VM instead of docker environment. This is crucial for successful mounting of file systems into docker containers.
     # Note: Not specifying an image (for the machine) results in the circleci:classic image being pulled in. This contains docker-compose on it already.
-    machine: true 
+    machine: true
     working_directory: ~/repo
     steps:
+      # Install NPM.
+      - run: curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+      - run: sudo apt install nodejs
+      # Install Newman Using NPM
+      - run: npm install -g newman
+      - run: newman run -h
+      # Add the required hostname entries for the integration tests.
+      - run: echo 127.0.0.1 a3s-identity-server | sudo tee -a /etc/hosts
+      - run: echo 127.0.0.1 open-ldap | sudo tee -a /etc/hosts
+      # Checkout the repository
       - checkout
-      # Build the two required docker images into the local docker image repo from this version of the code.
+      # # Build the two required docker images into the local docker image repo from this version of the code.
       - run: docker build -t grindrodbank/a3s:latest -f ~/repo/a3s-Dockerfile ~/repo
       - run: docker build -t grindrodbank/a3s-identity-server:latest -f ~/repo/a3s-identity-server-Dockerfile ~/repo
-      # Start the quickstart instance, as it models a fully featured running A3S environment, which is ideal for running Postman tests against.
+      # # Start the quickstart instance, as it models a fully featured running A3S environment, which is ideal for running Postman tests against.
       - run: docker-compose -f ~/repo/quickstart/docker-compose.yml up -d
-      - run: sleep 15
-      # Run the Newman orb to execute the collection against the quickstart environment.
-      - newman/newman-run:
-          collection: "~/repo/postman/A3S-pipeline.postman_collection.json"
-          environment: "~/repo/postman/A3S-quickstart.postman_environment.json"
+      - run: sleep 5
+      # Run docker-compose up -d again to hopefully mitigate any container ordering issues.
+      - run: docker-compose -f ~/repo/quickstart/docker-compose.yml up -d
+      - run: sleep 5
+      # # Run the Newman orb to execute the collection against the quickstart environment.
+      - run: newman run ~/repo/postman/A3S-pipeline.postman_collection.json -r cli -e ~/repo/postman/A3S-quickstart.postman_environment.json
 
   a3s-docker-build-push:
     docker:
@@ -175,6 +180,7 @@ workflows:
       - static-analysis
       - vulnerability-test
       - license-headers
+      - postman-integration-tests
       - fossa-scan:
           filters:    
             branches:    
@@ -187,23 +193,18 @@ workflows:
       - vulnerability-test: *only-tags
       - license-headers: *only-tags
       - fossa-scan: *only-tags
-      #- postman-integration-tests
+      - postman-integration-tests: *only-tags
       - a3s-docker-build-push:
           requires:
           - unit-test
           - static-analysis
           - license-headers
-          #- postman-integration-tests
+          - postman-integration-tests
           <<: *only-tags
-            # branches:
-            #   only: master
       - a3s-ids4-docker-build-push:
           requires:
           - unit-test
           - static-analysis
           - license-headers
-          #- postman-integration-tests
+          - postman-integration-tests
           <<: *only-tags
-            # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
-            # branches:
-            #   only: master
