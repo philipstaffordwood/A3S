@@ -91,14 +91,22 @@ jobs:
       # Install Newman Using NPM
       - run: npm install -g newman
       - run: newman run -h
-      # - checkout
+      # Checkout the repository
+      - checkout
       # # Build the two required docker images into the local docker image repo from this version of the code.
-      # - run: docker build -t grindrodbank/a3s:latest -f ~/repo/a3s-Dockerfile ~/repo
-      # - run: docker build -t grindrodbank/a3s-identity-server:latest -f ~/repo/a3s-identity-server-Dockerfile ~/repo
+      - run: docker build -t grindrodbank/a3s:latest -f ~/repo/a3s-Dockerfile ~/repo
+      - run: docker build -t grindrodbank/a3s-identity-server:latest -f ~/repo/a3s-identity-server-Dockerfile ~/repo
       # # Start the quickstart instance, as it models a fully featured running A3S environment, which is ideal for running Postman tests against.
-      # - run: docker-compose -f ~/repo/quickstart/docker-compose.yml up -d
-      # - run: sleep 15
+      - run: docker-compose -f ~/repo/quickstart/docker-compose.yml up -d
+      - run: sleep 15
+      # Run docker-compose up -d again to hopefully mitigate any container ordering issues.
+      - run: docker-compose -f ~/repo/quickstart/docker-compose.yml up -d
+      - run: sleep 10
       # # Run the Newman orb to execute the collection against the quickstart environment.
+      - run: newman \
+             run ~/repo/postman/A3S-pipeline.postman_collection.json \
+                -r cli \
+                -e ~/repo/postman/A3S-quickstart.postman_environment.json
       # - newman/newman-run:
       #     collection: "~/repo/postman/A3S-pipeline.postman_collection.json"
       #     environment: "~/repo/postman/A3S-quickstart.postman_environment.json"
