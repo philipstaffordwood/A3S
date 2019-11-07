@@ -92,8 +92,8 @@ jobs:
       - run: npm install -g newman
       - run: newman run -h
       # Add the required hostname entries for the integration tests.
-      - run: echo "127.0.0.1 a3s-identity-server" >> /etc/hosts
-      - run: echo "127.0.0.1 open-ldap" >> /etc/hosts
+      - run: sudo echo "127.0.0.1 a3s-identity-server" >> /etc/hosts
+      - run: sudo echo "127.0.0.1 open-ldap" >> /etc/hosts
       # Checkout the repository
       - checkout
       # # Build the two required docker images into the local docker image repo from this version of the code.
