@@ -106,10 +106,10 @@ jobs:
       - run: docker build -t grindrodbank/a3s-identity-server:latest -f ~/repo/a3s-identity-server-Dockerfile ~/repo
       # # Start the quickstart instance, as it models a fully featured running A3S environment, which is ideal for running Postman tests against.
       - run: docker-compose -f ~/repo/quickstart/docker-compose.yml up -d
-      - run: sleep 15
+      - run: sleep 5
       # Run docker-compose up -d again to hopefully mitigate any container ordering issues.
       - run: docker-compose -f ~/repo/quickstart/docker-compose.yml up -d
-      - run: sleep 10
+      - run: sleep 5
       # # Run the Newman orb to execute the collection against the quickstart environment.
       - run: newman run ~/repo/postman/A3S-pipeline.postman_collection.json -r cli -e ~/repo/postman/A3S-quickstart.postman_environment.json
       # - newman/newman-run:
