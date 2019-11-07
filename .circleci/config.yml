@@ -111,10 +111,7 @@ jobs:
       - run: docker-compose -f ~/repo/quickstart/docker-compose.yml up -d
       - run: sleep 10
       # # Run the Newman orb to execute the collection against the quickstart environment.
-      - run: newman \
-             run ~/repo/postman/A3S-pipeline.postman_collection.json \
-                -r cli \
-                -e ~/repo/postman/A3S-quickstart.postman_environment.json
+      - run: newman run ~/repo/postman/A3S-pipeline.postman_collection.json -r cli -e ~/repo/postman/A3S-quickstart.postman_environment.json
       # - newman/newman-run:
       #     collection: "~/repo/postman/A3S-pipeline.postman_collection.json"
       #     environment: "~/repo/postman/A3S-quickstart.postman_environment.json"
