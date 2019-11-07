@@ -45,12 +45,6 @@ jobs:
     working_directory: ~/build
     
     steps:
-      # Update, upgrade, then install  openssh and git for a clean checkout
-      # Im not sure that these components are required.
-      # - run: apk update
-      # - run: apk upgrade
-      # - run: apk --no-cache add --update git openssh
-
       - checkout
       - run: dotnet restore
       - run: dotnet build
@@ -207,23 +201,18 @@ workflows:
       - vulnerability-test: *only-tags
       - license-headers: *only-tags
       - fossa-scan: *only-tags
-      #- postman-integration-tests
+      - postman-integration-tests: *only-tags
       - a3s-docker-build-push:
           requires:
           - unit-test
           - static-analysis
           - license-headers
-          #- postman-integration-tests
+          - postman-integration-tests
           <<: *only-tags
-            # branches:
-            #   only: master
       - a3s-ids4-docker-build-push:
           requires:
           - unit-test
           - static-analysis
           - license-headers
-          #- postman-integration-tests
+          - postman-integration-tests
           <<: *only-tags
-            # We only want to build images when release tags are created. Uncomment the below to run on master branch updates too.
-            # branches:
-            #   only: master
