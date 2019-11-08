@@ -1,6 +1,6 @@
 ﻿{
 	"info": {
-		"_postman_id": "bc02515e-5673-40fc-b67f-377ee7a2f7cb",
+		"_postman_id": "f34680e5-aa8e-4cc5-a7ea-569d7fa88e66",
 		"name": "A3S - Pipeline",
 		"description": "A Postman collection desgined to be executed remotely using Newman within the CI/CD context.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -2517,7 +2517,7 @@
 									"pm.test(\"Check that the correct LDAP Auth Mode was returned.\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    pm.expect(jsonData.name).to.eql(\"open-ldap-dev\");",
-									"    pm.expect(jsonData.hostName).to.eql(\"open-ldap\");",
+									"    pm.expect(jsonData.hostName).to.eql(pm.environment.get('ldap-hostname'));",
 									"    pm.expect(jsonData.port).to.eql(389);",
 									"    pm.expect(jsonData.isLdaps).to.eql(true);",
 									"    pm.expect(jsonData.account).to.eql(\"admin\");",
@@ -2567,7 +2567,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"open-ldap-dev\",\n    \"hostName\": \"open-ldap\",\n    \"port\": 389,\n    \"isLdaps\": true,\n    \"account\": \"admin\",\n    \"password\": \"admin\",\n    \"baseDn\": \"dc=bigbaobab,dc=org\"\n}"
+							"raw": "{\n    \"name\": \"open-ldap-dev\",\n    \"hostName\": \"{{ldap-hostname}}\",\n    \"port\": 389,\n    \"isLdaps\": true,\n    \"account\": \"admin\",\n    \"password\": \"admin\",\n    \"baseDn\": \"dc=bigbaobab,dc=org\"\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/authenticationModes/ldap",
@@ -2610,7 +2610,7 @@
 									"pm.test(\"Check that the correct LDAP Auth Mode was returned.\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    pm.expect(jsonData.name).to.eql(\"open-ldap-dev-2\");",
-									"    pm.expect(jsonData.hostName).to.eql(\"open-ldap\");",
+									"    pm.expect(jsonData.hostName).to.eql(pm.environment.get('ldap-hostname'));",
 									"    pm.expect(jsonData.port).to.eql(389);",
 									"    pm.expect(jsonData.isLdaps).to.eql(true);",
 									"    pm.expect(jsonData.account).to.eql(\"admin\");",
@@ -2660,7 +2660,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"open-ldap-dev-2\",\n    \"hostName\": \"open-ldap\",\n    \"port\": 389,\n    \"isLdaps\": true,\n    \"account\": \"admin\",\n    \"password\": \"admin\",\n    \"baseDn\": \"dc=bigbaobab,dc=org\"\n}"
+							"raw": "{\n    \"name\": \"open-ldap-dev-2\",\n    \"hostName\": \"{{ldap-hostname}}\",\n    \"port\": 389,\n    \"isLdaps\": true,\n    \"account\": \"admin\",\n    \"password\": \"admin\",\n    \"baseDn\": \"dc=bigbaobab,dc=org\"\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/authenticationModes/ldap",
@@ -3026,7 +3026,7 @@
 									"pm.test(\"Check that the correct LDAP Auth Mode was returned.\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    pm.expect(jsonData.name).to.eql(\"open-ldap-dev-2\");",
-									"    pm.expect(jsonData.hostName).to.eql(\"open-ldap\");",
+									"    pm.expect(jsonData.hostName).to.eql(pm.environment.get('ldap-hostname'));",
 									"    pm.expect(jsonData.port).to.eql(389);",
 									"    pm.expect(jsonData.isLdaps).to.eql(true);",
 									"    pm.expect(jsonData.account).to.eql(\"admin\");",
@@ -3076,7 +3076,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"open-ldap-dev-2\",\n    \"hostName\": \"open-ldap\",\n    \"port\": 389,\n    \"isLdaps\": true,\n    \"account\": \"admin\",\n    \"password\": \"admin\",\n    \"baseDn\": \"dc=bigbaobab,dc=org\",\n    \"ldapAttributes\": [{\n    \t\"userField\": \"firstName\",\n    \t\"ldapField\": \"givenName\"\n    },\n    {\n    \t\"userField\": \"surname\",\n    \t\"ldapField\": \"sn\"\n    },\n    {\n    \t\"userField\": \"userName\",\n    \t\"ldapField\": \"userPrincipalName\"\n    },\n    {\n    \t\"userField\": \"email\",\n    \t\"ldapField\": \"mail\"\n    },\n    {\n    \t\"userField\": \"avatar\",\n    \t\"ldapField\": \"jpegPhoto\"\n    }]\n}"
+							"raw": "{\n    \"name\": \"open-ldap-dev-2\",\n    \"hostName\": \"{{ldap-hostname}}\",\n    \"port\": 389,\n    \"isLdaps\": true,\n    \"account\": \"admin\",\n    \"password\": \"admin\",\n    \"baseDn\": \"dc=bigbaobab,dc=org\",\n    \"ldapAttributes\": [{\n    \t\"userField\": \"firstName\",\n    \t\"ldapField\": \"givenName\"\n    },\n    {\n    \t\"userField\": \"surname\",\n    \t\"ldapField\": \"sn\"\n    },\n    {\n    \t\"userField\": \"userName\",\n    \t\"ldapField\": \"userPrincipalName\"\n    },\n    {\n    \t\"userField\": \"email\",\n    \t\"ldapField\": \"mail\"\n    },\n    {\n    \t\"userField\": \"avatar\",\n    \t\"ldapField\": \"jpegPhoto\"\n    }]\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/authenticationModes/ldap",
@@ -3147,7 +3147,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"uuid\": \"{{authentication-mode-guid}}\",\n    \"name\": \"open-ldap-dev-2-updated\",\n    \"hostName\": \"open-ldap\",\n    \"port\": 389,\n    \"isLdaps\": false,\n    \"account\": \"admin\",\n    \"password\": \"admin\",\n    \"baseDn\": \"dc=bigbaobab,dc=org\",\n    \"ldapAttributes\": [{\n    \t\"userField\": \"firstName\",\n    \t\"ldapField\": \"givenNameUpdated\"\n    },\n    {\n    \t\"userField\": \"surname\",\n    \t\"ldapField\": \"sn\"\n    },\n    {\n    \t\"userField\": \"userName\",\n    \t\"ldapField\": \"userPrincipalName\"\n    },\n    {\n    \t\"userField\": \"email\",\n    \t\"ldapField\": \"mail\"\n    },\n    {\n    \t\"userField\": \"avatar\",\n    \t\"ldapField\": \"jpegPhoto\"\n    }]\n}"
+							"raw": "{\n\t\"uuid\": \"{{authentication-mode-guid}}\",\n    \"name\": \"open-ldap-dev-2-updated\",\n    \"hostName\": \"{{ldap-hostname}}\",\n    \"port\": 389,\n    \"isLdaps\": false,\n    \"account\": \"admin\",\n    \"password\": \"admin\",\n    \"baseDn\": \"dc=bigbaobab,dc=org\",\n    \"ldapAttributes\": [{\n    \t\"userField\": \"firstName\",\n    \t\"ldapField\": \"givenNameUpdated\"\n    },\n    {\n    \t\"userField\": \"surname\",\n    \t\"ldapField\": \"sn\"\n    },\n    {\n    \t\"userField\": \"userName\",\n    \t\"ldapField\": \"userPrincipalName\"\n    },\n    {\n    \t\"userField\": \"email\",\n    \t\"ldapField\": \"mail\"\n    },\n    {\n    \t\"userField\": \"avatar\",\n    \t\"ldapField\": \"jpegPhoto\"\n    }]\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/authenticationModes/ldap/{{authentication-mode-guid}}",
