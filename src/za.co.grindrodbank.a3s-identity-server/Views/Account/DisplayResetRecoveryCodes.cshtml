@@ -16,14 +16,8 @@
                 <div class="panel-body">
                     <p>Your one-time recovery codes have been regenerated.</p>
 
-                    <p>If you lose access to your authenticator app, you can use the following one-time recovery codes to recover access to your profile:</p>
+                    <partial name="_2FABackupCodesDisplay" model="Model.RecoveryCodes" />
 
-                    <ul>
-                        @foreach (string code in Model.RecoveryCodes)
-                        {
-                            <li>@code</li>
-                        }
-                    </ul>
                 </div>
             </div>
 

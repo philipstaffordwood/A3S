@@ -1,0 +1,28 @@
+﻿@model IEnumerable<string>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <div id="section-to-hide-during-print">
+        <p>If you lose access to your authenticator app, you can use the following one-time recovery codes to recover access to your profile:</p>
+
+        <ul id="recoveryCodeList">
+            @foreach (string code in Model)
+            {
+                <li>@code</li>
+            }
+        </ul>
+        <button class="btn btn-default" name="btnPrint" id="btnPrint" value="btnPrint" title="Print">Print</button>
+        <button class="btn btn-default" name="btnSave" id="btnSave" value="btnSave" title="Save text file">Save</button>
+        <button class="btn btn-default" name="btnCopy" id="btnCopy" value="btnCopy" title="Copy to clipboard">Copy</button>
+    </div>
+    <div id="section-to-only-print">
+        <strong>Recovery Codes</strong><br /><br />
+
+        @foreach (string code in Model)
+        {
+            @code<br />
+        }
+    </div>
+
+    <script type="text/javascript" src="~/js/display-2fa-backup-codes.js"></script>
+}

@@ -114,3 +114,43 @@
         }
     }
 }
+#section-to-only-print,
+#section-to-only-print * {
+  display: none;
+}
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #section-to-print,
+  #section-to-print * {
+    visibility: visible;
+  }
+  #section-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  #section-to-only-print,
+  #section-to-only-print * {
+    visibility: visible;
+    display: initial;
+  }
+  #section-to-only-print {
+    position: absolute;
+    left: 100px;
+    right: 100px;
+    top: 0px;
+    bottom: 50px;
+  }
+  #section-to-hide-during-print,
+  #section-to-hide-during-print * {
+    display: none;
+  }
+  #section-to-hide-during-print {
+    position: absolute;
+  }
+
+  @page { margin: 0; }
+  body { margin: 1.6cm; }
+}

@@ -43,7 +43,8 @@ namespace za.co.grindrodbank.a3sidentityserver.Quickstart.UI
         private readonly IUserRepository _userRepository;
         private readonly TokenOptions _tokenOptions = new TokenOptions();
 
-        private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+        private const string AUTHENTICATOR_URI_FORMAT = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+        private const int RECOVERY_CODE_MAX = 10;
 
         public AccountController(
             CustomUserManager userManager,
@@ -288,11 +289,36 @@ namespace za.co.grindrodbank.a3sidentityserver.Quickstart.UI
 
             if (!_userManager.IsAuthenticatorTokenVerified(user))
                 throw new TwoFactorAuthException("Invalid authenticator data");
+            
+            TempData["recoveryCodes"] = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, RECOVERY_CODE_MAX);
+
+            return RedirectToAction("DisplayResetRecoveryCodes", new { redirectUrl });
+        }
+
+        /// <summary>
+        /// Entry point into display recovery codes reset workflow
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> DisplayResetRecoveryCodes(string redirectUrl)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+
+            if (user == null)
+                throw new Exception("Invalid login info.");
+
+            if (!_userManager.IsAuthenticatorTokenVerified(user))
+                throw new TwoFactorAuthException("Invalid authenticator data");
+
+            if (TempData["recoveryCodes"] == null)
+                TempData["recoveryCodes"] = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, RECOVERY_CODE_MAX);
+
+            IEnumerable<string> recoveryCodes = (IEnumerable<string>)TempData["recoveryCodes"];
+            TempData["recoveryCodes"] = recoveryCodes;
 
             return View(new ResetRecoveryCodesModel()
             {
                 RedirectUrl = redirectUrl,
-                RecoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10)
+                RecoveryCodes = recoveryCodes
             });
         }
 
@@ -646,9 +672,11 @@ namespace za.co.grindrodbank.a3sidentityserver.Quickstart.UI
 
             IEnumerable<string> recoveryCodes = null;
             if (await _userManager.CountRecoveryCodesAsync(user) == 0)
-                recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
+                recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, RECOVERY_CODE_MAX);
+            else
+                recoveryCodes = (IEnumerable<string>)TempData["recoveryCodes"];
 
-
+            TempData["recoveryCodes"] = recoveryCodes;
             await _userManager.SetAuthenticatorTokenVerifiedAsync(user);
             return new RegisterTwoFactorAuthenticatorCompleteViewModel()
             {
@@ -675,7 +703,7 @@ namespace za.co.grindrodbank.a3sidentityserver.Quickstart.UI
         private string GenerateQrCodeUri(string email, string unformattedKey)
         {
             return string.Format(
-                AuthenticatorUriFormat,
+                AUTHENTICATOR_URI_FORMAT,
                 _urlEncoder.Encode("A3S"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
