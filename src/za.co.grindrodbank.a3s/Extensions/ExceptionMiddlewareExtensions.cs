@@ -41,7 +41,7 @@ namespace GlobalErrorHandling.Extensions
                         return;
                     }
 
-                    writeException(contextFeature.Error, configuration);
+                    WriteException(contextFeature.Error, configuration);
 
                     // Check for a YAML structure error
                     if (contextFeature.Error is YamlDotNet.Core.SyntaxErrorException || contextFeature.Error is YamlDotNet.Core.YamlException)
@@ -93,7 +93,7 @@ namespace GlobalErrorHandling.Extensions
             });
         }
 
-        public static void writeException(Exception exception, IConfiguration configuration)
+        public static void WriteException(Exception exception, IConfiguration configuration)
         {
             var sentryEnabled = bool.Parse(configuration["Sentry:Enabled"]);
             logger.Error(exception);
