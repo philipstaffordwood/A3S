@@ -339,3 +339,6 @@ ASALocalRun/
 
 # Docker storage files, creating from runnign docker images within the project
 *.DS_Store
+
+# Environment file for sentry within the development docker-compose.
+*.env
