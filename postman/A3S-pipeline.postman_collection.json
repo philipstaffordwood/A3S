@@ -2764,7 +2764,7 @@
 									"    var jsonData = pm.response.json();",
 									"    pm.expect(jsonData.uuid).to.eql(pm.environment.get('authentication-mode-guid'));",
 									"    pm.expect(jsonData.name).to.eql(\"open-ldap-dev-2\");",
-									"    pm.expect(jsonData.hostName).to.eql(\"open-ldap\");",
+									"    pm.expect(jsonData.hostName).to.eql(pm.environment.get('ldap-hostname'));",
 									"    pm.expect(jsonData.port).to.eql(389);",
 									"    pm.expect(jsonData.isLdaps).to.eql(true);",
 									"    pm.expect(jsonData.account).to.eql(\"admin\");",
