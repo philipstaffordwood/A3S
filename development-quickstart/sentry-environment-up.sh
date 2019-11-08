@@ -1,4 +1,11 @@
 #!/bin/bash
+#
+# *************************************************
+# Copyright (c) 2019, Grindrod Bank Limited
+# License MIT: https://opensource.org/licenses/MIT
+# **************************************************
+#
+
 
 echo "Migrating the Sentry Database"
 docker-compose -f sentry-docker-compose.yml run --rm web upgrade --noinput
