@@ -43,6 +43,7 @@ To log into the Open Ldap Admin instance from PHP Admin LDAP, click the login bu
 
 [Sentry](https://sentry.io/welcome/) is currently going to be used for runtime exceptions monitoring. An optional add on docker-compose environment has been developed for adding [sentry](https://sentry.io/welcome/) into the development environment. It is in a separate sentry-docker-compose.yml file, as bringing up the environment is a little more complex than a `docker-compose up`. A script has been developed to ensure this process happens correctly. To bring up the sentry environment:
 
+* Run `docker-compose run --rm web config generate-secret-key | tail -n 1 | tr -d '\r\n' | awk '{print "SENTRY_SECRET_KEY="$1}' > .env`. This generates the required sentry secret key and places it into a `.env` file.
 * Run `./sentry-environment-up.sh`.
   * This will migrate the sentry database (which happens prior to the actual docker-compose up).
   * Prompt the user to create a sentry user. This is interactive and will require human input.

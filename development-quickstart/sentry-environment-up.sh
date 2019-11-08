@@ -15,3 +15,5 @@ docker-compose -f sentry-docker-compose.yml run --rm web createuser
 
 echo "Bringing up the Environment"
 docker-compose -f sentry-docker-compose.yml up
+
+echo "Sentry is now listening on `localhost:9000`"
