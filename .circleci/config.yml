@@ -50,7 +50,7 @@ jobs:
       - checkout
       - run: dotnet restore
       - run: dotnet build
-      - run: dotnet test --no-build 
+      - run: dotnet test --no-build
 
   license-headers:
     docker:
@@ -103,6 +103,30 @@ jobs:
       - run: sleep 5
       # # Run the Newman orb to execute the collection against the quickstart environment.
       - run: newman run ~/repo/postman/A3S-pipeline.postman_collection.json -r cli -e ~/repo/postman/A3S-quickstart.postman_environment.json
+
+  publish-axios-client:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:lts-jessie-browsers-legacy
+    steps:
+      - attach_workspace:
+            at: ~/repo
+      - run: yarn
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - run:
+          name: install-snyk
+          command: 'sudo npm install -g snyk'
+      - run:
+          name: Build
+          command: npm run lib
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run:
+          name: Publish package
+          command: npm publish dist/
 
   a3s-docker-build-push:
     docker:
@@ -174,6 +198,7 @@ jobs:
       - run: sudo npm_config_unsafe_perm=true npm install -g snyk@latest
       - run: sudo snyk auth $SNYK_TOKEN
       - run: sudo snyk monitor --file=A3Service.sln || true
+
 workflows:
   version: 2
   untagged_build_test:
@@ -204,6 +229,13 @@ workflows:
           - postman-integration-tests
           <<: *only-tags
       - a3s-ids4-docker-build-push:
+          requires:
+          - unit-test
+          - static-analysis
+          - license-headers
+          - postman-integration-tests
+          <<: *only-tags
+      - publish-axios-client:
           requires:
           - unit-test
           - static-analysis
