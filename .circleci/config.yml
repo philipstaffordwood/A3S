@@ -38,7 +38,7 @@ jobs:
           -Dsonar.projectBaseDir=$CI_PROJECT_DIR \
           -Dsonar.sourceEncoding=UTF-8 \
           -Dsonar.test.inclusions=tests/**/* \
-          -Dsonar.exclusions=**/Data/**,**/Migrations/**,**/Quickstart/**,**/wwwroot/**,**/A3SApiResources/**,**/AbstractApiControllers/**,**/Models/**,**/Repositories/**,**/db/** \
+          -Dsonar.exclusions=**/Data/**,**/Migrations/**,**/Quickstart/**,**/wwwroot/**,**/A3SApiResources/**,**/AbstractApiControllers/**,**/Models/**,**/Repositories/**,**/db/**,**/Views/** \
           -Dsonar.coverage.exclusions=**/*Context.cs,**/Program.cs,**/Startup.cs,**/Config.cs,**/A3SApiResources/**,**/AbstractApiControllers/**,**/Models/**,**/Repositories/** \
           -Dsonar.sources=.
   unit-test:
