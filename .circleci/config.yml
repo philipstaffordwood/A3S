@@ -12,6 +12,7 @@ only-tags: &only-tags
     branches:
       ignore: /.*/
 
+# This workspace can be attached to jobs that require artifacts from previous jobs.
 workspace_root: &workspace_root
   /root/workspace
 
