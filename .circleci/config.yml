@@ -123,7 +123,7 @@ jobs:
       - run: pwd ~/repo/a3s-typescript-axios
       - run: ls -lah ~/repo/a3s-typescript-axios
       - persist_to_workspace:
-          root: /a3s-typescript-axios
+          root: ~/repo/a3s-typescript-axios
           paths:
             - axios-client
 
@@ -235,6 +235,8 @@ workflows:
       - postman-integration-tests
       - generate-axios-client
       - publish-axios-client
+          requires:
+            - generate-axios-client
       - fossa-scan:
           filters:    
             branches:    
