@@ -234,9 +234,9 @@ workflows:
       - license-headers
       - postman-integration-tests
       - generate-axios-client
-      - publish-axios-client
+      - publish-axios-client:
           requires:
-            - generate-axios-client
+          - generate-axios-client
       - fossa-scan:
           filters:    
             branches:    
