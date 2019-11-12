@@ -110,7 +110,10 @@ jobs:
        - image: openapitools/openapi-generator-cli:latest
     steps:
       - checkout
-      - run: /usr/local/bin/docker-entrypoint.sh generate -i ~/repo/doc/a3s-openapi.yaml -g typescript-axios -o /tmp/$label/a3s-typescript-axios --model-package=model --api-package=api --additional-properties=withSeparateModelsAndApi=true,modelPropertyNaming=camelCase,npmName=@grindrodbank/a3s-api
+      - run: mkdir ~/repo/a3s-typescript-axios
+      - run: /usr/local/bin/docker-entrypoint.sh generate -i ~/repo/doc/a3s-openapi.yaml -g typescript-axios -o ~/repo/a3s-typescript-axios --model-package=model --api-package=api --additional-properties=withSeparateModelsAndApi=true,modelPropertyNaming=camelCase,npmName=@grindrodbank/a3s-api
+      - run: pwd ~/repo/a3s-typescript-axios
+      - run: ls -lah ~/repo/a3s-typescript-axios
 
   publish-axios-client:
     working_directory: ~/repo
