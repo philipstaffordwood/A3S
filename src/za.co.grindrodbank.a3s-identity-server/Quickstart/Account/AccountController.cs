@@ -23,8 +23,8 @@ using Microsoft.Extensions.Configuration;
 using za.co.grindrodbank.a3sidentityserver.Exceptions;
 using System.Collections.Generic;
 using za.co.grindrodbank.a3s.Repositories;
-using za.co.grindrodbank.a3sidentityserver.Extensions;
 using za.co.grindrodbank.a3sidentityserver.Managers;
+using za.co.grindrodbank.a3s.Extensions;
 
 namespace za.co.grindrodbank.a3sidentityserver.Quickstart.UI
 {

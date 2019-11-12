@@ -6,7 +6,7 @@
  */
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace za.co.grindrodbank.a3sidentityserver.Extensions
+namespace za.co.grindrodbank.a3s.Extensions
 {
     public static class TokenExtensions
     {

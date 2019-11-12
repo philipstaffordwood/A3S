@@ -147,6 +147,7 @@ namespace za.co.grindrodbank.a3s
                 options.AddPolicy("permission:a3s.ldapAuthenticationModes.read", policy => policy.Requirements.Add(new PermissionRequirement("a3s.ldapAuthenticationModes.read")));
                 options.AddPolicy("permission:a3s.ldapAuthenticationModes.update", policy => policy.Requirements.Add(new PermissionRequirement("a3s.ldapAuthenticationModes.update")));
                 options.AddPolicy("permission:a3s.ldapAuthenticationModes.delete", policy => policy.Requirements.Add(new PermissionRequirement("a3s.ldapAuthenticationModes.delete")));
+                options.AddPolicy("permission:a3s.twoFactorAuth.remove", policy => policy.Requirements.Add(new PermissionRequirement("a3s.twoFactorAuth.remove")));
             });
 
             // Add policy handler services
@@ -180,6 +181,7 @@ namespace za.co.grindrodbank.a3s
             services.AddScoped<IApplicationFunctionService, ApplicationFunctionService>();
             services.AddScoped<ISafeRandomizerService, SafeRandomizerService>();
             services.AddScoped<ILdapConnectionService, LdapConnectionService>();
+            services.AddScoped<ITwoFactorAuthService, TwoFactorAuthService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

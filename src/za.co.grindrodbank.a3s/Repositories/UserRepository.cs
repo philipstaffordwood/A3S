@@ -137,6 +137,7 @@ namespace za.co.grindrodbank.a3s.Repositories
                                                   .ThenInclude(cr => cr.ChildRole)
                                             .Include(u => u.UserTeams)
                                               .ThenInclude(ut => ut.Team)
+                                            .Include(u => u.UserTokens)
                                             .FirstOrDefaultAsync();
             }
 
@@ -158,6 +159,7 @@ namespace za.co.grindrodbank.a3s.Repositories
                                                   .ThenInclude(cr => cr.ChildRole)
                                             .Include(u => u.UserTeams)
                                               .ThenInclude(ut => ut.Team)
+                                            .Include(u => u.UserTokens)
                                             .FirstOrDefaultAsync();
             }
 
@@ -177,6 +179,7 @@ namespace za.co.grindrodbank.a3s.Repositories
                                                 .ThenInclude(cr => cr.ChildRole)
                                         .Include(u => u.UserTeams)
                                           .ThenInclude(ut => ut.Team)
+                                        .Include(u => u.UserTokens)
                                         .ToListAsync();
         }
 

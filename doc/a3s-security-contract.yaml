@@ -4,7 +4,7 @@
 # More information at: https://github.com/GrindrodBank/A3S/blob/master/doc/security-contracts.md
 #
 name: A3S Security Contract
-generated: 2019-10-30 10:00:00 +02:00
+generated: 2019-11-11 14:26:00 +02:00
 applications:
     # This value will be used to create the client scope within the Identity Server. Therefore, it cannot contain any spaces, and should follow a fully smaller case convention.
   - fullname: a3s   
@@ -102,6 +102,12 @@ applications:
           - name: a3s.clientRegistration.update
             description: Enables idempotently applying (creating or updating) a client definition.
 
+      - name: a3s.twoFactorAuth
+        description: Functionality to update two-factor authentication configuration.
+        permissions:
+          - name: a3s.twoFactorAuth.remove
+            description: Removes two-factor authentication from a user profile.
+
     dataPolicies:
       - name: a3s.viewYourTeamsOnly
         description: Will only return teams that the accessing user is part of when retrieving lists of teams from the API.
@@ -168,6 +174,7 @@ defaultConfigurations:
               - a3s.securityContracts.read
               - a3s.securityContracts.update
               - a3s.clientRegistration.update
+              - a3s.twoFactorAuth.remove
           - name: "a3s.userMaintenance"
             description: "A function that contains all user related permissions within the A3S micro-service."
             permissions:
@@ -175,6 +182,7 @@ defaultConfigurations:
               - a3s.users.create
               - a3s.users.update
               - a3s.users.delete
+              - a3s.twoFactorAuth.remove
           - name: "a3s.ldapMaintenance"
             description: "A function that contains all ldap related permissions within the A3S micro-service."
             permissions:
