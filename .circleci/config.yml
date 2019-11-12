@@ -124,20 +124,24 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo/workspace
-      # - run: ls -lah ~/repo/workspace
-      # - run: ls -lah ~/repo/workspace/a3s-typescript-axios
       - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/workspace/a3s-typescript-axios/.npmrc
-      - run: cd ~/repo/workspace/a3s-typescript-axios && yarn
-      - run: cd ~/repo/workspace/a3s-typescript-axios && yarn build
-      # - run: yarn publish
-      # - run:
-      #     name: Publish package
-      #     command: npm publish dist/
+      - run:
+          name: Add node modules to the NPM ignore file.
+          command: echo 'node_modules/' >> ~/repo/workspace/a3s-typescript-axios/.npmignore
+      - run: 
+          name: Run Yarn
+          command: cd ~/repo/workspace/a3s-typescript-axios && yarn
+      - run: 
+          name: Build with Yarn
+          command: cd ~/repo/workspace/a3s-typescript-axios && yarn build
+      - run: 
+          name: Publish to NPM with Yarn.
+          command: cd ~/repo/workspace/a3s-typescript-axios && yarn publish
 
   a3s-docker-build-push:
     docker:
@@ -220,9 +224,6 @@ workflows:
       - license-headers
       - postman-integration-tests
       - generate-axios-client
-      - publish-axios-client:
-          requires:
-          - generate-axios-client
       - fossa-scan:
           filters:    
             branches:    
@@ -256,4 +257,5 @@ workflows:
           - static-analysis
           - license-headers
           - postman-integration-tests
+          - generate-axios-client
           <<: *only-tags
