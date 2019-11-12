@@ -124,21 +124,17 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/repo/workspace
-      - run: ls -lah ~/repo/workspace
-      - run: ls -lah ~/repo/workspace/a3s-typescript-axios
-      # - run: yarn
-      # - run:
-      #     name: update-npm
-      #     command: 'sudo npm install -g npm@latest'
-      # - run:
-      #     name: install-snyk
-      #     command: 'sudo npm install -g snyk'
-      # - run:
-      #     name: Build
-      #     command: npm run lib
-      # - run:
-      #     name: Authenticate with registry
-      #     command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      # - run: ls -lah ~/repo/workspace
+      # - run: ls -lah ~/repo/workspace/a3s-typescript-axios
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      - run: yarn
+      - run: yarn build
+      # - run: yarn publish
       # - run:
       #     name: Publish package
       #     command: npm publish dist/
