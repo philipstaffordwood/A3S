@@ -123,9 +123,9 @@ jobs:
       - run: pwd ~/repo/a3s-typescript-axios
       - run: ls -lah ~/repo/a3s-typescript-axios
       - persist_to_workspace:
-          root: ~/repo/a3s-typescript-axios
+          root: ~/repo
           paths:
-            - axios-client
+            - a3s-typescript-axios
 
   publish-axios-client:
     working_directory: ~/repo
