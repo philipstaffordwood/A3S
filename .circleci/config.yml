@@ -237,6 +237,7 @@ workflows:
       - license-headers: *only-tags
       - fossa-scan: *only-tags
       - postman-integration-tests: *only-tags
+      - generate-axios-client: *only-tags
       - a3s-docker-build-push:
           requires:
           - unit-test
