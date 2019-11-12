@@ -129,6 +129,7 @@ jobs:
       - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
+      - run: cd ~/repo/workspace/a3s-typescript-axios
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
