@@ -58,18 +58,7 @@ jobs:
           -Dsonar.exclusions=**/Data/**,**/Migrations/**,**/Quickstart/**,**/wwwroot/**,**/A3SApiResources/**,**/AbstractApiControllers/**,**/Models/**,**/Repositories/**,**/db/**,**/Views/** \
           -Dsonar.coverage.exclusions=**/*Context.cs,**/Program.cs,**/Startup.cs,**/Config.cs,**/A3SApiResources/**,**/AbstractApiControllers/**,**/Models/**,**/Repositories/** \
           -Dsonar.sources=. \
-          -Dsonar.cs.opencover.reportsPaths=workspace/tests/za.co.grindrodbank.a3s.tests/coverage.opencover.xml,workspace/tests/za.co.grindrodbank.a3s-identity-server.tests/coverage.opencover.xml
-
-  unit-test:
-    docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
-    working_directory: ~/build
-    
-    steps:
-      - checkout
-      - run: dotnet restore
-      - run: dotnet build
-      - run: dotnet test --no-build       
+          -Dsonar.cs.opencover.reportsPaths=workspace/tests/za.co.grindrodbank.a3s.tests/coverage.opencover.xml,workspace/tests/za.co.grindrodbank.a3s-identity-server.tests/coverage.opencover.xml      
 
   license-headers:
     docker:
