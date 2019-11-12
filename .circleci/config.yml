@@ -17,6 +17,21 @@ version: 2.1
 orbs:
   newman: postman/newman@0.0.2
 jobs:
+  unit-test:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
+    working_directory: ~/build
+    
+    steps:
+      - checkout
+      - run: dotnet restore
+      - run: dotnet build
+      - run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+      - persist_to_workspace:
+          root: ~/build
+          paths:
+            - tests/*
+          
   static-analysis:
     docker:
       - image: newtmitch/sonar-scanner:alpine
@@ -27,6 +42,8 @@ jobs:
       - run: apk upgrade
       - run: apk --no-cache add --update git openssh
       - checkout
+      - attach_workspace:
+          at: ~/build/workspace
       - run: |
          sonar-scanner \
           -Dsonar.host.url=https://sonarcloud.io \
@@ -40,17 +57,8 @@ jobs:
           -Dsonar.test.inclusions=tests/**/* \
           -Dsonar.exclusions=**/Data/**,**/Migrations/**,**/Quickstart/**,**/wwwroot/**,**/A3SApiResources/**,**/AbstractApiControllers/**,**/Models/**,**/Repositories/**,**/db/**,**/Views/** \
           -Dsonar.coverage.exclusions=**/*Context.cs,**/Program.cs,**/Startup.cs,**/Config.cs,**/A3SApiResources/**,**/AbstractApiControllers/**,**/Models/**,**/Repositories/** \
-          -Dsonar.sources=.
-  unit-test:
-    docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
-    working_directory: ~/build
-    
-    steps:
-      - checkout
-      - run: dotnet restore
-      - run: dotnet build
-      - run: dotnet test --no-build 
+          -Dsonar.sources=. \
+          -Dsonar.cs.opencover.reportsPaths=workspace/tests/za.co.grindrodbank.a3s.tests/coverage.opencover.xml,workspace/tests/za.co.grindrodbank.a3s-identity-server.tests/coverage.opencover.xml
 
   license-headers:
     docker:
@@ -179,7 +187,9 @@ workflows:
   untagged_build_test:
     jobs:
       - unit-test
-      - static-analysis
+      - static-analysis:
+          requires:
+          - unit-test
       - vulnerability-test
       - license-headers
       - postman-integration-tests
@@ -191,7 +201,10 @@ workflows:
   tagged_build_push:
     jobs:
       - unit-test: *only-tags
-      - static-analysis: *only-tags
+      - static-analysis:
+          requires:
+          - unit-test
+          <<: *only-tags
       - vulnerability-test: *only-tags
       - license-headers: *only-tags
       - fossa-scan: *only-tags
