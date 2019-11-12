@@ -98,9 +98,6 @@
     <Compile Include="..\za.co.grindrodbank.a3s\Models\ApplicationFunctionPermissionModel.cs">
       <Link>Models\ApplicationFunctionPermissionModel.cs</Link>
     </Compile>
-    <Compile Include="..\za.co.grindrodbank.a3s\Extensions\StringExtensions.cs">
-      <Link>Extensions\StringExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\za.co.grindrodbank.a3s\Models\UserTokenModel.cs">
       <Link>Models\UserTokenModel.cs</Link>
     </Compile>
@@ -140,5 +137,11 @@
     <Compile Include="..\za.co.grindrodbank.a3s\Services\LdapConnectionService.cs">
       <Link>Services\LdapConnectionService.cs</Link>
     </Compile>
-  </ItemGroup>
+    <Compile Include="..\za.co.grindrodbank.a3s\Extensions\StringExtensions.cs">
+      <Link>Extensions\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\za.co.grindrodbank.a3s\Extensions\TokenExtensions.cs">
+      <Link>Extensions\TokenExtensions.cs</Link>
+    </Compile>
+</ItemGroup>
 </Project>

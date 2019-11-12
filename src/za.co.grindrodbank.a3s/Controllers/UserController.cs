@@ -74,12 +74,13 @@ namespace za.co.grindrodbank.a3s.Controllers
             return NoContent();
         }
 
+        [Authorize(Policy = "permission:a3s.users.update")]
         public async override Task<IActionResult> ChangeUserPasswordAsync([FromRoute, Required] Guid userId, [FromBody] UserPasswordChangeSubmit userPasswordChangeSubmit)
         {
-            if (userId == Guid.Empty)
+            if (userId == Guid.Empty || userPasswordChangeSubmit.Uuid == Guid.Empty)
                 return BadRequest();
 
-            await userService.ChangePassword(userPasswordChangeSubmit);
+            await userService.ChangePasswordAsync(userPasswordChangeSubmit);
             return NoContent();
         }
     }

@@ -406,6 +406,53 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
   #endregion - User
+  #region - TwoFactorAuth
+  '/twoFactorAuth/users/{userId}':
+    delete:
+      tags:
+        - TwoFactorAuth
+      description: Removes two-factor authentication for a user.
+      summary: Removes two-factor authentication for a user, as well as any registered devices and methods.
+      operationId: removeTwoFactorAuthentication
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The UUID of the user.
+          schema:
+            $ref: '#/components/schemas/UserId'
+      responses:
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to remove two-factor authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  #endregion - TwoFactorAuth
   #region - Role
   '/roles':
     get:

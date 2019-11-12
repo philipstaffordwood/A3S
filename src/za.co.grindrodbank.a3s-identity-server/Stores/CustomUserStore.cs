@@ -4,7 +4,7 @@
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -15,8 +15,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using za.co.grindrodbank.a3s.Extensions;
 using za.co.grindrodbank.a3s.Models;
-using za.co.grindrodbank.a3sidentityserver.Extensions;
 
 namespace za.co.grindrodbank.a3sidentityserver.Stores
 {

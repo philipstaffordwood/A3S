@@ -256,7 +256,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
             Exception caughtException = null;
             try
             {
-                await userService.ChangePassword(userPasswordChangeSubmit);
+                await userService.ChangePasswordAsync(userPasswordChangeSubmit);
             }
             catch (Exception ex)
             {
@@ -287,7 +287,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
             Exception caughtException = null;
             try
             {
-                await userService.ChangePassword(userPasswordChangeSubmit);
+                await userService.ChangePasswordAsync(userPasswordChangeSubmit);
             }
             catch (Exception ex)
             {
@@ -320,7 +320,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
             Exception caughtException = null;
             try
             {
-                await userService.ChangePassword(userPasswordChangeSubmit);
+                await userService.ChangePasswordAsync(userPasswordChangeSubmit);
             }
             catch (Exception ex)
             {

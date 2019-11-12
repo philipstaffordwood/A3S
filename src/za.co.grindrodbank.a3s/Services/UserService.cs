@@ -15,6 +15,7 @@ using NLog;
 using za.co.grindrodbank.a3s.A3SApiResources;
 using za.co.grindrodbank.a3s.Extensions;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace za.co.grindrodbank.a3s.Services
 {
@@ -222,7 +223,7 @@ namespace za.co.grindrodbank.a3s.Services
             }
         }
 
-        public async Task ChangePassword(UserPasswordChangeSubmit changeSubmit)
+        public async Task ChangePasswordAsync(UserPasswordChangeSubmit changeSubmit)
         {
             if (string.Compare(changeSubmit.NewPassword, changeSubmit.NewPasswordConfirmed, StringComparison.Ordinal) != 0)
                 throw new ItemNotProcessableException("New password and confirm new password fields do not match.");

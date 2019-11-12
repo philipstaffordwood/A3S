@@ -19,6 +19,6 @@ namespace za.co.grindrodbank.a3s.Services
         Task<User> CreateAsync(UserSubmit userSubmit, Guid createdById);
         Task<List<User>> GetListAsync();
         Task DeleteAsync(Guid userId);
-        Task ChangePassword(UserPasswordChangeSubmit changeSubmit);
+        Task ChangePasswordAsync(UserPasswordChangeSubmit changeSubmit);
     }
 }

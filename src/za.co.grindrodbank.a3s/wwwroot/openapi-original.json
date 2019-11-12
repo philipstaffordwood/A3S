@@ -621,6 +621,77 @@
         "tags" : [ "User" ]
       }
     },
+    "/twoFactorAuth/users/{userId}" : {
+      "delete" : {
+        "description" : "Removes two-factor authentication for a user.",
+        "operationId" : "removeTwoFactorAuthentication",
+        "parameters" : [ {
+          "description" : "The UUID of the user.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "userId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/UserId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to remove two-factor authentication."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "User not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Removes two-factor authentication for a user, as well as any registered devices and methods.",
+        "tags" : [ "TwoFactorAuth" ]
+      }
+    },
     "/roles" : {
       "get" : {
         "description" : "Search for Roles.",
