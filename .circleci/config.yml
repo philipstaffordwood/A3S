@@ -13,7 +13,7 @@ only-tags: &only-tags
       ignore: /.*/
 
 workspace_root: &workspace_root
-  /tmp/workspace
+  /root/workspace
 
 attach_workspace: &attach_workspace
   attach_workspace:
