@@ -129,12 +129,11 @@ jobs:
       - run:
           name: update-npm
           command: 'sudo npm install -g npm@latest'
-      - run: cd ~/repo/workspace/a3s-typescript-axios
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
-      - run: yarn
-      - run: yarn build
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/workspace/a3s-typescript-axios/.npmrc
+      - run: cd ~/repo/workspace/a3s-typescript-axios && yarn
+      - run: cd ~/repo/workspace/a3s-typescript-axios && yarn build
       # - run: yarn publish
       # - run:
       #     name: Publish package
