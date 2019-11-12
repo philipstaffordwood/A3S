@@ -223,7 +223,6 @@ workflows:
       - vulnerability-test
       - license-headers
       - postman-integration-tests
-      - generate-axios-client
       - fossa-scan:
           filters:    
             branches:    
