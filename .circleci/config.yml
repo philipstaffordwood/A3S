@@ -12,6 +12,13 @@ only-tags: &only-tags
     branches:
       ignore: /.*/
 
+workspace_root: &workspace_root
+  /tmp/workspace
+
+attach_workspace: &attach_workspace
+  attach_workspace:
+    at: *workspace_root
+
 # Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle CI admin.
 version: 2.1
 orbs:
@@ -114,30 +121,34 @@ jobs:
       - run: /usr/local/bin/docker-entrypoint.sh generate -i ~/repo/doc/a3s-openapi.yaml -g typescript-axios -o ~/repo/a3s-typescript-axios --model-package=model --api-package=api --additional-properties=withSeparateModelsAndApi=true,modelPropertyNaming=camelCase,npmName=@grindrodbank/a3s-api
       - run: pwd ~/repo/a3s-typescript-axios
       - run: ls -lah ~/repo/a3s-typescript-axios
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - axios-client
 
   publish-axios-client:
     working_directory: ~/repo
     docker:
       - image: circleci/node:lts-jessie-browsers-legacy
     steps:
-      - attach_workspace:
-            at: ~/repo
-      - run: yarn
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
-      - run:
-          name: install-snyk
-          command: 'sudo npm install -g snyk'
-      - run:
-          name: Build
-          command: npm run lib
-      - run:
-          name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
-      - run:
-          name: Publish package
-          command: npm publish dist/
+      - *attach_workspace
+      - run: ls -lah /tmp/workspace
+      # - run: yarn
+      # - run:
+      #     name: update-npm
+      #     command: 'sudo npm install -g npm@latest'
+      # - run:
+      #     name: install-snyk
+      #     command: 'sudo npm install -g snyk'
+      # - run:
+      #     name: Build
+      #     command: npm run lib
+      # - run:
+      #     name: Authenticate with registry
+      #     command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/.npmrc
+      # - run:
+      #     name: Publish package
+      #     command: npm publish dist/
 
   a3s-docker-build-push:
     docker:
@@ -220,6 +231,7 @@ workflows:
       - license-headers
       - postman-integration-tests
       - generate-axios-client
+      - publish-axios-client
       - fossa-scan:
           filters:    
             branches:    
