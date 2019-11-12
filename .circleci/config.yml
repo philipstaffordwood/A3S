@@ -12,14 +12,6 @@ only-tags: &only-tags
     branches:
       ignore: /.*/
 
-# # This workspace can be attached to jobs that require artifacts from previous jobs.
-# workspace_root: &workspace_root
-#   /root/workspace
-
-# attach_workspace: &attach_workspace
-#   attach_workspace:
-#     at: *workspace_root
-
 # Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle CI admin.
 version: 2.1
 orbs:
@@ -132,10 +124,10 @@ jobs:
     docker:
       - image: circleci/node:lts-jessie-browsers-legacy
     steps:
-      # - *attach_workspace
       - attach_workspace:
           at: ~/repo/workspace
       - run: ls -lah ~/repo/workspace
+      - run: ls -lah ~/repo/workspace/a3s-typescript-axios
       # - run: yarn
       # - run:
       #     name: update-npm
