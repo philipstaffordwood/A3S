@@ -104,6 +104,19 @@ jobs:
       # # Run the Newman orb to execute the collection against the quickstart environment.
       - run: newman run ~/repo/postman/A3S-pipeline.postman_collection.json -r cli -e ~/repo/postman/A3S-quickstart.postman_environment.json
 
+  generate-axios-client:
+    working_directory: ~/repo
+    docker:
+       - image: openapitools/openapi-generator-cli:latest
+    steps:
+      - checkout
+      - run: /usr/local/bin/docker-entrypoint.sh generate  \
+             -i ~/repo/doc/a3s-openapi.yaml \
+             -g typescript-axios -o /tmp/$label/a3s-typescript-axios \
+             --model-package=model \
+             --api-package=api \
+             --additional-properties=withSeparateModelsAndApi=true,modelPropertyNaming=camelCase,npmName=@grindrodbank/a3s-api
+
   publish-axios-client:
     working_directory: ~/repo
     docker:
@@ -208,6 +221,7 @@ workflows:
       - vulnerability-test
       - license-headers
       - postman-integration-tests
+      - generate-axios-client
       - fossa-scan:
           filters:    
             branches:    
