@@ -58,7 +58,7 @@ jobs:
           -Dsonar.exclusions=**/Data/**,**/Migrations/**,**/Quickstart/**,**/wwwroot/**,**/A3SApiResources/**,**/AbstractApiControllers/**,**/Models/**,**/Repositories/**,**/db/**,**/Views/** \
           -Dsonar.coverage.exclusions=**/*Context.cs,**/Program.cs,**/Startup.cs,**/Config.cs,**/A3SApiResources/**,**/AbstractApiControllers/**,**/Models/**,**/Repositories/** \
           -Dsonar.sources=. \
-          -Dsonar.cs.opencover.reportsPaths=workspace/tests/za.co.grindrodbank.a3s.tests/coverage.opencover.xml,workspace/tests/za.co.grindrodbank.a3s-identity-server.tests/coverage.opencover.xml
+          -Dsonar.cs.opencover.reportsPaths=workspace/tests/za.co.grindrodbank.a3s.tests/coverage.opencover.xml,workspace/tests/za.co.grindrodbank.a3s-identity-server.tests/coverage.opencover.xml      
 
   license-headers:
     docker:
@@ -111,6 +111,45 @@ jobs:
       - run: sleep 5
       # # Run the Newman orb to execute the collection against the quickstart environment.
       - run: newman run ~/repo/postman/A3S-pipeline.postman_collection.json -r cli -e ~/repo/postman/A3S-quickstart.postman_environment.json
+
+  generate-axios-client:
+    working_directory: ~/repo
+    docker:
+       - image: openapitools/openapi-generator-cli:latest
+    steps:
+      - checkout
+      - run: mkdir ~/repo/a3s-typescript-axios
+      - run: /usr/local/bin/docker-entrypoint.sh generate -i ~/repo/doc/a3s-openapi.yaml -g typescript-axios -o ~/repo/a3s-typescript-axios --model-package=model --api-package=api --additional-properties=withSeparateModelsAndApi=true,modelPropertyNaming=camelCase,npmName=@grindrodbank/a3s-api
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - a3s-typescript-axios
+
+  publish-axios-client:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:lts-jessie-browsers-legacy
+    steps:
+      - attach_workspace:
+          at: ~/repo/workspace
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/repo/workspace/a3s-typescript-axios/.npmrc
+      - run:
+          name: Add node modules to the NPM ignore file.
+          command: echo 'node_modules/' >> ~/repo/workspace/a3s-typescript-axios/.npmignore
+      - run: 
+          name: Run Yarn
+          command: cd ~/repo/workspace/a3s-typescript-axios && yarn
+      - run: 
+          name: Build with Yarn
+          command: cd ~/repo/workspace/a3s-typescript-axios && yarn build
+      - run: 
+          name: Publish to NPM with Yarn.
+          command: cd ~/repo/workspace/a3s-typescript-axios && yarn publish
 
   a3s-docker-build-push:
     docker:
@@ -182,6 +221,7 @@ jobs:
       - run: sudo npm_config_unsafe_perm=true npm install -g snyk@latest
       - run: sudo snyk auth $SNYK_TOKEN
       - run: sudo snyk monitor --file=A3Service.sln || true
+
 workflows:
   version: 2
   untagged_build_test:
@@ -209,6 +249,7 @@ workflows:
       - license-headers: *only-tags
       - fossa-scan: *only-tags
       - postman-integration-tests: *only-tags
+      - generate-axios-client: *only-tags
       - a3s-docker-build-push:
           requires:
           - unit-test
@@ -222,4 +263,12 @@ workflows:
           - static-analysis
           - license-headers
           - postman-integration-tests
+          <<: *only-tags
+      - publish-axios-client:
+          requires:
+          - unit-test
+          - static-analysis
+          - license-headers
+          - postman-integration-tests
+          - generate-axios-client
           <<: *only-tags
