@@ -50,13 +50,11 @@ namespace za.co.grindrodbank.a3s.Services
             client.AlwaysIncludeUserClaimsInIdToken = true;
             client.RequireConsent = false;
 
-            logger.Debug($"Access Token Lifetime: '{oauth2ClientSubmit.AccessTokenLifetime}'.");
             if (oauth2ClientSubmit.AccessTokenLifetime > 0)
             {
                 client.AccessTokenLifetime = oauth2ClientSubmit.AccessTokenLifetime;
             }
 
-            logger.Debug($"ID Token Lifetime: '{oauth2ClientSubmit.IdentityTokenLifetime}'.");
             if (oauth2ClientSubmit.IdentityTokenLifetime > 0)
             {
                 client.IdentityTokenLifetime = oauth2ClientSubmit.IdentityTokenLifetime;
