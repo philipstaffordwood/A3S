@@ -44,7 +44,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="**/*" />
-  </ItemGroup>
 </Project>
