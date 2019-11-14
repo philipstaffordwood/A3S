@@ -55,11 +55,13 @@ namespace za.co.grindrodbank.a3s
             services.AddInfoActuator(Configuration); // Add Info Actuator
 
             // Add a database context for operating on the A3S data.
-            services.AddDbContext<A3SContext>(options =>
+            services.AddDbContextPool<A3SContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("IdentityServerConnection")
                     ));
 
+            // NOTE! Attempting to pool the configuration DB context results in the following exception.
+            // The DbContext of type 'ConfigurationDbContext' cannot be pooled because it does not have a single public constructor accepting a single parameter of type DbContextOptions.
             services.AddDbContext<ConfigurationDbContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("IdentityServerConnection")
