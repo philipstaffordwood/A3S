@@ -84,16 +84,16 @@ networks:
 
 Sentry requires some manual steps to be run using the docker-compose environment defined in figure 1. These are listed below and must be run **prior to `running docker-compose up`**. Assuming that the docker-compose file is called `sentry-docker-compose.yml`
 
-* Create a secret key. Run:
+* Create a secret key.
 
 ```yaml
 docker-compose run --rm web config generate-secret-key | tail -n 1 | tr -d '\r\n' | awk '{print "SENTRY_SECRET_KEY="$1}' > .env
 ```
-* Migrate the database. Run:
+* Migrate the database.
 ```yaml
 docker-compose -f sentry-docker-compose.yml run --rm web upgrade --noinput
 ```
-* Create a user. Run:
+* Create a user.
 ```yaml
 docker-compose -f sentry-docker-compose.yml run --rm web createuser
 ```

@@ -12,8 +12,6 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using NLog;
 using za.co.grindrodbank.a3s.A3SApiResources;
-using Microsoft.Extensions.Configuration;
-using Sentry;
 
 namespace GlobalErrorHandling.Extensions
 {
@@ -21,7 +19,7 @@ namespace GlobalErrorHandling.Extensions
     {
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
-        public static void ConfigureExceptionHandler(this IApplicationBuilder app, IConfiguration configuration)
+        public static void ConfigureExceptionHandler(this IApplicationBuilder app)
         {
             app.UseExceptionHandler(appError =>
             {
@@ -41,7 +39,7 @@ namespace GlobalErrorHandling.Extensions
                         return;
                     }
 
-                    WriteException(contextFeature.Error, configuration);
+                    WriteException(contextFeature.Error);
 
                     // Check for a YAML structure error
                     if (contextFeature.Error is YamlDotNet.Core.SyntaxErrorException || contextFeature.Error is YamlDotNet.Core.YamlException)
@@ -93,15 +91,9 @@ namespace GlobalErrorHandling.Extensions
             });
         }
 
-        public static void WriteException(Exception exception, IConfiguration configuration)
+        public static void WriteException(Exception exception)
         {
-            var sentryEnabled = bool.Parse(configuration["Sentry:Enabled"]);
             logger.Error(exception);
-
-            if (sentryEnabled)
-            {
-                SentrySdk.CaptureException(exception);
-            }
         }
     }
 }
