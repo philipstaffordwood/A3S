@@ -57,6 +57,11 @@ namespace za.co.grindrodbank.a3sidentityserver.Services
                     claims.Add(new Claim(IdentityServerConstants.StandardScopes.Email, user.Email));
                 }
 
+                if (user.UserName != null)
+                {
+                    claims.Add(new Claim("username", user.UserName));
+                }
+
                 context.IssuedClaims = claims;
                 context.LogIssuedClaims(Logger);
             }
