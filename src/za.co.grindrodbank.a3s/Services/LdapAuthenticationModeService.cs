@@ -33,12 +33,12 @@ namespace za.co.grindrodbank.a3s.Services
         {
             LdapAuthenticationModeModel existingAuthenticationMode = await ldapAuthenticationModeRepository.GetByNameAsync(ldapAuthenticationModeSubmit.Name, includePassword: false);
             if (existingAuthenticationMode != null)
-                throw new ItemNotFoundException($"AuthenticationMode with Name '{ldapAuthenticationModeSubmit.Name}' already exist.");
+                throw new ItemNotProcessableException($"LDAP Authentication Mode with Name '{ldapAuthenticationModeSubmit.Name}' already exist.");
 
-            var authenticationModeModel = mapper.Map<LdapAuthenticationModeModel>(ldapAuthenticationModeSubmit);
-            authenticationModeModel.ChangedBy = createdById;
+            var LdapAuthenticationModeModel = mapper.Map<LdapAuthenticationModeModel>(ldapAuthenticationModeSubmit);
+            LdapAuthenticationModeModel.ChangedBy = createdById;
 
-            return mapper.Map<LdapAuthenticationMode>(await ldapAuthenticationModeRepository.CreateAsync(authenticationModeModel));
+            return mapper.Map<LdapAuthenticationMode>(await ldapAuthenticationModeRepository.CreateAsync(LdapAuthenticationModeModel));
         }
 
         public async Task<LdapAuthenticationMode> GetByIdAsync(Guid ldapAuthenticationModeId)
@@ -101,7 +101,7 @@ namespace za.co.grindrodbank.a3s.Services
                 throw new ItemNotFoundException($"Authentication Mode with GUID '{ldapAuthenticationModeId}' not found.");
             }
 
-            if (authenticationMode.Users.Any())
+            if (authenticationMode.Users != null && authenticationMode.Users.Any())
             {
                 throw new ItemNotProcessableException($"Authentication Mode has users still assigned to it. Only Authentication modes without users assigned can be deleted. Not deleting.");
             }

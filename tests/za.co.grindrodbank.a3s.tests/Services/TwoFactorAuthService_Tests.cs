@@ -5,6 +5,7 @@
  * **************************************************
  */
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using NSubstitute;
 using Xunit;
@@ -62,7 +63,18 @@ namespace za.co.grindrodbank.a3s.tests.Services
             var twoFactorAuthService = new TwoFactorAuthService(userRepository);
 
             var testGuid = Guid.NewGuid();
-            userRepository.GetByIdAsync(testGuid, Arg.Any<bool>()).Returns(new UserModel() { Id = testGuid.ToString() });
+            userRepository.GetByIdAsync(testGuid, Arg.Any<bool>()).Returns(
+                new UserModel()
+                {
+                    Id = testGuid.ToString(),
+                    UserTokens = new List<UserTokenModel>()
+                    {
+                        new UserTokenModel(),
+                        new UserTokenModel(),
+                        new UserTokenModel(),
+                    }
+                });
+
             await twoFactorAuthService.RemoveTwoFactorAuthenticationAsync(testGuid);
 
             Exception catchingException = null;

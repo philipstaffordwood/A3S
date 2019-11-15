@@ -19,7 +19,7 @@ using za.co.grindrodbank.a3sidentityserver.Managers;
 using za.co.grindrodbank.a3s.Repositories;
 using za.co.grindrodbank.a3s.Services;
 
-namespace IdentityServer.Tests.Managers
+namespace za.co.grindrodbank.a3sidentityserver.tests.Managers
 {
     public class LdapCompatibleSignInManager_Tests
     {

@@ -40,6 +40,10 @@ namespace za.co.grindrodbank.a3s.Services
 
             try
             {
+                RoleModel existingRole = await roleRepository.GetByNameAsync(roleSubmit.Name);
+                if (existingRole != null)
+                    throw new ItemNotProcessableException($"Role with Name '{roleSubmit.Name}' already exist.");
+
                 // Note: The mapper will only map the basic first level members of the RoleSubmit to the Role.
                 // The RoleSubmit contains a list of User UUIDs that will need to be found and converted into actual user representations.
                 RoleModel newRole = mapper.Map<RoleModel>(roleSubmit);

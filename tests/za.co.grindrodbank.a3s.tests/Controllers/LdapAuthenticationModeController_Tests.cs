@@ -16,7 +16,7 @@ using za.co.grindrodbank.a3s.A3SApiResources;
 
 namespace za.co.grindrodbank.a3s.tests.Controllers
 {
-    public class AuthenticationModeController_Tests
+    public class LdapAuthenticationModeController_Tests
     {
         [Fact]
         public async Task GetAuthenticationModeAsync_WithEmptyGuid_ReturnsNotFoundResult()

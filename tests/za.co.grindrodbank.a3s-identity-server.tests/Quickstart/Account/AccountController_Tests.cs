@@ -5,10 +5,12 @@
  * **************************************************
  */
 ﻿using System;
-namespace za.co.grindrodbank.a3sidentityserver.Quickstart.UI
+namespace za.co.grindrodbank.a3sidentityserver.tests.Quickstart.Account
 {
-    public class TwoFactorViewModel : TwoFactorInputModel
+    public class AccountController_Tests
     {
-        public bool AuthenticatorConfigured { get; set; }
+        public AccountController_Tests()
+        {
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿{
 	"info": {
 		"_postman_id": "e2f6cc98-6030-4ea6-8555-0d658cb40393",
-		"name": "A3S - Pipeline",
+		"name": "A3S - Integration",
 		"description": "A Postman collection desgined to be executed remotely using Newman within the CI/CD context.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},

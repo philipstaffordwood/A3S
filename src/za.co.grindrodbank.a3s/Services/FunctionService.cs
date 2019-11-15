@@ -40,6 +40,10 @@ namespace za.co.grindrodbank.a3s.Services
 
             try
             {
+                FunctionModel existingFunction = await functionRepository.GetByNameAsync(functionSubmit.Name);
+                if (existingFunction != null)
+                    throw new ItemNotProcessableException($"Function with Name '{functionSubmit.Name}' already exist.");
+
                 var function = new FunctionModel();
 
                 function.Name = functionSubmit.Name;
@@ -114,6 +118,18 @@ namespace za.co.grindrodbank.a3s.Services
             }
         }
 
+        public async Task DeleteAsync(Guid functionId)
+        {
+            var function = await functionRepository.GetByIdAsync(functionId);
+
+            if (function == null)
+            {
+                throw new ItemNotFoundException($"Function with UUID '{functionId}' not found.");
+            }
+
+            await functionRepository.DeleteAsync(function);
+        }
+
         private async Task CheckForApplicationAndAssignToFunctionIfExists(FunctionModel function, FunctionSubmit functionSubmit)
         {
             var application = await applicationRepository.GetByIdAsync(functionSubmit.ApplicationId);
@@ -174,18 +190,6 @@ namespace za.co.grindrodbank.a3s.Services
             permissionRepository.RollbackTransaction();
             applicationRepository.RollbackTransaction();
             functionRepository.RollbackTransaction();
-        }
-
-        public async Task DeleteUserAsync(Guid functionId)
-        {
-            var function = await functionRepository.GetByIdAsync(functionId);
-
-            if(function == null)
-            {
-                throw new ItemNotFoundException($"Function with UUID '{functionId}' not found.");
-            }
-
-            await functionRepository.DeleteAsync(function);
         }
     }
 }
