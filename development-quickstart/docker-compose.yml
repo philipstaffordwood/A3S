@@ -74,19 +74,6 @@ services:
     image: "namshi/smtp:latest"
     ports:
       - "25:25"
-
-  # Postgres database.
-  pgbouncer:
-    image: pgbouncer/pgbouncer:1.12.0
-    networks:
-      - a3s-development
-    environment:
-      DATABASES_HOST: a3s-development-postgresql
-      DATABASES_USER: postgres           # define credentials
-      DATABASES_PASSWORD: postgres       # define credentials
-      DATABASES_PORT: 5432               # define database
-    ports:
-      - 6432:6432                 # PgBouncer port
       
 networks:
   a3s-development:
