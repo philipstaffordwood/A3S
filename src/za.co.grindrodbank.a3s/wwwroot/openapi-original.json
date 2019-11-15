@@ -3,7 +3,7 @@
   "info" : {
     "description" : "API Definition for the A3S. This service allows authentication, authorisation and accounting.",
     "title" : "A3S",
-    "version" : "1.0.0"
+    "version" : "1.0.1"
   },
   "servers" : [ {
     "url" : "/"
@@ -4181,11 +4181,13 @@
           "clientId" : "clientId",
           "clientSecrets" : [ "clientSecrets", "clientSecrets" ],
           "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+          "identityTokenLifetime" : 6,
           "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
           "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
           "name" : "name",
           "redirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
-          "allowedScopes" : [ "allowedScopes", "allowedScopes" ]
+          "allowedScopes" : [ "allowedScopes", "allowedScopes" ],
+          "accessTokenLifetime" : 0
         },
         "properties" : {
           "clientId" : {
@@ -4251,9 +4253,17 @@
           "allowedOfflineAccess" : {
             "description" : "Defines whether offline access with refresh tokens is permitted for this client.",
             "type" : "boolean"
+          },
+          "accessTokenLifetime" : {
+            "description" : "The amount of time that access tokens issued for this client will be valid (in seconds) for. Default is 3600.",
+            "type" : "integer"
+          },
+          "identityTokenLifetime" : {
+            "description" : "The amount of time that ID tokens issued for this client will be valid (in seconds) for. Default is 3600.",
+            "type" : "integer"
           }
         },
-        "required" : [ "allowedGrantTypes", "allowedOfflineAccess", "allowedScopes", "clientId", "name" ],
+        "required" : [ "allowedCorsOrigins", "allowedGrantTypes", "allowedOfflineAccess", "allowedScopes", "clientId", "name", "postLogoutRedirectUris", "redirectUris" ],
         "type" : "object"
       },
       "Oauth2Client" : {
@@ -4581,7 +4591,7 @@
             "userField" : "userField",
             "ldapField" : "ldapField"
           } ],
-          "port" : 0,
+          "port" : 1,
           "name" : "name",
           "isLdaps" : true,
           "baseDn" : "baseDn",
@@ -4759,7 +4769,7 @@
               "userField" : "userField",
               "ldapField" : "ldapField"
             } ],
-            "port" : 0,
+            "port" : 1,
             "name" : "name",
             "isLdaps" : true,
             "baseDn" : "baseDn",
@@ -4773,7 +4783,7 @@
               "userField" : "userField",
               "ldapField" : "ldapField"
             } ],
-            "port" : 0,
+            "port" : 1,
             "name" : "name",
             "isLdaps" : true,
             "baseDn" : "baseDn",
@@ -4878,22 +4888,26 @@
             "clientId" : "clientId",
             "clientSecrets" : [ "clientSecrets", "clientSecrets" ],
             "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "identityTokenLifetime" : 6,
             "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
             "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
             "name" : "name",
             "redirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
-            "allowedScopes" : [ "allowedScopes", "allowedScopes" ]
+            "allowedScopes" : [ "allowedScopes", "allowedScopes" ],
+            "accessTokenLifetime" : 0
           }, {
             "allowedOfflineAccess" : true,
             "allowedGrantTypes" : [ "allowedGrantTypes", "allowedGrantTypes" ],
             "clientId" : "clientId",
             "clientSecrets" : [ "clientSecrets", "clientSecrets" ],
             "allowedCorsOrigins" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
+            "identityTokenLifetime" : 6,
             "hashedClientSecrets" : [ "hashedClientSecrets", "hashedClientSecrets" ],
             "postLogoutRedirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
             "name" : "name",
             "redirectUris" : [ "http://example.com/aeiou", "http://example.com/aeiou" ],
-            "allowedScopes" : [ "allowedScopes", "allowedScopes" ]
+            "allowedScopes" : [ "allowedScopes", "allowedScopes" ],
+            "accessTokenLifetime" : 0
           } ],
           "defaultConfigurations" : [ {
             "teams" : [ {
@@ -4932,7 +4946,7 @@
                 "userField" : "userField",
                 "ldapField" : "ldapField"
               } ],
-              "port" : 0,
+              "port" : 1,
               "name" : "name",
               "isLdaps" : true,
               "baseDn" : "baseDn",
@@ -4946,7 +4960,7 @@
                 "userField" : "userField",
                 "ldapField" : "ldapField"
               } ],
-              "port" : 0,
+              "port" : 1,
               "name" : "name",
               "isLdaps" : true,
               "baseDn" : "baseDn",
@@ -5041,7 +5055,7 @@
                 "userField" : "userField",
                 "ldapField" : "ldapField"
               } ],
-              "port" : 0,
+              "port" : 1,
               "name" : "name",
               "isLdaps" : true,
               "baseDn" : "baseDn",
@@ -5055,7 +5069,7 @@
                 "userField" : "userField",
                 "ldapField" : "ldapField"
               } ],
-              "port" : 0,
+              "port" : 1,
               "name" : "name",
               "isLdaps" : true,
               "baseDn" : "baseDn",

@@ -1,8 +1,8 @@
-openapi: 3.0.0
+﻿openapi: 3.0.0
 info:
   description: >-
     API Definition for the A3S. This service allows authentication, authorisation and accounting.
-  version: 1.0.0
+  version: 1.0.1
   title: A3S
 paths:
   #region - User
@@ -2714,6 +2714,9 @@ components:
         - allowedGrantTypes
         - allowedScopes
         - allowedOfflineAccess
+        - redirectUris
+        - allowedCorsOrigins
+        - postLogoutRedirectUris
       properties:
         clientId:
           type: string
@@ -2762,6 +2765,12 @@ components:
         allowedOfflineAccess:
           description: Defines whether offline access with refresh tokens is permitted for this client.
           type: boolean
+        accessTokenLifetime:
+          description: The amount of time that access tokens issued for this client will be valid (in seconds) for. Default is 3600.
+          type: integer
+        identityTokenLifetime:
+          description: The amount of time that ID tokens issued for this client will be valid (in seconds) for. Default is 3600.
+          type: integer
             
     Oauth2Client:
       description: |

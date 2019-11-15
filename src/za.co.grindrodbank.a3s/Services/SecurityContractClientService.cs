@@ -50,6 +50,16 @@ namespace za.co.grindrodbank.a3s.Services
             client.AlwaysIncludeUserClaimsInIdToken = true;
             client.RequireConsent = false;
 
+            if (oauth2ClientSubmit.AccessTokenLifetime > 0)
+            {
+                client.AccessTokenLifetime = oauth2ClientSubmit.AccessTokenLifetime;
+            }
+
+            if (oauth2ClientSubmit.IdentityTokenLifetime > 0)
+            {
+                client.IdentityTokenLifetime = oauth2ClientSubmit.IdentityTokenLifetime;
+            }
+
             client.AllowedScopes = new List<ClientScope>();
 
             foreach(var clientScope in oauth2ClientSubmit.AllowedScopes)
@@ -153,6 +163,8 @@ namespace za.co.grindrodbank.a3s.Services
                 {
                     ClientId = client.ClientId,
                     Name = client.ClientName,
+                    AccessTokenLifetime = client.AccessTokenLifetime,
+                    IdentityTokenLifetime = client.IdentityTokenLifetime,
                     AllowedOfflineAccess = client.AllowOfflineAccess,
                     AllowedCorsOrigins = new List<string>(),
                     AllowedGrantTypes = new List<string>(),
