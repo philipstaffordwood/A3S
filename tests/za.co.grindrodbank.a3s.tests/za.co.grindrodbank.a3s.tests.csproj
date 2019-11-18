@@ -13,6 +13,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="microsoft.aspnetcore.diagnostics.abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
@@ -29,6 +30,7 @@
     <Folder Include="Services\" />
     <Folder Include="Controllers\" />
     <Folder Include="Fakes\" />
+    <Folder Include="Managers\" />
     <Folder Include="Extensions\" />
   </ItemGroup>
   <ItemGroup>

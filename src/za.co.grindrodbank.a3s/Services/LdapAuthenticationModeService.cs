@@ -80,9 +80,9 @@ namespace za.co.grindrodbank.a3s.Services
             return mapper.Map<LdapAuthenticationMode>(await ldapAuthenticationModeRepository.UpdateAsync(existingAuthenticationMode));
         }
 
-        public Task<LdapAuthenticationModeTestResult> TestAsync(LdapAuthenticationModeSubmit ldapAuthenticationModeSubmit)
+        public Task<ValidationResultResponse> TestAsync(LdapAuthenticationModeSubmit ldapAuthenticationModeSubmit)
         {
-            var testResult = new LdapAuthenticationModeTestResult();
+            var testResult = new ValidationResultResponse();
             var resultMessages = new List<string>();
 
             var ldapModel = mapper.Map<LdapAuthenticationModeModel>(ldapAuthenticationModeSubmit);

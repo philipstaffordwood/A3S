@@ -27,10 +27,10 @@ using za.co.grindrodbank.a3s.Converters;
 namespace za.co.grindrodbank.a3s.A3SApiResources
 { 
     /// <summary>
-    /// An LdapAuthenticationMode test result 
+    /// A validation result. 
     /// </summary>
     [DataContract]
-    public partial class LdapAuthenticationModeTestResult : IEquatable<LdapAuthenticationModeTestResult>
+    public partial class ValidationResultResponse : IEquatable<ValidationResultResponse>
     { 
         /// <summary>
         /// Gets or Sets Success
@@ -51,7 +51,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.Append("class LdapAuthenticationModeTestResult {\n");
+            sb.Append("class ValidationResultResponse {\n");
             sb.Append("  Success: ").Append(Success).Append("\n");
             sb.Append("  Messages: ").Append(Messages).Append("\n");
             sb.Append("}\n");
@@ -76,15 +76,15 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         {
             if (obj is null) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((LdapAuthenticationModeTestResult)obj);
+            return obj.GetType() == GetType() && Equals((ValidationResultResponse)obj);
         }
 
         /// <summary>
-        /// Returns true if LdapAuthenticationModeTestResult instances are equal
+        /// Returns true if ValidationResultResponse instances are equal
         /// </summary>
-        /// <param name="other">Instance of LdapAuthenticationModeTestResult to be compared</param>
+        /// <param name="other">Instance of ValidationResultResponse to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(LdapAuthenticationModeTestResult other)
+        public bool Equals(ValidationResultResponse other)
         {
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -124,12 +124,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         #region Operators
         #pragma warning disable 1591
 
-        public static bool operator ==(LdapAuthenticationModeTestResult left, LdapAuthenticationModeTestResult right)
+        public static bool operator ==(ValidationResultResponse left, ValidationResultResponse right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(LdapAuthenticationModeTestResult left, LdapAuthenticationModeTestResult right)
+        public static bool operator !=(ValidationResultResponse left, ValidationResultResponse right)
         {
             return !Equals(left, right);
         }

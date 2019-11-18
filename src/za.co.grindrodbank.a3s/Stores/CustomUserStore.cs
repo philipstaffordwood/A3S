@@ -18,7 +18,7 @@ using Microsoft.Extensions.Configuration;
 using za.co.grindrodbank.a3s.Extensions;
 using za.co.grindrodbank.a3s.Models;
 
-namespace za.co.grindrodbank.a3sidentityserver.Stores
+namespace za.co.grindrodbank.a3s.Stores
 {
     public class CustomUserStore : UserStore<UserModel>
     {

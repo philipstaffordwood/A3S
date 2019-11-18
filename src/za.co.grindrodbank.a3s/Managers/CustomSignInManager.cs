@@ -16,7 +16,7 @@ using Microsoft.Extensions.Options;
 using za.co.grindrodbank.a3s.Repositories;
 using za.co.grindrodbank.a3s.Services;
 
-namespace za.co.grindrodbank.a3sidentityserver.Managers
+namespace za.co.grindrodbank.a3s.Managers
 {
     /// <summary>
     /// Provides the APIs for user sign in.

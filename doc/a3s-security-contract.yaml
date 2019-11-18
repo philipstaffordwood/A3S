@@ -107,6 +107,8 @@ applications:
         permissions:
           - name: a3s.twoFactorAuth.remove
             description: Removes two-factor authentication from a user profile.
+          - name: a3s.twoFactorAuth.validateOtp
+            description: Validates a user authenticator generated OTP.
 
     dataPolicies:
       - name: a3s.viewYourTeamsOnly
@@ -175,6 +177,7 @@ defaultConfigurations:
               - a3s.securityContracts.update
               - a3s.clientRegistration.update
               - a3s.twoFactorAuth.remove
+              - a3s.twoFactorAuth.validateOtp
           - name: "a3s.userMaintenance"
             description: "A function that contains all user related permissions within the A3S micro-service."
             permissions:
@@ -183,6 +186,7 @@ defaultConfigurations:
               - a3s.users.update
               - a3s.users.delete
               - a3s.twoFactorAuth.remove
+              - a3s.twoFactorAuth.validateOtp
           - name: "a3s.ldapMaintenance"
             description: "A function that contains all ldap related permissions within the A3S micro-service."
             permissions:
@@ -190,6 +194,7 @@ defaultConfigurations:
               - a3s.ldapAuthenticationModes.create
               - a3s.ldapAuthenticationModes.update
               - a3s.ldapAuthenticationModes.delete
+              - a3s.twoFactorAuth.validateOtp
     # Default Roles to be created. Contains the functions that will be assigned to the Roles.
     roles:
       - name: "A3S Super Admin"

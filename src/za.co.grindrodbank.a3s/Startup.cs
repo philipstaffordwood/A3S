@@ -31,6 +31,8 @@ using Steeltoe.Management.Endpoint.Info;
 using System;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
+using za.co.grindrodbank.a3s.Managers;
+using za.co.grindrodbank.a3s.Stores;
 
 namespace za.co.grindrodbank.a3s
 {
@@ -70,8 +72,10 @@ namespace za.co.grindrodbank.a3s
             // We need to add this so we can correctly utilise the underlying user manager.
             services.AddIdentity<UserModel, IdentityRole>()
                 .AddEntityFrameworkStores<A3SContext>()
-                .AddDefaultTokenProviders();
-                
+                .AddDefaultTokenProviders()
+                .AddUserManager<CustomUserManager>()
+                .AddUserStore<CustomUserStore>();
+
 
             // Add an indentity service to use the configuration context, as the configuration store options are a dependent service of the ID Server configuration DB context.
             // We don't need to actually run the ID server and inject it into the pipeline, just configure it.
@@ -150,6 +154,7 @@ namespace za.co.grindrodbank.a3s
                 options.AddPolicy("permission:a3s.ldapAuthenticationModes.update", policy => policy.Requirements.Add(new PermissionRequirement("a3s.ldapAuthenticationModes.update")));
                 options.AddPolicy("permission:a3s.ldapAuthenticationModes.delete", policy => policy.Requirements.Add(new PermissionRequirement("a3s.ldapAuthenticationModes.delete")));
                 options.AddPolicy("permission:a3s.twoFactorAuth.remove", policy => policy.Requirements.Add(new PermissionRequirement("a3s.twoFactorAuth.remove")));
+                options.AddPolicy("permission:a3s.twoFactorAuth.validateOtp", policy => policy.Requirements.Add(new PermissionRequirement("a3s.twoFactorAuth.validateOtp")));
             });
 
             // Add policy handler services

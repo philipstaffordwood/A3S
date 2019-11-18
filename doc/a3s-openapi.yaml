@@ -422,6 +422,8 @@ paths:
           schema:
             $ref: '#/components/schemas/UserId'
       responses:
+        '204':
+          description: No Content.
         '400':
           description: Bad Request.
           content:
@@ -436,6 +438,55 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: Forbidden - You are not authorized to remove two-factor authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/twoFactorAuth/validate':
+    post:
+      tags:
+        - TwoFactorAuth
+      description: Validates a two-factor authenticator OTP.
+      summary: Validates a two-factor authenticator OTP.
+      operationId: validateTwoFactorAuthenticationOTP
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TwoFactorAuthOTP'
+      responses:
+        '200':    
+          description: Successful. OTP validation ran successfully. Check Success parameter and results for more information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResultResponse'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to validate two-factor authentication OTP's.
           content:
             application/json:
               schema:
@@ -2266,11 +2317,11 @@ paths:
               $ref: '#/components/schemas/LdapAuthenticationModeSubmit'
       responses:
         '200':    
-          description: Successful. LDAP Authentication Model successfully tested.
+          description: Successful. LDAP Authentication Model successfully tested. Check Success parameter and results for more information.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LdapAuthenticationModeTestResult'
+                $ref: '#/components/schemas/ValidationResultResponse'
         '400':
           description: Invalid parameters.
           content:
@@ -3229,19 +3280,21 @@ components:
           description: A list of LDAP attribute to user field mappings
           items:
             $ref: '#/components/schemas/LdapAttributeLink'
-    LdapAuthenticationModeTestResult:
-      description: |
-        An LdapAuthenticationMode test result
-      type: object
-      properties:
-        success:
-          type: boolean
-        messages:
-          type: array
-          items:
-            type: string           
     #endregion
     
+    #region - TwoFactorAuth
+    TwoFactorAuthOTP:
+      description: |
+        A OTP for a specific user.
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        OTP:
+          type: string
+
+    #endregion
     # Begin Region Application Data Policies
     # This is the same model as the 'SecurityContractApplicationDataPolicy', but for use outside of the context of security contracts.    
     ApplicationDataPolicy:
@@ -3339,6 +3392,17 @@ components:
             link includes the page, size, filter, orderBy and fields query
             parameters. If this is the last page in the result set then this will
             be [null].
+    ValidationResultResponse:
+      description: |
+        A validation result.
+      type: object
+      properties:
+        success:
+          type: boolean
+        messages:
+          type: array
+          items:
+            type: string           
 
 
     #endregion

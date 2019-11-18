@@ -637,6 +637,9 @@
           "style" : "simple"
         } ],
         "responses" : {
+          "204" : {
+            "description" : "No Content."
+          },
           "400" : {
             "content" : {
               "application/json" : {
@@ -689,6 +692,85 @@
           }
         },
         "summary" : "Removes two-factor authentication for a user, as well as any registered devices and methods.",
+        "tags" : [ "TwoFactorAuth" ]
+      }
+    },
+    "/twoFactorAuth/validate" : {
+      "post" : {
+        "description" : "Validates a two-factor authenticator OTP.",
+        "operationId" : "validateTwoFactorAuthenticationOTP",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TwoFactorAuthOTP"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ValidationResultResponse"
+                }
+              }
+            },
+            "description" : "Successful. OTP validation ran successfully. Check Success parameter and results for more information."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to validate two-factor authentication OTP's."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "User not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Validates a two-factor authenticator OTP.",
         "tags" : [ "TwoFactorAuth" ]
       }
     },
@@ -3450,11 +3532,11 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/LdapAuthenticationModeTestResult"
+                  "$ref" : "#/components/schemas/ValidationResultResponse"
                 }
               }
             },
-            "description" : "Successful. LDAP Authentication Model successfully tested."
+            "description" : "Successful. LDAP Authentication Model successfully tested. Check Success parameter and results for more information."
           },
           "400" : {
             "content" : {
@@ -5343,21 +5425,19 @@
         "required" : [ "account", "baseDn", "hostName", "isLdaps", "name", "password", "port", "uuid" ],
         "type" : "object"
       },
-      "LdapAuthenticationModeTestResult" : {
-        "description" : "An LdapAuthenticationMode test result\n",
+      "TwoFactorAuthOTP" : {
+        "description" : "A OTP for a specific user.\n",
         "example" : {
-          "success" : true,
-          "messages" : [ "messages", "messages" ]
+          "OTP" : "OTP",
+          "userId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
         },
         "properties" : {
-          "success" : {
-            "type" : "boolean"
+          "userId" : {
+            "format" : "uuid",
+            "type" : "string"
           },
-          "messages" : {
-            "items" : {
-              "type" : "string"
-            },
-            "type" : "array"
+          "OTP" : {
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -5448,6 +5528,25 @@
             "description" : "The link to the next page of results containing [size] results. This link includes the page, size, filter, orderBy and fields query parameters. If this is the last page in the result set then this will be [null].",
             "format" : "url",
             "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "ValidationResultResponse" : {
+        "description" : "A validation result.\n",
+        "example" : {
+          "success" : true,
+          "messages" : [ "messages", "messages" ]
+        },
+        "properties" : {
+          "success" : {
+            "type" : "boolean"
+          },
+          "messages" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
           }
         },
         "type" : "object"

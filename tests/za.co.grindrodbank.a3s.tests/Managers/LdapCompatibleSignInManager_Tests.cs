@@ -15,11 +15,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System;
-using za.co.grindrodbank.a3sidentityserver.Managers;
+using za.co.grindrodbank.a3s.Managers;
 using za.co.grindrodbank.a3s.Repositories;
 using za.co.grindrodbank.a3s.Services;
 
-namespace za.co.grindrodbank.a3sidentityserver.tests.Managers
+namespace za.co.grindrodbank.a3s.tests.Managers
 {
     public class LdapCompatibleSignInManager_Tests
     {

@@ -15,9 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using za.co.grindrodbank.a3s.Models;
-using za.co.grindrodbank.a3sidentityserver.Stores;
+using za.co.grindrodbank.a3s.Stores;
 
-namespace za.co.grindrodbank.a3sidentityserver.Managers
+namespace za.co.grindrodbank.a3s.Managers
 {
     public class CustomUserManager : UserManager<UserModel>
     {
@@ -37,7 +37,7 @@ namespace za.co.grindrodbank.a3sidentityserver.Managers
             await store.SetAuthenticatorTokenVerifiedAsync(user);
         }
 
-        public bool IsAuthenticatorTokenVerified(UserModel user)
+        public virtual bool IsAuthenticatorTokenVerified(UserModel user)
         {
             ThrowIfDisposed();
             return store.IsAuthenticatorTokenVerified(user);
