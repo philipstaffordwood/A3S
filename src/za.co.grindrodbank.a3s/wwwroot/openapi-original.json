@@ -2283,6 +2283,444 @@
         "tags" : [ "Permission" ]
       }
     },
+    "/termsOfService" : {
+      "get" : {
+        "description" : "Search for terms of service entries.",
+        "operationId" : "listTermsOfServices",
+        "parameters" : [ {
+          "description" : "The page to view.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "page",
+          "required" : false,
+          "schema" : {
+            "default" : 0,
+            "format" : "int32",
+            "minimum" : 0,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "The size of a page.",
+          "explode" : true,
+          "in" : "query",
+          "name" : "size",
+          "required" : false,
+          "schema" : {
+            "default" : 10,
+            "format" : "int32",
+            "maximum" : 20,
+            "minimum" : 1,
+            "type" : "integer"
+          },
+          "style" : "form"
+        }, {
+          "description" : "A search query filter on the description",
+          "example" : "FilterByEntityType",
+          "explode" : true,
+          "in" : "query",
+          "name" : "filterDescription",
+          "required" : false,
+          "schema" : {
+            "maxLength" : 255,
+            "minLength" : 0,
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
+          "explode" : false,
+          "in" : "query",
+          "name" : "orderBy",
+          "required" : false,
+          "schema" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/TermsOfService"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "OK",
+            "headers" : {
+              "X-Pagination" : {
+                "description" : "Pagination header.",
+                "explode" : false,
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaginationHeaderResponse"
+                },
+                "style" : "simple"
+              }
+            }
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the list of terms of service entries."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Search for terms of service entries.",
+        "tags" : [ "TermsOfService" ]
+      },
+      "post" : {
+        "description" : "Create a new terms of service entry.",
+        "operationId" : "createTermsOfService",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TermsOfServiceSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TermsOfService"
+                }
+              }
+            },
+            "description" : "OK."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to create terms of service entries."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Create a new terms of service entry.",
+        "tags" : [ "TermsOfService" ]
+      }
+    },
+    "/termsOfService/{termsOfServiceId}" : {
+      "delete" : {
+        "description" : "Deletes a terms of service entry from A3S.",
+        "operationId" : "deleteTermsOfService",
+        "parameters" : [ {
+          "description" : "The UUID of the terms of service entry to delete.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "termsOfServiceId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TermsOfServiceId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "No Content."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Invalid parameters."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - Not authorized to delete terms of service entry."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Terms of service entry not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Delete a terms of service entry.",
+        "tags" : [ "TermsOfService" ]
+      },
+      "get" : {
+        "description" : "Get a terms of service entry by its UUID.",
+        "operationId" : "getTermsOfService",
+        "parameters" : [ {
+          "description" : "Terms of service entry",
+          "explode" : false,
+          "in" : "path",
+          "name" : "termsOfServiceId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TermsOfServiceId"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TermsOfService"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to access the terms of service entry."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Terms of service entry not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred"
+          }
+        },
+        "summary" : "Get a terms of service entry.",
+        "tags" : [ "TermsOfService" ]
+      },
+      "put" : {
+        "description" : "Update a terms of service entry by its UUID.",
+        "operationId" : "updateTermsOfService",
+        "parameters" : [ {
+          "description" : "The UUID of the terms of service entry.",
+          "explode" : false,
+          "in" : "path",
+          "name" : "termsOfServiceId",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/TermsOfServiceId"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TermsOfServiceSubmit"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TermsOfService"
+                }
+              }
+            },
+            "description" : "OK"
+          },
+          "204" : {
+            "description" : "No Content."
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request."
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not authenticated."
+          },
+          "403" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Forbidden - You are not authorized to update the terms of service entry."
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Terms of service entry not found."
+          },
+          "500" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "An unexpected error occurred."
+          }
+        },
+        "summary" : "Update a terms of service entry.",
+        "tags" : [ "TermsOfService" ]
+      }
+    },
     "/functions" : {
       "get" : {
         "description" : "Search for functions.",
@@ -3846,6 +4284,76 @@
           },
           "description" : {
             "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TermsOfServiceId" : {
+        "format" : "uuid",
+        "type" : "string"
+      },
+      "TermsOfService" : {
+        "description" : "An agreement the needs to be agreed to by a user\n",
+        "example" : {
+          "agreementName" : "agreementName",
+          "AgreementFileSha256Hash" : "AgreementFileSha256Hash",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "version" : 0.8008282,
+          "agreementFileData" : "agreementFileData"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "agreementName" : {
+            "type" : "string"
+          },
+          "version" : {
+            "format" : "float",
+            "type" : "number"
+          },
+          "agreementFileData" : {
+            "format" : "byte",
+            "type" : "string"
+          },
+          "AgreementFileSha256Hash" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "TermsOfServiceSubmit" : {
+        "description" : "An agreement the needs to be agreed to by a user\n",
+        "example" : {
+          "autoUpdate" : true,
+          "agreementName" : "agreementName",
+          "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "version" : 0.8008282,
+          "agreementFileSha256Hash" : "agreementFileSha256Hash",
+          "agreementFileData" : "agreementFileData"
+        },
+        "properties" : {
+          "uuid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "agreementName" : {
+            "type" : "string"
+          },
+          "version" : {
+            "format" : "float",
+            "type" : "number"
+          },
+          "agreementFileData" : {
+            "format" : "byte",
+            "type" : "string"
+          },
+          "agreementFileSha256Hash" : {
+            "type" : "string"
+          },
+          "autoUpdate" : {
+            "type" : "boolean"
           }
         },
         "type" : "object"
