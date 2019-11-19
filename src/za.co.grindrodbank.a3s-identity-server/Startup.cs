@@ -8,7 +8,7 @@
 using za.co.grindrodbank.a3sidentityserver.Extensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
-using za.co.grindrodbank.a3sidentityserver.Managers;
+using za.co.grindrodbank.a3s.Managers;
 using za.co.grindrodbank.a3s.Models;
 using za.co.grindrodbank.a3sidentityserver.Services;
 using Microsoft.AspNetCore.Builder;
@@ -20,7 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using za.co.grindrodbank.a3s.Repositories;
 using za.co.grindrodbank.a3s.Services;
-using za.co.grindrodbank.a3sidentityserver.Stores;
+using za.co.grindrodbank.a3s.Stores;
 
 namespace za.co.grindrodbank.a3sidentityserver
 {

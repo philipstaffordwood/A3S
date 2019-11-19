@@ -4,7 +4,6 @@ This docker-compose setup is intended for use when developing the A3S platform. 
 * An instance of [Postgresql](https://www.postgresql.org) database.
 * An instance of [Open LDAP](https://www.openldap.org). A light weight LDAP implementation.
 * An instanec of [PHP LDAP admin](https://www.openldap.org). A web-based LDAP client for accessing the Open LDAP instance.
-* An instance of an simple SMTP server that can be used to test email-based two factor authentication.
 
 ## Pre-requisites
 

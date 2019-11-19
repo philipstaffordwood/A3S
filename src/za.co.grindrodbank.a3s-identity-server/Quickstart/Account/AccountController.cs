@@ -1,3 +1,9 @@
+/**
+ * *************************************************
+ * Copyright (c) 2019, Grindrod Bank Limited
+ * License MIT: https://opensource.org/licenses/MIT
+ * **************************************************
+ */
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
@@ -23,7 +29,7 @@ using Microsoft.Extensions.Configuration;
 using za.co.grindrodbank.a3sidentityserver.Exceptions;
 using System.Collections.Generic;
 using za.co.grindrodbank.a3s.Repositories;
-using za.co.grindrodbank.a3sidentityserver.Managers;
+using za.co.grindrodbank.a3s.Managers;
 using za.co.grindrodbank.a3s.Extensions;
 
 namespace za.co.grindrodbank.a3sidentityserver.Quickstart.UI
@@ -240,8 +246,7 @@ namespace za.co.grindrodbank.a3sidentityserver.Quickstart.UI
             if (ModelState.IsValid)
             {
                 model.OTP = model.OTP.Replace(" ", string.Empty).Replace("-", string.Empty);
-                bool is2FaTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                    user, _userManager.Options.Tokens.AuthenticatorTokenProvider, model.OTP);
+                var is2FaTokenValid = await _userManager.VerifyTwoFactorTokenAsync(user, _userManager.Options.Tokens.AuthenticatorTokenProvider, model.OTP);
 
                 if (is2FaTokenValid)
                 {
