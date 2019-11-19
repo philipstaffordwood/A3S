@@ -4,10 +4,9 @@
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using za.co.grindrodbank.a3s.Models;
-using za.co.grindrodbank.a3s.SecurityContractApiResources;
 using za.co.grindrodbank.a3s.A3SApiResources;
 using System;
 

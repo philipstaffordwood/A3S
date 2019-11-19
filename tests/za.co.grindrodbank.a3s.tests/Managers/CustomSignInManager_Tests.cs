@@ -21,7 +21,7 @@ using za.co.grindrodbank.a3s.Services;
 
 namespace za.co.grindrodbank.a3s.tests.Managers
 {
-    public class LdapCompatibleSignInManager_Tests
+    public class CustomSignInManager_Tests
     {
         [Fact]
         public async Task PasswordSignInAsync_Given_Returns()

@@ -6,6 +6,12 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="2.7.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Managers\" />
     <Folder Include="Quickstart\" />
     <Folder Include="Quickstart\Account\" />
     <Folder Include="Quickstart\Home\" />
@@ -37,5 +42,28 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="appsettings.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\za.co.grindrodbank.a3s.tests\Fakes\CustomUserManagerFake.cs">
+      <Link>Fakes\CustomUserManagerFake.cs</Link>
+    </Compile>
+    <Compile Include="..\za.co.grindrodbank.a3s.tests\Fakes\CustomUserStoreFake.cs">
+      <Link>Fakes\CustomUserStoreFake.cs</Link>
+    </Compile>
+    <Compile Include="..\za.co.grindrodbank.a3s.tests\Fakes\A3SContextFake.cs">
+      <Link>Fakes\A3SContextFake.cs</Link>
+    </Compile>
+    <Compile Include="..\za.co.grindrodbank.a3s.tests\Fakes\CustomSignInManagerFake.cs">
+      <Link>Fakes\CustomSignInManagerFake.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+    <None Remove="appsettings.Development.json" />
   </ItemGroup>
 </Project>

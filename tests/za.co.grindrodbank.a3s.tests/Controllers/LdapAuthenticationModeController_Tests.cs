@@ -217,5 +217,64 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             Assert.True(authenticationMode.IsLdaps == inputModel.IsLdaps, $"Retrieved Name {authenticationMode.IsLdaps} not the same as sample Ldaps {inputModel.IsLdaps}.");
             Assert.True(authenticationMode.Port == inputModel.Port, $"Retrieved Port {authenticationMode.Port} not the same as sample Port {inputModel.Port}.");
         }
+
+        [Fact]
+        public async Task TestAuthenticationModeAsync_WithTestAuthenticationMode_ReturnsUpdatedAuthenticationMode()
+        {
+            // Arrange
+            var authenticationModeService = Substitute.For<ILdapAuthenticationModeService>();
+            var inputModel = new LdapAuthenticationModeSubmit()
+            {
+                Uuid = Guid.NewGuid(),
+                Name = "Test AuthenticationMode Name",
+                Account = "TestAccount",
+                BaseDn = "TestBaseDN",
+                HostName = "TestHostName",
+                IsLdaps = true,
+                Password = "TestPass",
+                Port = 389
+            };
+
+            authenticationModeService.TestAsync(inputModel)
+                .Returns(new ValidationResultResponse()
+                {
+                    Success = false,
+                    Messages = new List<string>()
+                    {
+                        "123",
+                        "456"
+                    }
+                });
+
+            var controller = new LdapAuthenticationModeController(authenticationModeService);
+
+            // Act
+            IActionResult actionResult = await controller.TestLdapAuthenticationModeAsync(inputModel);
+
+            // Assert
+            var okResult = actionResult as OkObjectResult;
+            Assert.NotNull(okResult);
+
+            var testResult = okResult.Value as ValidationResultResponse;
+            Assert.NotNull(testResult);
+            Assert.True(testResult.Success == false, $"Retrieved Success {testResult.Success} not the same as sample 'false'.");
+            Assert.True(testResult.Messages[0] == "123", $"Retrieved Message {testResult.Messages[0]} not the same as sample message '123'.");
+            Assert.True(testResult.Messages[1] == "456", $"Retrieved Message {testResult.Messages[1]} not the same as sample message '456'.");
+        }
+
+        [Fact]
+        public async Task DeleteLdapAuthenticationModeAsync_WithId_ReturnsNoContent()
+        {
+            // Arrange
+            var authenticationModeService = Substitute.For<ILdapAuthenticationModeService>();
+            var controller = new LdapAuthenticationModeController(authenticationModeService);
+
+            // Act
+            IActionResult actionResult = await controller.DeleteLdapAuthenticationModeAsync(Guid.NewGuid());
+
+            // Assert
+            var noContentResult = actionResult as NoContentResult;
+            Assert.NotNull(noContentResult);
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace za.co.grindrodbank.a3s.tests.Fakes
     {
         private bool isAuthenticatorTokenVerified;
         private bool isAuthenticatorOtpValid;
+        private UserModel userModel;
 
         public CustomUserManagerFake(IUserStore<UserModel> store, IOptions<IdentityOptions> optionsAccessor, IPasswordHasher<UserModel> passwordHasher,
             IEnumerable<IUserValidator<UserModel>> userValidators, IEnumerable<IPasswordValidator<UserModel>> passwordValidators, ILookupNormalizer keyNormalizer,
@@ -48,6 +49,19 @@ namespace za.co.grindrodbank.a3s.tests.Fakes
         public void SetAuthenticatorOtpValid(bool value)
         {
             isAuthenticatorOtpValid = value;
+        }
+
+        public override Task<UserModel> FindByNameAsync(string userName)
+        {
+            if (userModel.UserName == userName)
+                return Task.FromResult(userModel);
+            else
+                return Task.FromResult<UserModel>(null);
+        }
+
+        public void SetUserModel(UserModel value)
+        {
+            userModel = value;
         }
     }
 }
