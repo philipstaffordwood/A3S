@@ -155,6 +155,9 @@ namespace za.co.grindrodbank.a3s
                 options.AddPolicy("permission:a3s.ldapAuthenticationModes.delete", policy => policy.Requirements.Add(new PermissionRequirement("a3s.ldapAuthenticationModes.delete")));
                 options.AddPolicy("permission:a3s.twoFactorAuth.remove", policy => policy.Requirements.Add(new PermissionRequirement("a3s.twoFactorAuth.remove")));
                 options.AddPolicy("permission:a3s.twoFactorAuth.validateOtp", policy => policy.Requirements.Add(new PermissionRequirement("a3s.twoFactorAuth.validateOtp")));
+                options.AddPolicy("permission:a3s.termsOfService.read", policy => policy.Requirements.Add(new PermissionRequirement("a3s.termsOfService.read")));
+                options.AddPolicy("permission:a3s.termsOfService.create", policy => policy.Requirements.Add(new PermissionRequirement("a3s.termsOfService.create")));
+                options.AddPolicy("permission:a3s.termsOfService.delete", policy => policy.Requirements.Add(new PermissionRequirement("a3s.termsOfService.delete")));
             });
 
             // Add policy handler services
