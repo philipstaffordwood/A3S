@@ -1496,6 +1496,291 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
   #endregion
   
+  #region - TermsOfService
+  '/termsOfService':
+    get:
+      tags:
+        - TermsOfService
+      description: Search for terms of service entries.
+      summary: Search for terms of service entries.
+      operationId: listTermsOfServices
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: The page to view.
+          schema:
+            type: integer
+            minimum: 0
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          description: The size of a page.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            format: int32
+            default: 10
+        - name: filterDescription
+          in: query
+          required: false
+          description: A search query filter on the description
+          schema:
+            type: string
+            minLength: 0
+            maxLength: 255
+          example: FilterByEntityType
+        - name: orderBy
+          in: query
+          required: false
+          style: form
+          explode: false
+          description: >-
+            a comma separated list of fields in their sort order. Ascending
+            order is assumed. Append desc after a field to indicate descending
+            order.
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Pagination:
+              description: Pagination header.
+              schema:
+                $ref: '#/components/schemas/PaginationHeaderResponse'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TermsOfService'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the list of terms of service entries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - TermsOfService
+      summary: Create a new terms of service entry.
+      description: Create a new terms of service entry.
+      operationId: createTermsOfService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TermsOfServiceSubmit'
+      responses:
+        '200':
+          description: OK.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsOfService'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to create terms of service entries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  '/termsOfService/{termsOfServiceId}':
+    get:
+      tags:
+        - TermsOfService
+      summary: Get a terms of service entry.
+      description: Get a terms of service entry by its UUID.
+      operationId: getTermsOfService
+      parameters:
+        - name: termsOfServiceId
+          in: path
+          description: Terms of service entry
+          required: true
+          schema:
+            $ref: '#/components/schemas/TermsOfServiceId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsOfService'
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to access the terms of service entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Terms of service entry not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags:
+        - TermsOfService
+      summary: Update a terms of service entry.
+      description: Update a terms of service entry by its UUID.
+      operationId: updateTermsOfService
+      parameters:
+        - name: termsOfServiceId
+          in: path
+          description: The UUID of the terms of service entry.
+          required: true
+          schema:
+            $ref: '#/components/schemas/TermsOfServiceId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TermsOfServiceSubmit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermsOfService'
+        '204':
+          description: No Content.
+        '400':
+          description: Bad Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - You are not authorized to update the terms of service entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Terms of service entry not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - TermsOfService
+      summary: Delete a terms of service entry.
+      description: Deletes a terms of service entry from A3S.
+      operationId: deleteTermsOfService
+      parameters:
+        - name: termsOfServiceId
+          description: The UUID of the terms of service entry to delete.
+          required: true
+          in: path
+          schema:
+            $ref: '#/components/schemas/TermsOfServiceId'
+      responses:
+        '204':
+          description: No Content.
+        '400':
+          description: Invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Not authenticated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden - Not authorized to delete terms of service entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Terms of service entry not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: An unexpected error occurred.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  #endregion
   
   # Region - Functions
   '/functions':
@@ -2510,7 +2795,52 @@ components:
           type: string
 
     # End Region - Permissions      
-          
+
+    # Region - TermsOfService
+    TermsOfServiceId:
+      type: string
+      format: uuid
+
+    TermsOfService:
+      description: |
+        An agreement the needs to be agreed to by a user
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TermsOfServiceId'
+        agreementName:
+          type: string
+        version:
+          type: number
+          format: float
+        agreementFileData:
+          type: string
+          format: byte
+        AgreementFileSha256Hash:
+          type: string
+
+    TermsOfServiceSubmit:
+      description: |
+        An agreement the needs to be agreed to by a user
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/TermsOfServiceId'
+        agreementName:
+          type: string
+        version:
+          type: number
+          format: float
+        agreementFileData:
+          type: string
+          format: byte
+        agreementFileSha256Hash:
+          type: string
+        autoUpdate:
+          type: boolean
+
+    # End Region - TermsOfService      
+
     # Region - Functions
 
     FunctionId:
