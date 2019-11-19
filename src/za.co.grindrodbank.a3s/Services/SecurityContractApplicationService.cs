@@ -196,7 +196,7 @@ namespace za.co.grindrodbank.a3s.Services
                         // Add any new permissions to the function.
                         foreach (var permission in functionResource.Permissions)
                         {
-                            AddPermissionToFunctionIfNotAlreadyAssigned(applicationFunction, permission);
+                            AddPermissionToFunctionIfNotAlreadyAssigned(applicationFunction, permission, updatedByGuid);
                         }
 
                         DetectAndUnassignPermissionsRemovedFromFunctions(applicationFunction, functionResource);
@@ -262,25 +262,25 @@ namespace za.co.grindrodbank.a3s.Services
             {
                 foreach (var permission in functionResource.Permissions)
                 {
-                    AddResourcePermissionToFunction(newFunction, permission);
+                    AddResourcePermissionToFunction(newFunction, permission, updatedByGuid);
                 }
             }
 
             return newFunction;
         }
 
-        private void AddPermissionToFunctionIfNotAlreadyAssigned(ApplicationFunctionModel applicationFunction, SecurityContractPermission permission)
+        private void AddPermissionToFunctionIfNotAlreadyAssigned(ApplicationFunctionModel applicationFunction, SecurityContractPermission permission, Guid updatedByGuid)
         {
             // add the permission if it does not exist.
             var applicationPermission = applicationFunction.ApplicationFunctionPermissions.Find(fp => fp.Permission.Name == permission.Name);
 
             if (applicationPermission == null)
             {
-                AddResourcePermissionToFunction(applicationFunction, permission);
+                AddResourcePermissionToFunction(applicationFunction, permission, updatedByGuid);
             }
         }
 
-        private void AddResourcePermissionToFunction(ApplicationFunctionModel applicationFuction, SecurityContractPermission permission)
+        private void AddResourcePermissionToFunction(ApplicationFunctionModel applicationFuction, SecurityContractPermission permission, Guid updatedByGuid)
         {
             logger.Debug($"Assinging permission {permission.Name} to function: {applicationFuction.Name}.");
             // Check if there is an existing permission within the database. Add this one if found, else create a new one and add it.
@@ -289,7 +289,8 @@ namespace za.co.grindrodbank.a3s.Services
             PermissionModel permissionToAdd = new PermissionModel
             {
                 Name = permission.Name,
-                Description = permission.Description
+                Description = permission.Description,
+                ChangedBy = updatedByGuid
             };
 
             if (existingPermission != null)
@@ -305,7 +306,8 @@ namespace za.co.grindrodbank.a3s.Services
             applicationFuction.ApplicationFunctionPermissions.Add(new ApplicationFunctionPermissionModel
             {
                 ApplicationFunction = applicationFuction,
-                Permission = permissionToAdd
+                Permission = permissionToAdd,
+                ChangedBy = updatedByGuid
             });
         }
 

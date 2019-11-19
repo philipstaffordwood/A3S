@@ -225,130 +225,147 @@ namespace za.co.grindrodbank.a3s
 
         private void BootstrapAdminUserWithRolesAndPermissions(IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            var context = serviceScope.ServiceProvider.GetRequiredService<A3SContext>();
+
+            // Ensure that the A3S application is createdd.
+            var application = context.Application.Where(a => a.Name == "a3s").FirstOrDefault();
+
+            var writePermission = new PermissionModel
             {
-                var context = serviceScope.ServiceProvider.GetRequiredService<A3SContext>();
+                Name = "a3s.securityContracts.update",
+                Description = "Enables idempotently applying (creating or updating) a security contract definition. This includes creation or updating of permissions, functions, applications and the relationships between them.",
+                ChangedBy = Guid.Empty
+            };
 
-                // Create the 'applySecurityContract' Permissions for A3S.
-                var writePermission = context.Permission.Where(p => p.Name == "a3s.securityContracts.update").FirstOrDefault();
+            var readPermission = new PermissionModel
+            {
+                Name = "a3s.securityContracts.read",
+                Description = "Enables fetching of a security contract definition.",
+                ChangedBy = Guid.Empty
+            };
 
-                if (writePermission == null)
+            if (application == null)
+            {
+                application = new ApplicationModel
                 {
-                    writePermission = new PermissionModel();
+                    Name = "a3s",
+                    ApplicationFunctions = new List<ApplicationFunctionModel>()
+                        {
+                            new ApplicationFunctionModel
+                            {
+                                Application = application,
+                                Name = "a3s.securityContracts",
+                                ApplicationFunctionPermissions = new List<ApplicationFunctionPermissionModel>
+                                {
+                                    new ApplicationFunctionPermissionModel
+                                    {
+                                        Permission = writePermission
+                                    },
+                                    new ApplicationFunctionPermissionModel
+                                    {
+                                        Permission = readPermission
+                                    }
+                                }
+                            }
+                        }
+                };
 
-                    writePermission.Name = "a3s.securityContracts.update";
-                    writePermission.Description = "Enables idempotently applying (creating or updating) a security contract definition. This includes creation or updating of permissions, functions, applications and the relationships between them.";
-                    writePermission.ChangedBy = Guid.Empty;
+                context.Application.Add(application);
+                context.SaveChanges();
+            }
 
-                    context.Permission.Add(writePermission);
-                    context.SaveChanges();
-                }
+            // Create the 'a3s.securityContractMaintenance' function.
+            var function = context.Function.Where(f => f.Name == "a3s.securityContractMaintenance").FirstOrDefault();
 
-                // Create the 'readSecurityContract' Permissions for A3S.
-                var readPermission = context.Permission.Where(p => p.Name == "a3s.securityContracts.read").FirstOrDefault();
-
-                if (readPermission == null)
+            if (function == null)
+            {
+                function = new FunctionModel
                 {
-                    readPermission = new PermissionModel();
-
-                    readPermission.Name = "a3s.securityContracts.read";
-                    readPermission.Description = "Enables fetching of a security contract definition.";
-                    readPermission.ChangedBy = Guid.Empty;
-
-                    context.Permission.Add(readPermission);
-                    context.SaveChanges();
-                }
-
-                // Create the 'a3s.securityContractMaintenance' function.
-                var function = context.Function.Where(f => f.Name == "a3s.securityContractMaintenance").FirstOrDefault();
-
-                if(function == null)
+                    FunctionPermissions = new List<FunctionPermissionModel>(),
+                    Name = "a3s.securityContractMaintenance",
+                    Description = "Functionality to apply security contracts for micro-services.",
+                    ChangedBy = Guid.Empty
+                };
+                function.FunctionPermissions.Add(new FunctionPermissionModel
                 {
-                    function = new FunctionModel();
-
-                    function.FunctionPermissions = new List<FunctionPermissionModel>();
-                    function.Name = "a3s.securityContractMaintenance";
-                    function.Description = "Functionality to apply security contracts for micro-services.";
-                    function.ChangedBy = Guid.Empty;
-                    function.FunctionPermissions.Add(new FunctionPermissionModel
-                    {
-                        Function = function,
-                        Permission = writePermission,
-                        ChangedBy = Guid.Empty
-                    });
-                    function.FunctionPermissions.Add(new FunctionPermissionModel
-                    {
-                        Function = function,
-                        Permission = readPermission,
-                        ChangedBy = Guid.Empty
-                    });
-
-                    context.Function.Add(function);
-                    context.SaveChanges();
-                }
-
-
-                // Create the bootsrap Role.
-                var bootstrapRole = context.Role.Where(r => r.Name == "a3s-bootstrap").FirstOrDefault();
-
-                if(bootstrapRole == null)
+                    Function = function,
+                    Permission = writePermission,
+                    ChangedBy = Guid.Empty
+                });
+                function.FunctionPermissions.Add(new FunctionPermissionModel
                 {
-                    bootstrapRole = new RoleModel();
-                    bootstrapRole.RoleFunctions = new List<RoleFunctionModel>();
-                    bootstrapRole.Name = "a3s-bootstrap";
-                    bootstrapRole.Description = "A3S bootstrap role for applying security contracts.";
-                    bootstrapRole.ChangedBy = Guid.Empty;
-                    bootstrapRole.RoleFunctions.Add(new RoleFunctionModel
-                    {
-                        Role = bootstrapRole,
-                        Function = function,
-                        ChangedBy = Guid.Empty
-                    });
+                    Function = function,
+                    Permission = readPermission,
+                    ChangedBy = Guid.Empty
+                });
 
-                    context.Role.Add(bootstrapRole);
-                    context.SaveChanges();
-                }
+                context.Function.Add(function);
+                context.SaveChanges();
+            }
 
-                // Check to see if the admin user is already present.
-                var adminUser = context.User.Where(u => u.UserName == "a3s-bootstrap-admin").FirstOrDefault();
 
-                if (adminUser != null)
+            // Create the bootsrap Role.
+            var bootstrapRole = context.Role.Where(r => r.Name == "a3s-bootstrap").FirstOrDefault();
+
+            if (bootstrapRole == null)
+            {
+                bootstrapRole = new RoleModel();
+                bootstrapRole.RoleFunctions = new List<RoleFunctionModel>();
+                bootstrapRole.Name = "a3s-bootstrap";
+                bootstrapRole.Description = "A3S bootstrap role for applying security contracts.";
+                bootstrapRole.ChangedBy = Guid.Empty;
+                bootstrapRole.RoleFunctions.Add(new RoleFunctionModel
                 {
-                    return;
-                }
-                
-                adminUser = new UserModel();
-                adminUser.FirstName = "Bootstrap";
-                adminUser.Surname = "Admin";
-                adminUser.UserName = "a3s-bootstrap-admin";
-                adminUser.NormalizedUserName = "A3S-BOOTSTRAP-ADMIN";
-                adminUser.Email = "a3s-bootstrap-admin@localhost";
-                adminUser.NormalizedEmail = "A3S-BOOTSTRAP-ADMIN@LOCALHOST";
-                adminUser.EmailConfirmed = true;
-                adminUser.LdapAuthenticationModeId = null;
-                adminUser.ChangedBy = Guid.Empty;
+                    Role = bootstrapRole,
+                    Function = function,
+                    ChangedBy = Guid.Empty
+                });
 
-                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
+                context.Role.Add(bootstrapRole);
+                context.SaveChanges();
+            }
 
-                IdentityResult result = userManager.CreateAsync
-                (adminUser, "Password1#").Result;
+            // Check to see if the admin user is already present.
+            var adminUser = context.User.Where(u => u.UserName == "a3s-bootstrap-admin").FirstOrDefault();
 
-                if (result.Succeeded)
+            if (adminUser != null)
+            {
+                return;
+            }
+
+            adminUser = new UserModel();
+            adminUser.FirstName = "Bootstrap";
+            adminUser.Surname = "Admin";
+            adminUser.UserName = "a3s-bootstrap-admin";
+            adminUser.NormalizedUserName = "A3S-BOOTSTRAP-ADMIN";
+            adminUser.Email = "a3s-bootstrap-admin@localhost";
+            adminUser.NormalizedEmail = "A3S-BOOTSTRAP-ADMIN@LOCALHOST";
+            adminUser.EmailConfirmed = true;
+            adminUser.LdapAuthenticationModeId = null;
+            adminUser.ChangedBy = Guid.Empty;
+
+            var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<UserModel>>();
+
+            IdentityResult result = userManager.CreateAsync
+            (adminUser, "Password1#").Result;
+
+            if (result.Succeeded)
+            {
+                adminUser = context.User.Where(u => u.UserName == "a3s-bootstrap-admin")
+                                        .Include(u => u.UserRoles)
+                                          .ThenInclude(ur => ur.Role)
+                                        .FirstOrDefault();
+
+                adminUser.UserRoles.Add(new UserRoleModel
                 {
-                    adminUser = context.User.Where(u => u.UserName == "a3s-bootstrap-admin")
-                                            .Include(u => u.UserRoles)
-                                              .ThenInclude(ur => ur.Role)
-                                            .FirstOrDefault();
+                    User = adminUser,
+                    Role = bootstrapRole,
+                    ChangedBy = Guid.Empty
+                });
 
-                    adminUser.UserRoles.Add(new UserRoleModel {
-                        User = adminUser,
-                        Role = bootstrapRole,
-                        ChangedBy = Guid.Empty
-                    });
-
-                    context.Entry(adminUser).State = EntityState.Modified;
-                    context.SaveChanges();
-                }
+                context.Entry(adminUser).State = EntityState.Modified;
+                context.SaveChanges();
             }
         }
     }
