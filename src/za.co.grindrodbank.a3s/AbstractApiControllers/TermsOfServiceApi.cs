@@ -117,29 +117,5 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
         public abstract Task<IActionResult> ListTermsOfServicesAsync([FromQuery]int page, [FromQuery][Range(1, 20)]int size, [FromQuery][StringLength(255, MinimumLength=0)]string filterDescription, [FromQuery]List<string> orderBy);
-
-        /// <summary>
-        /// Update a terms of service entry.
-        /// </summary>
-        /// <remarks>Update a terms of service entry by its UUID.</remarks>
-        /// <param name="termsOfServiceId">The UUID of the terms of service entry.</param>
-        /// <param name="termsOfServiceSubmit"></param>
-        /// <response code="200">OK</response>
-        /// <response code="204">No Content.</response>
-        /// <response code="400">Bad Request.</response>
-        /// <response code="401">Not authenticated.</response>
-        /// <response code="403">Forbidden - You are not authorized to update the terms of service entry.</response>
-        /// <response code="404">Terms of service entry not found.</response>
-        /// <response code="500">An unexpected error occurred.</response>
-        [HttpPut]
-        [Route("/termsOfService/{termsOfServiceId}")]
-        [ValidateModelState]
-        [ProducesResponseType(statusCode: 200, type: typeof(TermsOfService))]
-        [ProducesResponseType(statusCode: 400, type: typeof(ErrorResponse))]
-        [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
-        [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
-        [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
-        [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
-        public abstract Task<IActionResult> UpdateTermsOfServiceAsync([FromRoute][Required]Guid termsOfServiceId, [FromBody]TermsOfServiceSubmit termsOfServiceSubmit);
     }
 }
