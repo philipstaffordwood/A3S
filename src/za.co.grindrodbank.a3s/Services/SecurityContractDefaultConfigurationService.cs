@@ -161,7 +161,7 @@ namespace za.co.grindrodbank.a3s.Services
 
                 if (!permissionIsApplicationPermission)
                 {
-                    logger.Warn($"Permission '{permissionToAddToFunction}' is not an existing application permission. Not adding it!");
+                    throw new ItemNotFoundException($"Permission '{permissionToAddToFunction}' is not an existing permission within application '{application.Name}'.");
                 }           
             }
 
@@ -253,7 +253,7 @@ namespace za.co.grindrodbank.a3s.Services
             defaultRoleToApply.ChangedBy = updatedById;
 
             await ApplyFunctionsToDefaultRole(defaultRole, defaultRoleToApply, updatedById);
-            await ApplyParentRolesToDefaultRole(defaultRole, defaultRoleToApply, updatedById);
+            await ApplyChildRolesToDefaultRole(defaultRole, defaultRoleToApply, updatedById);
 
             if (roleIsNew)
             {
@@ -281,8 +281,7 @@ namespace za.co.grindrodbank.a3s.Services
 
                     if (existingFunction == null)
                     {
-                        logger.Warn($"Function '{functionToAdd}' does not exists. Not assinging it to role '{defaultRole.Name}'.");
-                        break;
+                        throw new ItemNotFoundException($"Function '{functionToAdd}' does not exists. Cannot assign it to role '{defaultRole.Name}'.");
                     }
 
                     logger.Debug($"Function '{functionToAdd}' exists and is being assigned to role '{defaultRole.Name}'.");
@@ -296,7 +295,7 @@ namespace za.co.grindrodbank.a3s.Services
             }
         }
 
-        private async Task ApplyParentRolesToDefaultRole(SecurityContractDefaultConfigurationRole defaultRole, RoleModel defaultRoleToApply, Guid updatedById)
+        private async Task ApplyChildRolesToDefaultRole(SecurityContractDefaultConfigurationRole defaultRole, RoleModel defaultRoleToApply, Guid updatedById)
         {
             defaultRoleToApply.ChildRoles = new List<RoleRoleModel>();
 
@@ -307,19 +306,25 @@ namespace za.co.grindrodbank.a3s.Services
                     logger.Debug($"Attempting to add child role: '{roleToAdd}' to role '{defaultRole.Name}'.");
 
                     // Ensure that the role exists.
-                    var existingchildRole = await roleRepository.GetByNameAsync(roleToAdd);
+                    var existingChildRole = await roleRepository.GetByNameAsync(roleToAdd);
 
-                    if (existingchildRole == null)
+                    if (existingChildRole == null)
                     {
-                        logger.Warn($"Child role '{existingchildRole}' does not exists. Not assinging it to role '{defaultRole.Name}'.");
-                        break;
+                        throw new ItemNotFoundException($"Child role '{roleToAdd}' does not exist. Cannot assign it to parent role '{defaultRole.Name}'.");
                     }
 
-                    logger.Debug($"Child role '{existingchildRole}' exists and is being assigned to role '{defaultRole.Name}'.");
+                    // Only non-compound roles can be added to compound roles. Therefore, prior to adding the potential child role to the parent role, it must be
+                    // asserted that the child row has no child roles attached to it.
+                    if (existingChildRole.ChildRoles.Count > 0)
+                    {
+                        throw new ItemNotProcessableException($"Assigning a compound role as a child of a role is prohibited. Attempting to add Role '{existingChildRole.Name} with ID: '{existingChildRole.Id}' as a child role of Role: '{defaultRole.Name}'. However, it already has '{existingChildRole.ChildRoles.Count}' child roles assigned to it! Not adding it.");
+                    }
+
+                    logger.Debug($"Child role '{existingChildRole}' exists and is being assigned to role '{defaultRole.Name}'.");
                     defaultRoleToApply.ChildRoles.Add(new RoleRoleModel
                     {
                         ParentRole = defaultRoleToApply,
-                        ChildRole = existingchildRole,
+                        ChildRole = existingChildRole,
                         ChangedBy = updatedById
                     });
                 }
@@ -488,8 +493,7 @@ namespace za.co.grindrodbank.a3s.Services
 
                     if (existingRole == null)
                     {
-                        logger.Warn($"Role '{roleToApply}' does not exists within the database. NOT applying it to user '{defaultUser.Username}'.");
-                        break;
+                        throw new ItemNotFoundException($"Role '{roleToApply}' not found when attempting to apply it to user '{defaultUser.Username}'.");
                     }
 
                     logger.Debug($"Role '{roleToApply}' does exist within the database. Assigning it to user '{defaultUser.Username}'.");
@@ -513,8 +517,7 @@ namespace za.co.grindrodbank.a3s.Services
 
                 if (existingLdapAuthMode == null)
                 {
-                    logger.Warn($"Ldap Auth mode '{defaultUser.LdapAuthenticationMode}' does not exists within the database. NOT applying it to user '{defaultUser.Username}'.");
-                    return;
+                    throw new ItemNotFoundException($"Ldap Auth mode '{defaultUser.LdapAuthenticationMode}' not found when attempting to apply it to user '{defaultUser.Username}'.");
                 }
 
                 logger.Debug($"Ldap Auth mode '{defaultUser.LdapAuthenticationMode}' does exist within the database. Assigning it to user '{defaultUser.Username}'.");
@@ -648,8 +651,7 @@ namespace za.co.grindrodbank.a3s.Services
 
                     if (user == null)
                     {
-                        logger.Warn($"Unable to find a user with Username: '{userName}' when attempting to assing the user to a team.");
-                        break;
+                        throw new ItemNotFoundException($"Unable to find a user with Username: '{userName}' when attempting to assign the user to team {team.Name}.");
                     }
 
                     logger.Debug($"Adding user '{userName}' to team: {team.Name}");

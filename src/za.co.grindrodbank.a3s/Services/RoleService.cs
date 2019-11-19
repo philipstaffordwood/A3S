@@ -130,8 +130,7 @@ namespace za.co.grindrodbank.a3s.Services
 
                     if (function == null)
                     {
-                        logger.Warn("Unable to find a function with ID: " + function + "when attempting to assign the function to a role.");
-                        break;
+                        throw new ItemNotFoundException("Unable to find a function with ID: " + functionId + "when attempting to assign it to a role.");
                     }
 
                     role.RoleFunctions.Add(new RoleFunctionModel
@@ -174,8 +173,7 @@ namespace za.co.grindrodbank.a3s.Services
 
                 if(roleToAddAsChildRole == null)
                 {
-                    logger.Warn($"Unable to find role with ID: '{roleIdToAddAsChildRole}' when attempting to assign this role as a child of role: '{roleModel.Name}'.");
-                    break;
+                    throw new ItemNotFoundException($"Unable to find role with ID: '{roleIdToAddAsChildRole}' when attempting to assign this role as a child of role: '{roleModel.Name}'.");
                 }
 
                 // Only non-compound roles can be added to compound roles. Therefore, prior to adding the potential child role to the parent role, it must be
@@ -183,8 +181,7 @@ namespace za.co.grindrodbank.a3s.Services
                 if(roleToAddAsChildRole.ChildRoles.Count > 0)
                 {
                     // Note. This function is called by create role and update role functions within this class. Therefore, the 'roleModel' object will not have an ID set if called from the create context. Use it's name.
-                    logger.Warn($"Assigning a compound role as a child of a role is prohibited. Attempting to add Role '{roleToAddAsChildRole.Name} with ID: '{roleToAddAsChildRole.Id}' as a child role of Role: '{roleModel.Name}'. However, it already has '{roleToAddAsChildRole.ChildRoles.Count}' child roles assigned to it! Not adding it.");
-                    break;
+                    throw new ItemNotProcessableException($"Assigning a compound role as a child of a role is prohibited. Attempting to add Role '{roleToAddAsChildRole.Name} with ID: '{roleToAddAsChildRole.Id}' as a child role of Role: '{roleModel.Name}'. However, it already has '{roleToAddAsChildRole.ChildRoles.Count}' child roles assigned to it! Not adding it.");
                 }
 
                 roleModel.ChildRoles.Add(new RoleRoleModel {

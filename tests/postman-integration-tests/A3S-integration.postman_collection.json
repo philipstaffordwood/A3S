@@ -2000,7 +2000,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"test-role-new\",\n    \"description\" : \"test-new-role-description\",\n    \"functionIds\": [\"{{function-guid}}\"],\n    \"roleIds\": []\n}"
+							"raw": "{\n    \"name\": \"test-role-new\",\n    \"description\" : \"test-new-role-description\",\n    \"functionIds\": [],\n    \"roleIds\": []\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/roles",
@@ -2086,7 +2086,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"test-role-new-2\",\n    \"description\" : \"test-new-role-description\",\n    \"functionIds\": [\"{{function-guid}}\"],\n    \"roleIds\": []\n}"
+							"raw": "{\n    \"name\": \"test-role-new-2\",\n    \"description\" : \"test-new-role-description\",\n    \"functionIds\": [],\n    \"roleIds\": []\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/roles",
@@ -2230,7 +2230,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"test-role-new2\",\n    \"description\" : \"test-new-role-description2\",\n    \"functionIds\": [\"{{function-guid}}\"],\n    \"roleIds\": [\"{{child-role-guid}}\"]\n}"
+							"raw": "{\n    \"name\": \"test-role-new2\",\n    \"description\" : \"test-new-role-description2\",\n    \"functionIds\": [],\n    \"roleIds\": [\"{{child-role-guid}}\"]\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/roles",

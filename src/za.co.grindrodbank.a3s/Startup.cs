@@ -234,33 +234,50 @@ namespace za.co.grindrodbank.a3s
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<A3SContext>();
 
-                // Create the 'applySecurityContract' Permissions for A3S.
-                var writePermission = context.Permission.Where(p => p.Name == "a3s.securityContracts.update").FirstOrDefault();
+                // Ensure that the A3S application is createdd.
+                var application = context.Application.Where(a => a.Name == "a3s").FirstOrDefault();
 
-                if (writePermission == null)
+                var writePermission = new PermissionModel
                 {
-                    writePermission = new PermissionModel();
+                    Name = "a3s.securityContracts.update",
+                    Description = "Enables idempotently applying (creating or updating) a security contract definition. This includes creation or updating of permissions, functions, applications and the relationships between them.",
+                    ChangedBy = Guid.Empty
+                };
 
-                    writePermission.Name = "a3s.securityContracts.update";
-                    writePermission.Description = "Enables idempotently applying (creating or updating) a security contract definition. This includes creation or updating of permissions, functions, applications and the relationships between them.";
-                    writePermission.ChangedBy = Guid.Empty;
-
-                    context.Permission.Add(writePermission);
-                    context.SaveChanges();
-                }
-
-                // Create the 'readSecurityContract' Permissions for A3S.
-                var readPermission = context.Permission.Where(p => p.Name == "a3s.securityContracts.read").FirstOrDefault();
-
-                if (readPermission == null)
+                var readPermission = new PermissionModel
                 {
-                    readPermission = new PermissionModel();
+                    Name = "a3s.securityContracts.read",
+                    Description = "Enables fetching of a security contract definition.",
+                    ChangedBy = Guid.Empty
+                };
 
-                    readPermission.Name = "a3s.securityContracts.read";
-                    readPermission.Description = "Enables fetching of a security contract definition.";
-                    readPermission.ChangedBy = Guid.Empty;
+                if (application == null)
+                {
+                    application = new ApplicationModel
+                    {
+                        Name = "a3s",
+                        ApplicationFunctions = new List<ApplicationFunctionModel>()
+                        {
+                            new ApplicationFunctionModel
+                            {
+                                Application = application,
+                                Name = "a3s.securityContracts",
+                                ApplicationFunctionPermissions = new List<ApplicationFunctionPermissionModel>
+                                {
+                                    new ApplicationFunctionPermissionModel
+                                    {
+                                        Permission = writePermission
+                                    },
+                                    new ApplicationFunctionPermissionModel
+                                    {
+                                        Permission = readPermission
+                                    }
+                                }
+                            }
+                        }
+                    };
 
-                    context.Permission.Add(readPermission);
+                    context.Application.Add(application);
                     context.SaveChanges();
                 }
 
@@ -269,12 +286,13 @@ namespace za.co.grindrodbank.a3s
 
                 if(function == null)
                 {
-                    function = new FunctionModel();
-
-                    function.FunctionPermissions = new List<FunctionPermissionModel>();
-                    function.Name = "a3s.securityContractMaintenance";
-                    function.Description = "Functionality to apply security contracts for micro-services.";
-                    function.ChangedBy = Guid.Empty;
+                    function = new FunctionModel
+                    {
+                        FunctionPermissions = new List<FunctionPermissionModel>(),
+                        Name = "a3s.securityContractMaintenance",
+                        Description = "Functionality to apply security contracts for micro-services.",
+                        ChangedBy = Guid.Empty
+                    };
                     function.FunctionPermissions.Add(new FunctionPermissionModel
                     {
                         Function = function,
