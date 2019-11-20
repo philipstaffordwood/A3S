@@ -235,10 +235,6 @@ workflows:
           filters:    
             branches:    
               only: master
-      - generate-axios-client
-      - publish-axios-client:
-          requires:
-          - generate-axios-client
       
   tagged_build_push:
     jobs:
