@@ -71,6 +71,12 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public List<Guid> DataPolicyIds { get; set; }
 
         /// <summary>
+        /// Gets or Sets TermsOfService
+        /// </summary>
+        [DataMember(Name="termsOfService", EmitDefaultValue=false)]
+        public TermsOfService TermsOfService { get; set; }
+
+        /// <summary>
         /// Returns the string presentation of the object
         /// </summary>
         /// <returns>String presentation of the object</returns>
@@ -84,6 +90,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  TeamIds: ").Append(TeamIds).Append("\n");
             sb.Append("  UserIds: ").Append(UserIds).Append("\n");
             sb.Append("  DataPolicyIds: ").Append(DataPolicyIds).Append("\n");
+            sb.Append("  TermsOfService: ").Append(TermsOfService).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -152,6 +159,11 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     DataPolicyIds != null &&
                     other.DataPolicyIds != null &&
                     DataPolicyIds.SequenceEqual(other.DataPolicyIds)
+                ) && 
+                (
+                    TermsOfService == other.TermsOfService ||
+                    TermsOfService != null &&
+                    TermsOfService.Equals(other.TermsOfService)
                 );
         }
 
@@ -177,6 +189,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + UserIds.GetHashCode();
                     if (DataPolicyIds != null)
                     hashCode = hashCode * 59 + DataPolicyIds.GetHashCode();
+                    if (TermsOfService != null)
+                    hashCode = hashCode * 59 + TermsOfService.GetHashCode();
                 return hashCode;
             }
         }

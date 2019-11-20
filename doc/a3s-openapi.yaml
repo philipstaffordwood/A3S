@@ -2998,6 +2998,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ApplicationDataPolicyId'
+        termsOfService:
+            $ref: '#/components/schemas/TermsOfService'
         
 
     TeamSubmit:
@@ -3025,6 +3027,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ApplicationDataPolicyId'
+        termsOfService:
+            $ref: '#/components/schemas/TermsOfService'
     #endregion
     
     # Region -  Clients

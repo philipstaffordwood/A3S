@@ -4410,6 +4410,13 @@
             "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
             "name" : "name",
             "description" : "description",
+            "termsOfService" : {
+              "agreementName" : "agreementName",
+              "AgreementFileSha256Hash" : "AgreementFileSha256Hash",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "version" : 0.8008282,
+              "agreementFileData" : "agreementFileData"
+            },
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "dataPolicyIds" : [ null, null ],
             "teamIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ]
@@ -4417,6 +4424,13 @@
             "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
             "name" : "name",
             "description" : "description",
+            "termsOfService" : {
+              "agreementName" : "agreementName",
+              "AgreementFileSha256Hash" : "AgreementFileSha256Hash",
+              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+              "version" : 0.8008282,
+              "agreementFileData" : "agreementFileData"
+            },
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "dataPolicyIds" : [ null, null ],
             "teamIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ]
@@ -4594,6 +4608,13 @@
           "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
           "name" : "name",
           "description" : "description",
+          "termsOfService" : {
+            "agreementName" : "agreementName",
+            "AgreementFileSha256Hash" : "AgreementFileSha256Hash",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "version" : 0.8008282,
+            "agreementFileData" : "agreementFileData"
+          },
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "dataPolicyIds" : [ null, null ],
           "teamIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ]
@@ -4630,6 +4651,9 @@
               "$ref" : "#/components/schemas/ApplicationDataPolicyId"
             },
             "type" : "array"
+          },
+          "termsOfService" : {
+            "$ref" : "#/components/schemas/TermsOfService"
           }
         },
         "type" : "object"
@@ -4639,6 +4663,13 @@
         "example" : {
           "name" : "name",
           "description" : "description",
+          "termsOfService" : {
+            "agreementName" : "agreementName",
+            "AgreementFileSha256Hash" : "AgreementFileSha256Hash",
+            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+            "version" : 0.8008282,
+            "agreementFileData" : "agreementFileData"
+          },
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "dataPolicyIds" : [ null, null ],
           "teamIds" : [ null, null ]
@@ -4667,6 +4698,9 @@
               "$ref" : "#/components/schemas/ApplicationDataPolicyId"
             },
             "type" : "array"
+          },
+          "termsOfService" : {
+            "$ref" : "#/components/schemas/TermsOfService"
           }
         },
         "required" : [ "description", "name", "uuid" ],

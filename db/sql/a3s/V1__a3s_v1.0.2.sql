@@ -1,3 +1,10 @@
+--
+-- *************************************************
+-- Copyright (c) 2019, Grindrod Bank Limited
+-- License MIT: https://opensource.org/licenses/MIT
+-- **************************************************
+--
+
 -- These updates relate to A3S v1.0.2 updates
 
 
