@@ -147,7 +147,7 @@ jobs:
           command: cd ~/repo/workspace/a3s-typescript-axios && yarn build
       - run: 
           name: Publish to NPM with Yarn.
-          command: cd ~/repo/workspace/a3s-typescript-axios && npm publish dist/
+          command: cd ~/repo/workspace/a3s-typescript-axios && yarn publish --access public
 
   a3s-docker-build-push:
     docker:
