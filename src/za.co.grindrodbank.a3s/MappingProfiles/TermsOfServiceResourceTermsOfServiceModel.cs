@@ -5,14 +5,18 @@
  * **************************************************
  */
 ﻿using System;
+using AutoMapper;
+using za.co.grindrodbank.a3s.A3SApiResources;
+using za.co.grindrodbank.a3s.Models;
+
 namespace za.co.grindrodbank.a3s.MappingProfiles
 {
-    public class TermsOfServiceResourceTermsOfServiceModel
+    public class TermsOfServiceResourceTermsOfServiceModel : Profile
     {
         public TermsOfServiceResourceTermsOfServiceModel()
         {
-            CreateMap<TermsOfServiceSubmit, TermsOfServiceModel>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Uuid));
-            CreateMap<TermsOfServiceModel, TermsOfServiceSubmit>().ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id));
+            CreateMap<TermsOfService, TermsOfServiceModel>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Uuid));
+            CreateMap<TermsOfServiceModel, TermsOfService>().ForMember(dest => dest.Uuid, opt => opt.MapFrom(src => src.Id));
         }
     }
 }
