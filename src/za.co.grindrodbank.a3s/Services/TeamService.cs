@@ -39,16 +39,18 @@ namespace za.co.grindrodbank.a3s.Services
             try
             {
                 // This will only map the first level of members onto the model. User IDs and Policy IDs will not be.
-                TeamModel teamModel = mapper.Map<TeamModel>(teamSubmit);
+                var teamModel = mapper.Map<TeamModel>(teamSubmit);
                 teamModel.ChangedBy = createdById;
 
                 await AssignTeamsToTeamFromTeamIdList(teamModel, teamSubmit.TeamIds);
                 await AssignApplicationDataPoliciesToTeamFromDataPolicyIdList(teamModel, teamSubmit.DataPolicyIds);
 
+                var createdTeam = mapper.Map<Team>(await teamRepository.CreateAsync(teamModel));
+
                 // All successful
                 CommitAllTransactions();
 
-                return mapper.Map<Team>(await teamRepository.CreateAsync(teamModel));
+                return createdTeam;
             }
             catch (Exception ex)
             {
@@ -212,16 +214,19 @@ namespace za.co.grindrodbank.a3s.Services
         private void BeginAllTransactions()
         {
             teamRepository.InitSharedTransaction();
+            applicationDataPolicyRepository.InitSharedTransaction();
         }
 
         private void CommitAllTransactions()
         {
             teamRepository.CommitTransaction();
+            applicationDataPolicyRepository.CommitTransaction();
         }
 
         private void RollbackAllTransactions()
         {
             teamRepository.RollbackTransaction();
+            applicationDataPolicyRepository.RollbackTransaction();
         }
     }
 }
