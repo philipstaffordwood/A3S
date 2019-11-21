@@ -4205,9 +4205,8 @@
         "description" : "An agreement the needs to be agreed to by a user\n",
         "example" : {
           "agreementName" : "agreementName",
-          "AgreementFileSha256Hash" : "AgreementFileSha256Hash",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "version" : 0.8008282,
+          "version" : "version",
           "agreementFileData" : "agreementFileData"
         },
         "properties" : {
@@ -4219,14 +4218,10 @@
             "type" : "string"
           },
           "version" : {
-            "format" : "float",
-            "type" : "number"
+            "type" : "string"
           },
           "agreementFileData" : {
             "format" : "byte",
-            "type" : "string"
-          },
-          "AgreementFileSha256Hash" : {
             "type" : "string"
           }
         },
@@ -4238,8 +4233,6 @@
           "autoUpdate" : true,
           "agreementName" : "agreementName",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-          "version" : 0.8008282,
-          "agreementFileSha256Hash" : "agreementFileSha256Hash",
           "agreementFileData" : "agreementFileData"
         },
         "properties" : {
@@ -4250,15 +4243,8 @@
           "agreementName" : {
             "type" : "string"
           },
-          "version" : {
-            "format" : "float",
-            "type" : "number"
-          },
           "agreementFileData" : {
             "format" : "byte",
-            "type" : "string"
-          },
-          "agreementFileSha256Hash" : {
             "type" : "string"
           },
           "autoUpdate" : {
@@ -4410,13 +4396,7 @@
             "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
             "name" : "name",
             "description" : "description",
-            "termsOfService" : {
-              "agreementName" : "agreementName",
-              "AgreementFileSha256Hash" : "AgreementFileSha256Hash",
-              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "version" : 0.8008282,
-              "agreementFileData" : "agreementFileData"
-            },
+            "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "dataPolicyIds" : [ null, null ],
             "teamIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ]
@@ -4424,13 +4404,7 @@
             "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
             "name" : "name",
             "description" : "description",
-            "termsOfService" : {
-              "agreementName" : "agreementName",
-              "AgreementFileSha256Hash" : "AgreementFileSha256Hash",
-              "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-              "version" : 0.8008282,
-              "agreementFileData" : "agreementFileData"
-            },
+            "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
             "dataPolicyIds" : [ null, null ],
             "teamIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ]
@@ -4608,13 +4582,7 @@
           "userIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ],
           "name" : "name",
           "description" : "description",
-          "termsOfService" : {
-            "agreementName" : "agreementName",
-            "AgreementFileSha256Hash" : "AgreementFileSha256Hash",
-            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "version" : 0.8008282,
-            "agreementFileData" : "agreementFileData"
-          },
+          "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "dataPolicyIds" : [ null, null ],
           "teamIds" : [ "046b6c7f-0b8a-43b9-b35d-6489e6daee91", "046b6c7f-0b8a-43b9-b35d-6489e6daee91" ]
@@ -4652,8 +4620,9 @@
             },
             "type" : "array"
           },
-          "termsOfService" : {
-            "$ref" : "#/components/schemas/TermsOfService"
+          "termsOfServiceId" : {
+            "format" : "uuid",
+            "type" : "string"
           }
         },
         "type" : "object"
@@ -4663,13 +4632,7 @@
         "example" : {
           "name" : "name",
           "description" : "description",
-          "termsOfService" : {
-            "agreementName" : "agreementName",
-            "AgreementFileSha256Hash" : "AgreementFileSha256Hash",
-            "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
-            "version" : 0.8008282,
-            "agreementFileData" : "agreementFileData"
-          },
+          "termsOfServiceId" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "uuid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
           "dataPolicyIds" : [ null, null ],
           "teamIds" : [ null, null ]
@@ -4699,8 +4662,9 @@
             },
             "type" : "array"
           },
-          "termsOfService" : {
-            "$ref" : "#/components/schemas/TermsOfService"
+          "termsOfServiceId" : {
+            "format" : "uuid",
+            "type" : "string"
           }
         },
         "required" : [ "description", "name", "uuid" ],

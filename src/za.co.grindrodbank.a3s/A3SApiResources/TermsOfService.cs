@@ -48,19 +48,13 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// Gets or Sets Version
         /// </summary>
         [DataMember(Name="version", EmitDefaultValue=false)]
-        public float Version { get; set; }
+        public string Version { get; set; }
 
         /// <summary>
         /// Gets or Sets AgreementFileData
         /// </summary>
         [DataMember(Name="agreementFileData", EmitDefaultValue=false)]
         public byte[] AgreementFileData { get; set; }
-
-        /// <summary>
-        /// Gets or Sets AgreementFileSha256Hash
-        /// </summary>
-        [DataMember(Name="AgreementFileSha256Hash", EmitDefaultValue=false)]
-        public string AgreementFileSha256Hash { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -74,7 +68,6 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  AgreementName: ").Append(AgreementName).Append("\n");
             sb.Append("  Version: ").Append(Version).Append("\n");
             sb.Append("  AgreementFileData: ").Append(AgreementFileData).Append("\n");
-            sb.Append("  AgreementFileSha256Hash: ").Append(AgreementFileSha256Hash).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -123,18 +116,13 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                 ) && 
                 (
                     Version == other.Version ||
-                    
+                    Version != null &&
                     Version.Equals(other.Version)
                 ) && 
                 (
                     AgreementFileData == other.AgreementFileData ||
                     AgreementFileData != null &&
                     AgreementFileData.Equals(other.AgreementFileData)
-                ) && 
-                (
-                    AgreementFileSha256Hash == other.AgreementFileSha256Hash ||
-                    AgreementFileSha256Hash != null &&
-                    AgreementFileSha256Hash.Equals(other.AgreementFileSha256Hash)
                 );
         }
 
@@ -152,12 +140,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Uuid.GetHashCode();
                     if (AgreementName != null)
                     hashCode = hashCode * 59 + AgreementName.GetHashCode();
-                    
+                    if (Version != null)
                     hashCode = hashCode * 59 + Version.GetHashCode();
                     if (AgreementFileData != null)
                     hashCode = hashCode * 59 + AgreementFileData.GetHashCode();
-                    if (AgreementFileSha256Hash != null)
-                    hashCode = hashCode * 59 + AgreementFileSha256Hash.GetHashCode();
                 return hashCode;
             }
         }

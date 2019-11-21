@@ -2754,13 +2754,10 @@ components:
         agreementName:
           type: string
         version:
-          type: number
-          format: float
+          type: string
         agreementFileData:
           type: string
           format: byte
-        AgreementFileSha256Hash:
-          type: string
 
     TermsOfServiceSubmit:
       description: |
@@ -2771,14 +2768,9 @@ components:
           $ref: '#/components/schemas/TermsOfServiceId'
         agreementName:
           type: string
-        version:
-          type: number
-          format: float
         agreementFileData:
           type: string
           format: byte
-        agreementFileSha256Hash:
-          type: string
         autoUpdate:
           type: boolean
 
@@ -2998,8 +2990,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ApplicationDataPolicyId'
-        termsOfService:
-            $ref: '#/components/schemas/TermsOfService'
+        termsOfServiceId:
+            $ref: '#/components/schemas/TermsOfServiceId'
         
 
     TeamSubmit:
@@ -3027,8 +3019,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ApplicationDataPolicyId'
-        termsOfService:
-            $ref: '#/components/schemas/TermsOfService'
+        termsOfServiceId:
+            $ref: '#/components/schemas/TermsOfServiceId'
     #endregion
     
     # Region -  Clients

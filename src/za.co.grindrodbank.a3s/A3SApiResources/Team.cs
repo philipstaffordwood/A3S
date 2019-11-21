@@ -71,10 +71,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public List<Guid> DataPolicyIds { get; set; }
 
         /// <summary>
-        /// Gets or Sets TermsOfService
+        /// Gets or Sets TermsOfServiceId
         /// </summary>
-        [DataMember(Name="termsOfService", EmitDefaultValue=false)]
-        public TermsOfService TermsOfService { get; set; }
+        [DataMember(Name="termsOfServiceId", EmitDefaultValue=false)]
+        public Guid TermsOfServiceId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -90,7 +90,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("  TeamIds: ").Append(TeamIds).Append("\n");
             sb.Append("  UserIds: ").Append(UserIds).Append("\n");
             sb.Append("  DataPolicyIds: ").Append(DataPolicyIds).Append("\n");
-            sb.Append("  TermsOfService: ").Append(TermsOfService).Append("\n");
+            sb.Append("  TermsOfServiceId: ").Append(TermsOfServiceId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -161,9 +161,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     DataPolicyIds.SequenceEqual(other.DataPolicyIds)
                 ) && 
                 (
-                    TermsOfService == other.TermsOfService ||
-                    TermsOfService != null &&
-                    TermsOfService.Equals(other.TermsOfService)
+                    TermsOfServiceId == other.TermsOfServiceId ||
+                    TermsOfServiceId != null &&
+                    TermsOfServiceId.Equals(other.TermsOfServiceId)
                 );
         }
 
@@ -189,8 +189,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + UserIds.GetHashCode();
                     if (DataPolicyIds != null)
                     hashCode = hashCode * 59 + DataPolicyIds.GetHashCode();
-                    if (TermsOfService != null)
-                    hashCode = hashCode * 59 + TermsOfService.GetHashCode();
+                    if (TermsOfServiceId != null)
+                    hashCode = hashCode * 59 + TermsOfServiceId.GetHashCode();
                 return hashCode;
             }
         }

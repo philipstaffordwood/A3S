@@ -193,6 +193,7 @@ namespace za.co.grindrodbank.a3s
             services.AddScoped<ISafeRandomizerService, SafeRandomizerService>();
             services.AddScoped<ILdapConnectionService, LdapConnectionService>();
             services.AddScoped<ITwoFactorAuthService, TwoFactorAuthService>();
+            services.AddScoped<ITermsOfServiceService, TermsOfServiceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

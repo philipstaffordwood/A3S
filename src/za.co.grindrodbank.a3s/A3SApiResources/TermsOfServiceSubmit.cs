@@ -45,22 +45,10 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         public string AgreementName { get; set; }
 
         /// <summary>
-        /// Gets or Sets Version
-        /// </summary>
-        [DataMember(Name="version", EmitDefaultValue=false)]
-        public float Version { get; set; }
-
-        /// <summary>
         /// Gets or Sets AgreementFileData
         /// </summary>
         [DataMember(Name="agreementFileData", EmitDefaultValue=false)]
         public byte[] AgreementFileData { get; set; }
-
-        /// <summary>
-        /// Gets or Sets AgreementFileSha256Hash
-        /// </summary>
-        [DataMember(Name="agreementFileSha256Hash", EmitDefaultValue=false)]
-        public string AgreementFileSha256Hash { get; set; }
 
         /// <summary>
         /// Gets or Sets AutoUpdate
@@ -78,9 +66,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
             sb.Append("class TermsOfServiceSubmit {\n");
             sb.Append("  Uuid: ").Append(Uuid).Append("\n");
             sb.Append("  AgreementName: ").Append(AgreementName).Append("\n");
-            sb.Append("  Version: ").Append(Version).Append("\n");
             sb.Append("  AgreementFileData: ").Append(AgreementFileData).Append("\n");
-            sb.Append("  AgreementFileSha256Hash: ").Append(AgreementFileSha256Hash).Append("\n");
             sb.Append("  AutoUpdate: ").Append(AutoUpdate).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -129,19 +115,9 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     AgreementName.Equals(other.AgreementName)
                 ) && 
                 (
-                    Version == other.Version ||
-                    
-                    Version.Equals(other.Version)
-                ) && 
-                (
                     AgreementFileData == other.AgreementFileData ||
                     AgreementFileData != null &&
                     AgreementFileData.Equals(other.AgreementFileData)
-                ) && 
-                (
-                    AgreementFileSha256Hash == other.AgreementFileSha256Hash ||
-                    AgreementFileSha256Hash != null &&
-                    AgreementFileSha256Hash.Equals(other.AgreementFileSha256Hash)
                 ) && 
                 (
                     AutoUpdate == other.AutoUpdate ||
@@ -164,12 +140,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
                     hashCode = hashCode * 59 + Uuid.GetHashCode();
                     if (AgreementName != null)
                     hashCode = hashCode * 59 + AgreementName.GetHashCode();
-                    
-                    hashCode = hashCode * 59 + Version.GetHashCode();
                     if (AgreementFileData != null)
                     hashCode = hashCode * 59 + AgreementFileData.GetHashCode();
-                    if (AgreementFileSha256Hash != null)
-                    hashCode = hashCode * 59 + AgreementFileSha256Hash.GetHashCode();
                     
                     hashCode = hashCode * 59 + AutoUpdate.GetHashCode();
                 return hashCode;
