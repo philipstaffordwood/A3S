@@ -175,6 +175,7 @@ namespace za.co.grindrodbank.a3s
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IIdentityClientRepository, IdentityClientRepository>();
             services.AddScoped<IApplicationDataPolicyRepository, ApplicationDataPolicyRepository>();
+            services.AddScoped<ITermsOfServiceRepository, TermsOfServiceRepository>();
 
             // Resgister all the services.
             services.AddScoped<IPermissionService, PermissionService>();
