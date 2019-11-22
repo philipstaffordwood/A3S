@@ -38,7 +38,8 @@ namespace za.co.grindrodbank.a3s.Services
                 // This will only map the first level of members onto the model. User IDs and Policy IDs will not be.
                 var termsOfServiceModel = mapper.Map<TermsOfServiceModel>(termsOfServiceSubmit);
                 termsOfServiceModel.ChangedBy = createdById;
-                termsOfServiceModel.Version = "1";
+                termsOfServiceModel.AgreementName = termsOfServiceModel.AgreementName.Trim();
+                termsOfServiceModel.Version = await GetNewAgreementVersion(termsOfServiceModel.AgreementName);
 
                 // TODO: Implement mass teams update if AutoUpdate == true
 
@@ -55,6 +56,28 @@ namespace za.co.grindrodbank.a3s.Services
                 RollbackAllTransactions();
                 throw;
             }
+        }
+
+        private async Task<string> GetNewAgreementVersion(string agreementName)
+        {
+            string latestVersion = await termsOfServiceRepository.GetLastestVersionByAgreementName(agreementName);
+            string newVersion = string.Empty;
+
+            if (latestVersion == null)
+            {
+                newVersion = $"{DateTime.Now.Year}.1";
+            }
+            else
+            {
+                var splitVersion = latestVersion.Split('.');
+
+                if (splitVersion.Length != 2 || !int.TryParse(splitVersion[0], out int outTest) || !int.TryParse(splitVersion[1], out outTest) || int.Parse(splitVersion[0]) < DateTime.Now.Year)
+                    newVersion = $"{DateTime.Now.Year}.1";
+                else
+                    newVersion = $"{splitVersion[0]}.{(int.Parse(splitVersion[1]) + 1)}";
+            }
+
+            return newVersion;
         }
 
         public async Task DeleteAsync(Guid termsOfServiceId)

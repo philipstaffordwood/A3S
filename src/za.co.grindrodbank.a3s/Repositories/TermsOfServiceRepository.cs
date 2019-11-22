@@ -66,7 +66,7 @@ namespace za.co.grindrodbank.a3s.Repositories
             return await a3SContext.TermsOfService.Where(t => t.Id == termsOfServiceId).FirstOrDefaultAsync();
         }
 
-        public async Task<TermsOfServiceModel> GetByNameAsync(string name, bool includeRelations)
+        public async Task<TermsOfServiceModel> GetByAgreementNameAsync(string name, bool includeRelations)
         {
             if (includeRelations)
             {
@@ -90,6 +90,15 @@ namespace za.co.grindrodbank.a3s.Repositories
             await a3SContext.SaveChangesAsync();
 
             return termsOfService;
+        }
+
+        public async Task<string> GetLastestVersionByAgreementName(string agreementName)
+        {
+            return await a3SContext.TermsOfService.Where(t => t.AgreementName == agreementName)
+                .OrderByDescending(x => x.SysPeriod.LowerBound)
+                .Take(1)
+                .Select((term) => term.Version)
+                .FirstOrDefaultAsync();
         }
     }
 }
