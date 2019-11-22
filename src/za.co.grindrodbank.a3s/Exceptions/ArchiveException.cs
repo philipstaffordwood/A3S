@@ -10,23 +10,23 @@ using System.Runtime.Serialization;
 namespace za.co.grindrodbank.a3s.Exceptions
 {
     [Serializable]
-    public sealed class ArchivingException : Exception
+    public sealed class ArchiveException : Exception
     {
         private const string defaultMessage = "Archive processing error.";
 
-        public ArchivingException() : base(defaultMessage)
+        public ArchiveException() : base(defaultMessage)
         {
         }
 
-        public ArchivingException(string message) : base(!string.IsNullOrEmpty(message) ? message : defaultMessage)
+        public ArchiveException(string message) : base(!string.IsNullOrEmpty(message) ? message : defaultMessage)
         {
         }
 
-        public ArchivingException(string message, Exception innerException) : base(!string.IsNullOrEmpty(message) ? message : defaultMessage, innerException)
+        public ArchiveException(string message, Exception innerException) : base(!string.IsNullOrEmpty(message) ? message : defaultMessage, innerException)
         {
         }
 
-        private ArchivingException(SerializationInfo info, StreamingContext context)
+        private ArchiveException(SerializationInfo info, StreamingContext context)
         : base(info, context)
         {
         }

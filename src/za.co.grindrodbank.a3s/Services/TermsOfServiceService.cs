@@ -62,6 +62,28 @@ namespace za.co.grindrodbank.a3s.Services
             }
         }
 
+        public async Task DeleteAsync(Guid termsOfServiceId)
+        {
+            var termsOfService = await termsOfServiceRepository.GetByIdAsync(termsOfServiceId, false);
+
+            if (termsOfService == null)
+                throw new ItemNotFoundException($"Terms of Service entry with GUID '{termsOfServiceId}' not found.");
+
+            // TODO: Implement user acceptance check before delete
+
+            await termsOfServiceRepository.DeleteAsync(termsOfService);
+        }
+
+        public async Task<TermsOfService> GetByIdAsync(Guid termsOfServiceId, bool includeRelations = false)
+        {
+            return mapper.Map<TermsOfService>(await termsOfServiceRepository.GetByIdAsync(termsOfServiceId, includeRelations));
+        }
+
+        public async Task<List<TermsOfService>> GetListAsync()
+        {
+            return mapper.Map<List<TermsOfService>>(await termsOfServiceRepository.GetListAsync());
+        }
+
         private void ValidateFileCompatibility(byte[] fileContents)
         {
 
@@ -111,28 +133,6 @@ namespace za.co.grindrodbank.a3s.Services
             }
 
             return newVersion;
-        }
-
-        public async Task DeleteAsync(Guid termsOfServiceId)
-        {
-            var termsOfService = await termsOfServiceRepository.GetByIdAsync(termsOfServiceId, false);
-
-            if (termsOfService == null)
-                throw new ItemNotFoundException($"Terms of Service entry with GUID '{termsOfServiceId}' not found.");
-
-            // TODO: Implement user acceptance check before delete
-
-            await termsOfServiceRepository.DeleteAsync(termsOfService);
-        }
-
-        public async Task<TermsOfService> GetByIdAsync(Guid termsOfServiceId, bool includeRelations = false)
-        {
-            return mapper.Map<TermsOfService>(await termsOfServiceRepository.GetByIdAsync(termsOfServiceId, includeRelations));
-        }
-
-        public async Task<List<TermsOfService>> GetListAsync()
-        {
-            return mapper.Map<List<TermsOfService>>(await termsOfServiceRepository.GetListAsync());
         }
 
         private void BeginAllTransactions()

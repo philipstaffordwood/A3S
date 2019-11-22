@@ -75,7 +75,7 @@ namespace za.co.grindrodbank.a3s.Helpers
                 }
 
                 if (stream.Position > stream.Length)
-                    throw new ArchivingException("There was an error processing the tar ball.");
+                    throw new ArchiveException("There was an error processing the tar ball.");
 
                 var offset = 512 - (stream.Position % 512);
                 if (offset == 512)
