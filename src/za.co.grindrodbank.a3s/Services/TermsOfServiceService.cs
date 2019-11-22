@@ -4,13 +4,15 @@
  * License MIT: https://opensource.org/licenses/MIT
  * **************************************************
  */
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using NLog;
 using za.co.grindrodbank.a3s.A3SApiResources;
 using za.co.grindrodbank.a3s.Exceptions;
+using za.co.grindrodbank.a3s.Helpers;
 using za.co.grindrodbank.a3s.Models;
 using za.co.grindrodbank.a3s.Repositories;
 
@@ -41,6 +43,8 @@ namespace za.co.grindrodbank.a3s.Services
                 termsOfServiceModel.AgreementName = termsOfServiceModel.AgreementName.Trim();
                 termsOfServiceModel.Version = await GetNewAgreementVersion(termsOfServiceModel.AgreementName);
 
+                ValidateFileCompatibility(termsOfServiceModel.AgreementFile);
+
                 // TODO: Implement mass teams update if AutoUpdate == true
 
                 var createdTermsOfService = mapper.Map<TermsOfService>(await termsOfServiceRepository.CreateAsync(termsOfServiceModel));
@@ -55,6 +59,35 @@ namespace za.co.grindrodbank.a3s.Services
                 logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
+            }
+        }
+
+        private void ValidateFileCompatibility(byte[] fileContents)
+        {
+
+            try
+            {
+                string tempFolder = $"{ Path.GetTempPath()}{Path.DirectorySeparatorChar}{Guid.NewGuid()}";
+                string filePath = $"{tempFolder}{Path.DirectorySeparatorChar}terms_of_service.tar.gz";
+                string extractedFolder = $"{tempFolder}{Path.DirectorySeparatorChar}terms_of_service";
+                Directory.CreateDirectory(tempFolder);
+
+                File.WriteAllBytes(filePath, fileContents);
+                CompressionHelper.ExtractTarGz(filePath, extractedFolder);
+
+                if (!File.Exists($"{extractedFolder}{Path.DirectorySeparatorChar}terms_of_service.html"))
+                    throw new ItemNotProcessableException("Agreement file archive does not contain a 'terms_of_service.html' file.");
+
+                if (!File.Exists($"{extractedFolder}{Path.DirectorySeparatorChar}terms_of_service.css"))
+                    throw new ItemNotProcessableException("Agreement file archive does not contain a 'terms_of_service.css' file.");
+
+                // Cleanup
+                Directory.Delete(tempFolder, true);
+            }
+            catch (IOException ex)
+            {
+                logger.Error(ex);
+                throw new ItemNotProcessableException("An IO error occurred during the validation of the agreement file.");
             }
         }
 
