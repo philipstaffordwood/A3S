@@ -2757,7 +2757,6 @@ components:
           type: string
         agreementFileData:
           type: string
-          format: byte
 
     TermsOfServiceSubmit:
       description: |
@@ -2770,7 +2769,6 @@ components:
           type: string
         agreementFileData:
           type: string
-          format: byte
         autoUpdate:
           type: boolean
 

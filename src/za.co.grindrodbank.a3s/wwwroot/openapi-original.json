@@ -4221,7 +4221,6 @@
             "type" : "string"
           },
           "agreementFileData" : {
-            "format" : "byte",
             "type" : "string"
           }
         },
@@ -4244,7 +4243,6 @@
             "type" : "string"
           },
           "agreementFileData" : {
-            "format" : "byte",
             "type" : "string"
           },
           "autoUpdate" : {

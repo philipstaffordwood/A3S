@@ -48,7 +48,7 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// Gets or Sets AgreementFileData
         /// </summary>
         [DataMember(Name="agreementFileData", EmitDefaultValue=false)]
-        public byte[] AgreementFileData { get; set; }
+        public string AgreementFileData { get; set; }
 
         /// <summary>
         /// Gets or Sets AutoUpdate

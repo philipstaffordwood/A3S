@@ -14,7 +14,7 @@
 CREATE TABLE _a3s.terms_of_service (
     id uuid NOT NULL,
     agreement_name text NOT NULL,
-    version INTEGER NOT NULL,
+    version text NOT NULL,
     agreement_file bytea NOT NULL,
     changed_by uuid NOT NULL,
     sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)

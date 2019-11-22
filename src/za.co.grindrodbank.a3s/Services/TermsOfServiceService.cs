@@ -38,6 +38,7 @@ namespace za.co.grindrodbank.a3s.Services
                 // This will only map the first level of members onto the model. User IDs and Policy IDs will not be.
                 var termsOfServiceModel = mapper.Map<TermsOfServiceModel>(termsOfServiceSubmit);
                 termsOfServiceModel.ChangedBy = createdById;
+                termsOfServiceModel.Version = "1";
 
                 // TODO: Implement mass teams update if AutoUpdate == true
 

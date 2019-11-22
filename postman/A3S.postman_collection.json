@@ -1899,7 +1899,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"agreementName\": \"test-function\",\n    \"version\": \"test-function description\",\n    \"agreementFileData\": \"{{application-guid}}\"\n}"
+							"raw": "{\n    \"agreementName\": \"test-function\",\n    \"agreementFileData\": \"H4sIAO531l0AA+3VQQqDMBAF0B4lJ9BJM4kb6VVEJNJCrCVRz99EaTeVdiOW0v9APkLQCX8xWT5Y34Wqb6tg/XRpbNaEcNgUERlmkbIwek46Lu8Jx0dIpY3mQmmWgmShiA+Cth1j3RiG2sdRbvXopvra9M5Zv3IuHmvbN99Z7iKe+SOy1/7PQ+c2/ceH/omkfvQv2ajUfwz0v4cytX0q8zm+PQwAAOwG+x/7H/sfAOD/3AGb2peWABIAAA==\"\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/termsOfService",
