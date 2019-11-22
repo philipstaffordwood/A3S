@@ -12,15 +12,15 @@ using za.co.grindrodbank.a3s.Exceptions;
 
 namespace za.co.grindrodbank.a3s.Helpers
 {
-    public static class CompressionHelper
+    public class CompressionHelper : ICompressionHelper
     {
-        public static void ExtractTarGz(string filename, string outputDir)
+        public void ExtractTarGz(string filename, string outputDir)
         {
             using var stream = File.OpenRead(filename);
             ExtractTarGz(stream, outputDir);
         }
 
-        public static void ExtractTarGz(Stream stream, string outputDir)
+        public void ExtractTarGz(Stream stream, string outputDir)
         {
             // A GZipStream is not seekable, so copy it first to a MemoryStream
             using var gzip = new GZipStream(stream, CompressionMode.Decompress);
@@ -40,13 +40,13 @@ namespace za.co.grindrodbank.a3s.Helpers
             ExtractTar(memStr, outputDir);
         }
 
-        public static void ExtractTar(string filename, string outputDir)
+        public void ExtractTar(string filename, string outputDir)
         {
             using var stream = File.OpenRead(filename);
             ExtractTar(stream, outputDir);
         }
 
-        public static void ExtractTar(Stream stream, string outputDir)
+        public void ExtractTar(Stream stream, string outputDir)
         {
             var buffer = new byte[100];
 

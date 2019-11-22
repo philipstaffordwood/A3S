@@ -33,6 +33,7 @@ using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 using za.co.grindrodbank.a3s.Managers;
 using za.co.grindrodbank.a3s.Stores;
+using za.co.grindrodbank.a3s.Helpers;
 
 namespace za.co.grindrodbank.a3s
 {
@@ -194,6 +195,9 @@ namespace za.co.grindrodbank.a3s
             services.AddScoped<ILdapConnectionService, LdapConnectionService>();
             services.AddScoped<ITwoFactorAuthService, TwoFactorAuthService>();
             services.AddScoped<ITermsOfServiceService, TermsOfServiceService>();
+
+            // Register Helpers
+            services.AddScoped<ICompressionHelper, CompressionHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

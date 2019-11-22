@@ -20,11 +20,10 @@ namespace za.co.grindrodbank.a3s.tests.Services
 {
     public class TeamService_Tests
     {
-        IMapper mapper;
-        Guid userGuid;
-        Guid teamGuid;
-
-        TeamModel mockedTeam;
+        private readonly IMapper mapper;
+        private readonly Guid userGuid;
+        private readonly Guid teamGuid;
+        private readonly TeamModel mockedTeam;
 
         public TeamService_Tests()
         {

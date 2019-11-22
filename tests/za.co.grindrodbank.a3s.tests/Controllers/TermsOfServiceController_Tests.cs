@@ -1,9 +1,3 @@
-/**
- * *************************************************
- * Copyright (c) 2019, Grindrod Bank Limited
- * License MIT: https://opensource.org/licenses/MIT
- * **************************************************
- */
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,10 +12,6 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
 {
     public class TermsOfServiceController_Tests
     {
-        public TermsOfServiceController_Tests()
-        {
-        }
-
         [Fact]
         public async Task GetTermsOfServiceAsync_WithEmptyGuid_ReturnsBadRequest()
         {

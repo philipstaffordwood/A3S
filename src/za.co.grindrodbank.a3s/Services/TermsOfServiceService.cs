@@ -22,11 +22,13 @@ namespace za.co.grindrodbank.a3s.Services
     {
         private readonly ITermsOfServiceRepository termsOfServiceRepository;
         private readonly IMapper mapper;
+        private readonly ICompressionHelper compressionHelper;
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
-        public TermsOfServiceService(ITermsOfServiceRepository termsOfServiceRepository, IMapper mapper)
+        public TermsOfServiceService(ITermsOfServiceRepository termsOfServiceRepository, ICompressionHelper compressionHelper, IMapper mapper)
         {
             this.termsOfServiceRepository = termsOfServiceRepository;
+            this.compressionHelper = compressionHelper;
             this.mapper = mapper;
         }
 
@@ -95,7 +97,7 @@ namespace za.co.grindrodbank.a3s.Services
                 Directory.CreateDirectory(tempFolder);
 
                 File.WriteAllBytes(filePath, fileContents);
-                CompressionHelper.ExtractTarGz(filePath, extractedFolder);
+                compressionHelper.ExtractTarGz(filePath, extractedFolder);
 
                 if (!File.Exists($"{extractedFolder}{Path.DirectorySeparatorChar}terms_of_service.html"))
                     throw new ItemNotProcessableException("Agreement file archive does not contain a 'terms_of_service.html' file.");

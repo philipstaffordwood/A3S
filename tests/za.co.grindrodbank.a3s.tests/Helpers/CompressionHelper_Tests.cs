@@ -44,7 +44,7 @@ namespace za.co.grindrodbank.a3s.tests.Helpers
 
             try
             {
-                CompressionHelper.ExtractTarGz(filename: null, null);
+                new CompressionHelper().ExtractTarGz(filename: null, null);
             }
             catch (Exception ex)
             {
@@ -67,7 +67,7 @@ namespace za.co.grindrodbank.a3s.tests.Helpers
             File.WriteAllBytes(filePath, validFileContents);
 
             // Act
-            CompressionHelper.ExtractTarGz(filePath, extractedFolder);
+            new CompressionHelper().ExtractTarGz(filePath, extractedFolder);
 
             // Assert
             Assert.True(Directory.Exists(extractedFolder), $"Test existance of folder '{extractedFolder}'.");
@@ -96,7 +96,7 @@ namespace za.co.grindrodbank.a3s.tests.Helpers
 
             try
             {
-                CompressionHelper.ExtractTarGz(filePath, null);
+                new CompressionHelper().ExtractTarGz(filePath, null);
             }
             catch (Exception ex)
             {
@@ -123,7 +123,7 @@ namespace za.co.grindrodbank.a3s.tests.Helpers
 
             try
             {
-                CompressionHelper.ExtractTarGz(filePath, extractedFolder);
+                new CompressionHelper().ExtractTarGz(filePath, extractedFolder);
             }
             catch (Exception ex)
             {
