@@ -3018,7 +3018,9 @@ components:
           items:
             $ref: '#/components/schemas/ApplicationDataPolicyId'
         termsOfServiceId:
-            $ref: '#/components/schemas/TermsOfServiceId'
+            type: string
+            format: uuid
+            nullable: true
     #endregion
     
     # Region -  Clients

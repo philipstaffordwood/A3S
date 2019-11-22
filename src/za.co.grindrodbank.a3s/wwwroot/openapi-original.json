@@ -4662,6 +4662,7 @@
           },
           "termsOfServiceId" : {
             "format" : "uuid",
+            "nullable" : true,
             "type" : "string"
           }
         },

@@ -70,8 +70,8 @@ namespace za.co.grindrodbank.a3s.A3SApiResources
         /// <summary>
         /// Gets or Sets TermsOfServiceId
         /// </summary>
-        [DataMember(Name="termsOfServiceId", EmitDefaultValue=false)]
-        public Guid TermsOfServiceId { get; set; }
+        [DataMember(Name="termsOfServiceId", EmitDefaultValue=true)]
+        public Guid? TermsOfServiceId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
