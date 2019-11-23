@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-beta" last-position="1654,0" last-zoom="1" max-obj-count="32"
+<dbmodel pgmodeler-ver="0.9.2-beta" last-position="326,0" last-zoom="1" max-obj-count="33"
 	 default-schema="public" default-owner="postgres">
 <database name="identity_server" encoding="UTF8" lc-collate="en_US.utf8" lc-ctype="en_US.utf8" is-template="false" allow-conns="true">
 	<role name="postgres"/>
@@ -458,11 +458,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="team" layer="0" collapse-mode="2" max-obj-count="6">
+<table name="team" layer="0" collapse-mode="2" max-obj-count="7">
 	<schema name="_a3s"/>
 	<role name="postgres"/>
 	<comment><![CDATA[Team that users belong to]]></comment>
-	<position x="1020" y="420"/>
+	<position x="1000" y="340"/>
 	<column name="id" not-null="true">
 		<type name="uuid" length="0"/>
 	</column>
@@ -471,6 +471,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="description">
 		<type name="text" length="0"/>
+	</column>
+	<column name="terms_of_service_id">
+		<type name="uuid" length="0"/>
 	</column>
 	<column name="changed_by" not-null="true">
 		<type name="uuid" length="0"/>
@@ -638,7 +641,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="_a3s"/>
 	<role name="postgres"/>
 	<comment><![CDATA[Team of Teams (compound teams) definition]]></comment>
-	<position x="980" y="220"/>
+	<position x="720" y="40"/>
 	<column name="parent_team_id" not-null="true">
 		<type name="uuid" length="0"/>
 	</column>
@@ -846,6 +849,42 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
+<table name="terms_of_service" layer="0" collapse-mode="2" max-obj-count="7">
+	<schema name="_a3s"/>
+	<role name="postgres"/>
+	<comment><![CDATA[Terms of service agreement entries that users agree to.]]></comment>
+	<position x="1200" y="20"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="agreement_name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="version" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[The version of the agreement. Format is {year}.{number}, i.e. 2019.6.]]></comment>
+	</column>
+	<column name="agreement_file" not-null="true">
+		<type name="bytea" length="0"/>
+		<comment><![CDATA[A .tar.gz file, containing two files with the terms agreement: 
+
+- terms_of_service.html
+- terms_of_service.css]]></comment>
+	</column>
+	<column name="changed_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="sys_period" not-null="true" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+		<type name="tstzrange" length="0"/>
+	</column>
+	<constraint name="terms_of_service_pk" type="pk-constr" table="_a3s.terms_of_service">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uk_terms_of_service_agreement_name_version" type="uq-constr" table="_a3s.terms_of_service">
+		<columns names="agreement_name,version" ref-type="src-columns"/>
+	</constraint>
+</table>
+
 <constraint name="fk_application_function_application_application_id" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="RESTRICT" ref-table="_a3s.application" table="_a3s.application_function">
 	<columns names="application_id" ref-type="src-columns"/>
@@ -933,6 +972,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <constraint name="fk_role_function_role_role_id" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="NO ACTION" del-action="CASCADE" ref-table="_a3s.role" table="_a3s.role_function">
 	<columns names="role_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_team_terms_of_service_terms_of_service_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="RESTRICT" ref-table="_a3s.terms_of_service" table="_a3s.team">
+	<columns names="terms_of_service_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
@@ -1184,6 +1229,11 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 custom-color="#68fe2b"
 	 src-table="_a3s.team_application_data_policy"
 	 dst-table="_a3s.application_data_policy" reference-fk="fk_team_application_data_policy_application_data_policy_applica"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_team_terms_of_service" type="relfk" layer="0"
+	 src-table="_a3s.team"
+	 dst-table="_a3s.terms_of_service" reference-fk="fk_team_terms_of_service_terms_of_service_id"
 	 src-required="false" dst-required="false"/>
 
 </dbmodel>
