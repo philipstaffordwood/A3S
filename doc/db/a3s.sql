@@ -700,6 +700,61 @@ COMMENT ON COLUMN _a3s.terms_of_service.agreement_file IS 'A .tar.gz file, conta
 
 
 --
+-- Name: terms_of_service_user_acceptance; Type: TABLE; Schema: _a3s; Owner: postgres
+--
+
+CREATE TABLE _a3s.terms_of_service_user_acceptance (
+    terms_of_service_id uuid NOT NULL,
+    user_id text NOT NULL,
+    acceptance_time tstzrange NOT NULL
+);
+
+
+ALTER TABLE _a3s.terms_of_service_user_acceptance OWNER TO postgres;
+
+--
+-- Name: TABLE terms_of_service_user_acceptance; Type: COMMENT; Schema: _a3s; Owner: postgres
+--
+
+COMMENT ON TABLE _a3s.terms_of_service_user_acceptance IS 'This records the acceptance of terms of service entries by users.';
+
+
+--
+-- Name: COLUMN terms_of_service_user_acceptance.acceptance_time; Type: COMMENT; Schema: _a3s; Owner: postgres
+--
+
+COMMENT ON COLUMN _a3s.terms_of_service_user_acceptance.acceptance_time IS 'The date and time the user accepted the specific agreement.';
+
+
+--
+-- Name: terms_of_service_user_acceptance_history; Type: TABLE; Schema: _a3s; Owner: postgres
+--
+
+CREATE TABLE _a3s.terms_of_service_user_acceptance_history (
+    terms_of_service_id uuid NOT NULL,
+    user_id text NOT NULL,
+    acceptance_time tstzrange NOT NULL
+);
+
+
+ALTER TABLE _a3s.terms_of_service_user_acceptance_history OWNER TO postgres;
+
+--
+-- Name: TABLE terms_of_service_user_acceptance_history; Type: COMMENT; Schema: _a3s; Owner: postgres
+--
+
+COMMENT ON TABLE _a3s.terms_of_service_user_acceptance_history IS 'This stores the history of the acceptance of terms of service entries by users.
+On every update of a terms of service agreement version for a team, all user acceptance records get copied from ''terms_of_service_user_acceptance'' to ''terms_of_service_user_acceptance_history''.';
+
+
+--
+-- Name: COLUMN terms_of_service_user_acceptance_history.acceptance_time; Type: COMMENT; Schema: _a3s; Owner: postgres
+--
+
+COMMENT ON COLUMN _a3s.terms_of_service_user_acceptance_history.acceptance_time IS 'The date and time the user accepted the specific agreement.';
+
+
+--
 -- Name: user_role; Type: TABLE; Schema: _a3s; Owner: postgres
 --
 
@@ -739,6 +794,243 @@ ALTER TABLE _a3s.user_team OWNER TO postgres;
 --
 
 COMMENT ON TABLE _a3s.user_team IS 'Users and Teams link';
+
+
+--
+-- Data for Name: application; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.application (id, name, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: application_data_policy; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.application_data_policy (id, name, description, application_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: application_function; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.application_function (id, name, description, application_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: application_function_permission; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.application_function_permission (application_function_id, permission_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: application_user; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.application_user (id, user_name, normalized_user_name, email, normalized_email, email_confirmed, password_hash, security_stamp, concurrency_stamp, phone_number, phone_number_confirmed, two_factor_enabled, lockout_end, lockout_enabled, access_failed_count, ldap_authentication_mode_id, first_name, surname, avatar, is_deleted, deleted_time, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: application_user_claim; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.application_user_claim (id, claim_type, claim_value, user_id, discriminator) FROM stdin;
+\.
+
+
+--
+-- Data for Name: application_user_token; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.application_user_token (user_id, login_provider, name, value, is_verified) FROM stdin;
+\.
+
+
+--
+-- Data for Name: aspnet_role; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.aspnet_role (id, name, normalized_name, concurrency_stamp) FROM stdin;
+\.
+
+
+--
+-- Data for Name: aspnet_role_claim; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.aspnet_role_claim (id, role_id, claim_type, claim_value) FROM stdin;
+\.
+
+
+--
+-- Data for Name: aspnet_user_login; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.aspnet_user_login (login_provider, provider_key, provider_display_name, user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: aspnet_user_role; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.aspnet_user_role (user_id, role_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: function; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.function (id, name, description, application_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: function_permission; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.function_permission (function_id, permission_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ldap_authentication_mode; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.ldap_authentication_mode (id, name, host_name, port, is_ldaps, account, password, base_dn, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ldap_authentication_mode_ldap_attribute; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.ldap_authentication_mode_ldap_attribute (id, ldap_authentication_mode_id, user_field, ldap_field, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: permission; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.permission (id, name, description, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: role; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.role (id, name, description, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: role_function; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.role_function (role_id, function_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: role_role; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.role_role (parent_role_id, child_role_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: team; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.team (id, name, description, terms_of_service_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: team_application_data_policy; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.team_application_data_policy (team_id, application_data_policy_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: team_team; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.team_team (parent_team_id, child_team_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: terms_of_service; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.terms_of_service (id, agreement_name, version, agreement_file, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: terms_of_service_user_acceptance; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.terms_of_service_user_acceptance (terms_of_service_id, user_id, acceptance_time) FROM stdin;
+\.
+
+
+--
+-- Data for Name: terms_of_service_user_acceptance_history; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.terms_of_service_user_acceptance_history (terms_of_service_id, user_id, acceptance_time) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user_role; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.user_role (user_id, role_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user_team; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+--
+
+COPY _a3s.user_team (user_id, team_id, changed_by, sys_period) FROM stdin;
+\.
+
+
+--
+-- Name: application_user_claim_id_seq; Type: SEQUENCE SET; Schema: _a3s; Owner: postgres
+--
+
+SELECT pg_catalog.setval('_a3s.application_user_claim_id_seq', 1, false);
+
+
+--
+-- Name: aspnet_role_claim_id_seq; Type: SEQUENCE SET; Schema: _a3s; Owner: postgres
+--
+
+SELECT pg_catalog.setval('_a3s.aspnet_role_claim_id_seq', 1, false);
+
+
+--
+-- Name: ldap_authentication_mode_ldap_attribute_id_seq; Type: SEQUENCE SET; Schema: _a3s; Owner: postgres
+--
+
+SELECT pg_catalog.setval('_a3s.ldap_authentication_mode_ldap_attribute_id_seq', 1, false);
 
 
 --
@@ -939,6 +1231,22 @@ ALTER TABLE ONLY _a3s.user_team
 
 ALTER TABLE ONLY _a3s.terms_of_service
     ADD CONSTRAINT terms_of_service_pk PRIMARY KEY (id);
+
+
+--
+-- Name: terms_of_service_user_acceptance_history terms_of_service_user_acceptance_history_pk; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance_history
+    ADD CONSTRAINT terms_of_service_user_acceptance_history_pk PRIMARY KEY (terms_of_service_id, user_id);
+
+
+--
+-- Name: terms_of_service_user_acceptance terms_of_service_user_acceptance_pk; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
+    ADD CONSTRAINT terms_of_service_user_acceptance_pk PRIMARY KEY (terms_of_service_id, user_id);
 
 
 --
@@ -1331,6 +1639,38 @@ ALTER TABLE ONLY _a3s.team_team
 
 ALTER TABLE ONLY _a3s.team
     ADD CONSTRAINT fk_team_terms_of_service_terms_of_service_id FOREIGN KEY (terms_of_service_id) REFERENCES _a3s.terms_of_service(id) MATCH FULL ON DELETE RESTRICT;
+
+
+--
+-- Name: terms_of_service_user_acceptance_history fk_terms_of_service_user_acceptance_history_terms_of_service_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance_history
+    ADD CONSTRAINT fk_terms_of_service_user_acceptance_history_terms_of_service_id FOREIGN KEY (terms_of_service_id) REFERENCES _a3s.terms_of_service(id) MATCH FULL;
+
+
+--
+-- Name: terms_of_service_user_acceptance_history fk_terms_of_service_user_acceptance_history_user_user_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance_history
+    ADD CONSTRAINT fk_terms_of_service_user_acceptance_history_user_user_id FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
+
+
+--
+-- Name: terms_of_service_user_acceptance fk_terms_of_service_user_acceptance_terms_of_service_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
+    ADD CONSTRAINT fk_terms_of_service_user_acceptance_terms_of_service_id FOREIGN KEY (terms_of_service_id) REFERENCES _a3s.terms_of_service(id) MATCH FULL;
+
+
+--
+-- Name: terms_of_service_user_acceptance fk_terms_of_service_user_acceptance_user_user_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
+    ADD CONSTRAINT fk_terms_of_service_user_acceptance_user_user_id FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
 
 
 --
