@@ -47,8 +47,6 @@ namespace za.co.grindrodbank.a3s.Services
 
                 ValidateFileCompatibility(termsOfServiceModel.AgreementFile);
 
-                // TODO: Implement mass teams update if AutoUpdate == true
-
                 var createdTermsOfService = mapper.Map<TermsOfService>(await termsOfServiceRepository.CreateAsync(termsOfServiceModel));
 
                 // All successful
@@ -70,8 +68,6 @@ namespace za.co.grindrodbank.a3s.Services
 
             if (termsOfService == null)
                 throw new ItemNotFoundException($"Terms of Service entry with GUID '{termsOfServiceId}' not found.");
-
-            // TODO: Implement user acceptance check before delete
 
             await termsOfServiceRepository.DeleteAsync(termsOfService);
         }
