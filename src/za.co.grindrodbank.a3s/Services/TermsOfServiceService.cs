@@ -22,13 +22,13 @@ namespace za.co.grindrodbank.a3s.Services
     {
         private readonly ITermsOfServiceRepository termsOfServiceRepository;
         private readonly IMapper mapper;
-        private readonly ICompressionHelper compressionHelper;
+        private readonly IArchiveHelper archiveHelper;
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
-        public TermsOfServiceService(ITermsOfServiceRepository termsOfServiceRepository, ICompressionHelper compressionHelper, IMapper mapper)
+        public TermsOfServiceService(ITermsOfServiceRepository termsOfServiceRepository, IArchiveHelper archiveHelper, IMapper mapper)
         {
             this.termsOfServiceRepository = termsOfServiceRepository;
-            this.compressionHelper = compressionHelper;
+            this.archiveHelper = archiveHelper;
             this.mapper = mapper;
         }
 
@@ -91,22 +91,13 @@ namespace za.co.grindrodbank.a3s.Services
 
             try
             {
-                string tempFolder = $"{ Path.GetTempPath()}{Path.DirectorySeparatorChar}{Guid.NewGuid()}";
-                string filePath = $"{tempFolder}{Path.DirectorySeparatorChar}terms_of_service.tar.gz";
-                string extractedFolder = $"{tempFolder}{Path.DirectorySeparatorChar}terms_of_service";
-                Directory.CreateDirectory(tempFolder);
-
-                File.WriteAllBytes(filePath, fileContents);
-                compressionHelper.ExtractTarGz(filePath, extractedFolder);
-
-                if (!File.Exists($"{extractedFolder}{Path.DirectorySeparatorChar}terms_of_service.html"))
+                List<string> archiveFiles = archiveHelper.ReturnFilesListInTarGz(fileContents, true);
+                
+                if (!archiveFiles.Contains("terms_of_service.html"))
                     throw new ItemNotProcessableException("Agreement file archive does not contain a 'terms_of_service.html' file.");
 
-                if (!File.Exists($"{extractedFolder}{Path.DirectorySeparatorChar}terms_of_service.css"))
+                if (!archiveFiles.Contains("terms_of_service.css"))
                     throw new ItemNotProcessableException("Agreement file archive does not contain a 'terms_of_service.css' file.");
-
-                // Cleanup
-                Directory.Delete(tempFolder, true);
             }
             catch (IOException ex)
             {

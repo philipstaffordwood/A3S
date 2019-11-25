@@ -13,13 +13,13 @@ using za.co.grindrodbank.a3s.Helpers;
 
 namespace za.co.grindrodbank.a3s.tests.Helpers
 {
-    public class CompressionHelper_Tests : IDisposable
+    public class ArchiveHelper_Tests : IDisposable
     {
         private readonly string temporaryFolder;
         private readonly byte[] validFileContents;
         private readonly byte[] inValidFileContents;
 
-        public CompressionHelper_Tests()
+        public ArchiveHelper_Tests()
         {
             temporaryFolder = $"{ Path.GetTempPath()}{Path.DirectorySeparatorChar}{Guid.NewGuid()}";
             Directory.CreateDirectory(temporaryFolder);
@@ -35,7 +35,7 @@ namespace za.co.grindrodbank.a3s.tests.Helpers
         }
 
         [Fact]
-        public void ExtractTarGz_NullFileSpecified_ThrowsArgumentNullException()
+        public void ReturnFilesListInTarGz_NullFileSpecified_ThrowsArgumentNullException()
         {
             // Arrange
 
@@ -44,7 +44,7 @@ namespace za.co.grindrodbank.a3s.tests.Helpers
 
             try
             {
-                new CompressionHelper().ExtractTarGz(filename: null, null);
+                new ArchiveHelper().ReturnFilesListInTarGz(null, false);
             }
             catch (Exception ex)
             {
@@ -56,59 +56,21 @@ namespace za.co.grindrodbank.a3s.tests.Helpers
         }
 
         [Fact]
-        public void ExtractTarGz_WithFileSpecified_ExtractsArchive()
+        public void ReturnFilesListInTarGz_WithGzipTarContentSpecified_ExtractsArchive()
         {
             // Arrange
-            string testFolder = $"{temporaryFolder}{Path.DirectorySeparatorChar}{Guid.NewGuid().ToString()}";
-            string filePath = $"{testFolder}{Path.DirectorySeparatorChar}test_archive.tar.gz";
-            string extractedFolder = $"{testFolder}{Path.DirectorySeparatorChar}terms_of_service";
-            Directory.CreateDirectory(testFolder);
-
-            File.WriteAllBytes(filePath, validFileContents);
-
             // Act
-            new CompressionHelper().ExtractTarGz(filePath, extractedFolder);
+            List<string> filesInArchive = new ArchiveHelper().ReturnFilesListInTarGz(validFileContents, true);
 
             // Assert
-            Assert.True(Directory.Exists(extractedFolder), $"Test existance of folder '{extractedFolder}'.");
-
-            List<string> filesInFolder = new List<string>(Directory.GetFiles(extractedFolder));
-            filesInFolder.Sort();
-            
-            Assert.True(filesInFolder.Count == 2, $"Extracted folder must contain 2 files.");
-            Assert.True(string.Compare(Path.GetFileName(filesInFolder[0]), "terms_of_service.css") == 0, $"Extracted file 1 must have name of 'terms_of_service.css'.");
-            Assert.True(string.Compare(Path.GetFileName(filesInFolder[1]), "terms_of_service.html") == 0, $"Extracted file 1 must have name of 'terms_of_service.html'.");
+            Assert.True(filesInArchive.Count == 2, $"Extracted archive must contain 2 files.");
+            Assert.True(string.Compare(Path.GetFileName(filesInArchive[0]), "terms_of_service.css") == 0, $"Returned file 1 must have name of 'terms_of_service.css'.");
+            Assert.True(string.Compare(Path.GetFileName(filesInArchive[1]), "terms_of_service.html") == 0, $"Returned file 1 must have name of 'terms_of_service.html'.");
         }
 
-        [Fact]
-        public void ExtractTarGz_WithNullFolderSpecified_ThrowsArgumentNullException()
-        {
-            // Arrange
-            string testFolder = $"{temporaryFolder}{Path.DirectorySeparatorChar}{Guid.NewGuid().ToString()}";
-            string filePath = $"{testFolder}{Path.DirectorySeparatorChar}test_archive.tar.gz";
-            string extractedFolder = $"{testFolder}{Path.DirectorySeparatorChar}terms_of_service";
-            Directory.CreateDirectory(testFolder);
-
-            File.WriteAllBytes(filePath, validFileContents);
-
-            // Act
-            Exception caughException = null;
-
-            try
-            {
-                new CompressionHelper().ExtractTarGz(filePath, null);
-            }
-            catch (Exception ex)
-            {
-                caughException = ex;
-            }
-
-            // Assert
-            Assert.True(caughException is ArgumentNullException, "Null file specified must throw ArgumentNullException.");
-        }
 
         [Fact]
-        public void ExtractTarGz_WithInvalidArchivespecified_ThrowsArchiveException()
+        public void ReturnFilesListInTarGz_WithInvalidArchivespecified_ThrowsArchiveException()
         {
             // Arrange
             string testFolder = $"{temporaryFolder}{Path.DirectorySeparatorChar}{Guid.NewGuid().ToString()}";
@@ -123,7 +85,7 @@ namespace za.co.grindrodbank.a3s.tests.Helpers
 
             try
             {
-                new CompressionHelper().ExtractTarGz(filePath, extractedFolder);
+                new ArchiveHelper().ReturnFilesListInTarGz(inValidFileContents, true);
             }
             catch (Exception ex)
             {

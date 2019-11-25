@@ -5,6 +5,7 @@
  * **************************************************
  */
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
@@ -12,15 +13,15 @@ using za.co.grindrodbank.a3s.Exceptions;
 
 namespace za.co.grindrodbank.a3s.Helpers
 {
-    public class CompressionHelper : ICompressionHelper
+    public class ArchiveHelper : IArchiveHelper
     {
-        public void ExtractTarGz(string filename, string outputDir)
+        public List<string> ReturnFilesListInTarGz(byte[] bytes, bool flattenFileStructure)
         {
-            using var stream = File.OpenRead(filename);
-            ExtractTarGz(stream, outputDir);
+            using var stream = new MemoryStream(bytes);
+            return ReturnFilesListInTarGz(stream, flattenFileStructure);
         }
 
-        public void ExtractTarGz(Stream stream, string outputDir)
+        private List<string> ReturnFilesListInTarGz(Stream stream, bool flattenFileStructure)
         {
             // A GZipStream is not seekable, so copy it first to a MemoryStream
             using var gzip = new GZipStream(stream, CompressionMode.Decompress);
@@ -37,18 +38,13 @@ namespace za.co.grindrodbank.a3s.Helpers
 
             memStr.Seek(0, SeekOrigin.Begin);
 
-            ExtractTar(memStr, outputDir);
+            return ReturnFilesListInTar(memStr, flattenFileStructure);
         }
 
-        public void ExtractTar(string filename, string outputDir)
-        {
-            using var stream = File.OpenRead(filename);
-            ExtractTar(stream, outputDir);
-        }
-
-        public void ExtractTar(Stream stream, string outputDir)
+        private List<string> ReturnFilesListInTar(Stream stream, bool flattenFileStructure)
         {
             var buffer = new byte[100];
+            var outFileList = new List<string>();
 
             while (true)
             {
@@ -57,22 +53,16 @@ namespace za.co.grindrodbank.a3s.Helpers
                 if (string.IsNullOrWhiteSpace(name))
                     break;
 
+                outFileList.Add(name);
+
                 stream.Seek(24, SeekOrigin.Current);
                 stream.Read(buffer, 0, 12);
                 var size = Convert.ToInt64(Encoding.ASCII.GetString(buffer, 0, 12).Trim(), 8);
 
                 stream.Seek(376L, SeekOrigin.Current);
 
-                var output = Path.Combine(outputDir, name);
-                if (!Directory.Exists(Path.GetDirectoryName(output)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(output));
-
-                using (var str = File.Open(output, FileMode.OpenOrCreate, FileAccess.Write))
-                {
-                    var buf = new byte[size];
-                    stream.Read(buf, 0, buf.Length);
-                    str.Write(buf, 0, buf.Length);
-                }
+                var buf = new byte[size];
+                stream.Read(buf, 0, buf.Length);
 
                 if (stream.Position > stream.Length)
                     throw new ArchiveException("There was an error processing the tar ball.");
@@ -83,6 +73,18 @@ namespace za.co.grindrodbank.a3s.Helpers
 
                 stream.Seek(offset, SeekOrigin.Current);
             }
+
+            if (flattenFileStructure)
+            {
+                var flattenedStructureList = new List<string>();
+
+                foreach (var filePath in outFileList)
+                    flattenedStructureList.Add(Path.GetFileName(filePath));
+
+                return flattenedStructureList;
+            }
+
+            return outFileList;
         }
     }
 }

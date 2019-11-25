@@ -26,7 +26,6 @@ namespace za.co.grindrodbank.a3s.tests.Services
         private readonly TermsOfServiceModel mockedTermsOfServiceModel;
         private readonly TermsOfServiceSubmit mockedTermsOfServiceSubmitModel;
         private readonly Guid termsOfServiceGuid;
-        private readonly Guid functionGuid;
 
         public TermsOfServiceService_Tests()
         {
@@ -38,7 +37,6 @@ namespace za.co.grindrodbank.a3s.tests.Services
 
             mapper = config.CreateMapper();
             termsOfServiceGuid = Guid.NewGuid();
-            functionGuid = Guid.NewGuid();
 
             mockedTermsOfServiceModel = new TermsOfServiceModel
             {
@@ -66,11 +64,11 @@ namespace za.co.grindrodbank.a3s.tests.Services
         public async Task GetById_GivenGuid_ReturnsTermsOfServiceResource()
         {
             var termsOfServiceRepository = Substitute.For<ITermsOfServiceRepository>();
-            var compressionHelper = Substitute.For<ICompressionHelper>();
+            var archiveHelper = Substitute.For<IArchiveHelper>();
 
             termsOfServiceRepository.GetByIdAsync(termsOfServiceGuid, Arg.Any<bool>()).Returns(mockedTermsOfServiceModel);
 
-            var termsOfServiceService = new TermsOfServiceService(termsOfServiceRepository, compressionHelper, mapper);
+            var termsOfServiceService = new TermsOfServiceService(termsOfServiceRepository, archiveHelper, mapper);
             var termsOfServiceResource = await termsOfServiceService.GetByIdAsync(termsOfServiceGuid);
 
             Assert.True(termsOfServiceResource.AgreementName == "Test TermsOfService", $"TermsOfService resource Name: '{termsOfServiceResource.AgreementName}' does not match expected value: 'Test TermsOfService'");
@@ -99,13 +97,14 @@ namespace za.co.grindrodbank.a3s.tests.Services
         public async Task CreateAsync_GivenAlreadyUsedName_ThrowsItemNotProcessableException()
         {
             var termsOfServiceRepository = Substitute.For<ITermsOfServiceRepository>();
-            var compressionHelper = Substitute.For<ICompressionHelper>();
+            var archiveHelper = Substitute.For<IArchiveHelper>();
 
             termsOfServiceRepository.GetByIdAsync(mockedTermsOfServiceModel.Id, Arg.Any<bool>()).Returns(mockedTermsOfServiceModel);
             termsOfServiceRepository.GetByAgreementNameAsync(mockedTermsOfServiceSubmitModel.AgreementName, Arg.Any<bool>()).Returns(mockedTermsOfServiceModel);
             termsOfServiceRepository.CreateAsync(Arg.Any<TermsOfServiceModel>()).Returns(mockedTermsOfServiceModel);
+            archiveHelper.ReturnFilesListInTarGz(Arg.Any<byte[]>(), Arg.Any<bool>()).Returns(new List<string>());
 
-            var termsOfServiceService = new TermsOfServiceService(termsOfServiceRepository, compressionHelper, mapper);
+            var termsOfServiceService = new TermsOfServiceService(termsOfServiceRepository, archiveHelper, mapper);
 
             // Act
             Exception caughEx = null;
@@ -127,7 +126,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
         {
             // Arrange
             var termsOfServiceRepository = Substitute.For<ITermsOfServiceRepository>();
-            var compressionHelper = Substitute.For<ICompressionHelper>();
+            var archiveHelper = Substitute.For<IArchiveHelper>();
 
             termsOfServiceRepository.GetListAsync().Returns(
                 new List<TermsOfServiceModel>()
@@ -136,7 +135,7 @@ namespace za.co.grindrodbank.a3s.tests.Services
                     mockedTermsOfServiceModel
                 });
 
-            var termsOfServiceService = new TermsOfServiceService(termsOfServiceRepository, compressionHelper, mapper);
+            var termsOfServiceService = new TermsOfServiceService(termsOfServiceRepository, archiveHelper, mapper);
 
             // Act
             var termsOfServiceList = await termsOfServiceService.GetListAsync();

@@ -197,7 +197,7 @@ namespace za.co.grindrodbank.a3s
             services.AddScoped<ITermsOfServiceService, TermsOfServiceService>();
 
             // Register Helpers
-            services.AddScoped<ICompressionHelper, CompressionHelper>();
+            services.AddScoped<IArchiveHelper, ArchiveHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
