@@ -75,23 +75,29 @@ namespace za.co.grindrodbank.a3s.tests.Services
             Assert.True(termsOfServiceResource.Uuid == termsOfServiceGuid, $"TermsOfService resource UUID: '{termsOfServiceResource.Uuid}' does not match expected value: '{termsOfServiceGuid}'");
         }
 
-        /*[Fact]
+        [Fact]
         public async Task CreateAsync_GivenFullProcessableModel_ReturnsCreatedModel()
         {
             // Arrange
             var termsOfServiceRepository = Substitute.For<ITermsOfServiceRepository>();
-            var compressionHelper = Substitute.For<ICompressionHelper>();
+            var archiveHelper = Substitute.For<IArchiveHelper>();
 
             termsOfServiceRepository.CreateAsync(Arg.Any<TermsOfServiceModel>()).Returns(mockedTermsOfServiceModel);
+            archiveHelper.ReturnFilesListInTarGz(Arg.Any<byte[]>(), Arg.Any<bool>()).Returns(
+                new List<string>()
+                {
+                    "terms_of_service.html",
+                    "terms_of_service.css"
+                });
 
-            var termsOfServiceService = new TermsOfServiceService(termsOfServiceRepository, compressionHelper, mapper);
+            var termsOfServiceService = new TermsOfServiceService(termsOfServiceRepository, archiveHelper, mapper);
 
             // Act
             var termsOfServiceResource = await termsOfServiceService.CreateAsync(mockedTermsOfServiceSubmitModel, Guid.NewGuid());
 
             // Assert
             Assert.True(termsOfServiceResource.AgreementName == mockedTermsOfServiceSubmitModel.AgreementName, $"TermsOfService Resource name: '{termsOfServiceResource.AgreementName}' not the expected value: '{mockedTermsOfServiceSubmitModel.AgreementName}'");
-        }*/
+        }
 
         [Fact]
         public async Task CreateAsync_GivenAlreadyUsedName_ThrowsItemNotProcessableException()
