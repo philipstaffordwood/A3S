@@ -1864,7 +1864,7 @@
 									"pm.test(\"Set function GUID environment variable.\", function () {",
 									"    var jsonData = pm.response.json();",
 									"    pm.expect(jsonData).to.have.property('uuid');",
-									"    pm.environment.set(\"function-guid\", jsonData.uuid);",
+									"    pm.environment.set(\"terms-of-service-guid\", jsonData.uuid);",
 									"});",
 									""
 								],
@@ -1899,7 +1899,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"agreementName\": \"test-function\",\n    \"agreementFileData\": \"H4sIAO531l0AA+3VQQqDMBAF0B4lJ9BJM4kb6VVEJNJCrCVRz99EaTeVdiOW0v9APkLQCX8xWT5Y34Wqb6tg/XRpbNaEcNgUERlmkbIwek46Lu8Jx0dIpY3mQmmWgmShiA+Cth1j3RiG2sdRbvXopvra9M5Zv3IuHmvbN99Z7iKe+SOy1/7PQ+c2/ceH/omkfvQv2ajUfwz0v4cytX0q8zm+PQwAAOwG+x/7H/sfAOD/3AGb2peWABIAAA==\"\n}"
+							"raw": "{\n    \"agreementName\": \"test-agreement\",\n    \"agreementFileData\": \"H4sIAF3V110AA+3T0QqCMBQG4K73FHuB9KibQkmvIstmCtPFNo2I3j1t4E1SN6YE+27OBoftjPF7vuGq1pksMs1VV+Xcy7XezAoAYkLwUJOYviqEdm+REAcRjWlCQwKAIUgigA2GeceY1mrDVD/KhbWiY00uheBqoq9vK4oP59iX4LH+iaM83fAd4V4hG7O98upcmh1upKqZ2KMHWntC55e89/yXphaz3vE1/yGM+acBGfJPaOzyv4R0+O0DQqlvF2vP4ziO4yzjCdehEDwADAAA\"\n}"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/termsOfService",

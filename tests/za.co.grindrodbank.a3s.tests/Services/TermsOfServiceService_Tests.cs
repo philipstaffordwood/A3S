@@ -100,6 +100,39 @@ namespace za.co.grindrodbank.a3s.tests.Services
         }
 
         [Fact]
+        public async Task CreateAsync_GivenNonTermsOfServiceArchive_ThrowsItemNotProcessableException()
+        {
+            // Arrange
+            var termsOfServiceRepository = Substitute.For<ITermsOfServiceRepository>();
+            var archiveHelper = Substitute.For<IArchiveHelper>();
+
+            termsOfServiceRepository.CreateAsync(Arg.Any<TermsOfServiceModel>()).Returns(mockedTermsOfServiceModel);
+            archiveHelper.ReturnFilesListInTarGz(Arg.Any<byte[]>(), Arg.Any<bool>()).Returns(
+                new List<string>()
+                {
+                    "terms_of_service_other_File.html",
+                    "terms_of_service.css"
+                });
+
+            var termsOfServiceService = new TermsOfServiceService(termsOfServiceRepository, archiveHelper, mapper);
+
+            // Act
+            Exception caughtException = null;
+
+            try
+            {
+                var termsOfServiceResource = await termsOfServiceService.CreateAsync(mockedTermsOfServiceSubmitModel, Guid.NewGuid());
+            }
+            catch (Exception ex)
+            {
+                caughtException = ex;
+            }
+
+            // Assert
+            Assert.True(caughtException is ItemNotProcessableException, $"A non-terms-of-service archive musth throw an ItemNotProcessable exception.");
+        }
+
+        [Fact]
         public async Task CreateAsync_GivenAlreadyUsedName_ThrowsItemNotProcessableException()
         {
             var termsOfServiceRepository = Substitute.For<ITermsOfServiceRepository>();
