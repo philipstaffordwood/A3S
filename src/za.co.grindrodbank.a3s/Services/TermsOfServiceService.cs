@@ -99,17 +99,17 @@ namespace za.co.grindrodbank.a3s.Services
                 if (!archiveFiles.Contains("terms_of_service.css"))
                     throw new ItemNotProcessableException("Agreement file archive does not contain a 'terms_of_service.css' file.");
             }
-            catch (IOException ex)
+            catch (ArchiveException ex)
             {
                 logger.Error(ex);
-                throw new ItemNotProcessableException("An IO error occurred during the validation of the agreement file.");
+                throw new ItemNotProcessableException("An archive error occurred during the validation of the agreement file.");
             }
         }
 
         private async Task<string> GetNewAgreementVersion(string agreementName)
         {
             string latestVersion = await termsOfServiceRepository.GetLastestVersionByAgreementName(agreementName);
-            string newVersion = string.Empty;
+            string newVersion;
 
             if (latestVersion == null)
             {
