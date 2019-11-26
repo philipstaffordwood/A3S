@@ -59,9 +59,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return mapper.Map<Function>(await functionRepository.CreateAsync(function));
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
@@ -110,9 +109,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return mapper.Map<Function>(await functionRepository.UpdateAsync(function));
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }

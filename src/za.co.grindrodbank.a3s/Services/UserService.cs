@@ -97,9 +97,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return mapper.Map<User>(createdUser);
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
@@ -164,9 +163,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return mapper.Map<User>(updatedUser);
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
@@ -214,9 +212,8 @@ namespace za.co.grindrodbank.a3s.Services
                 // All successful
                 CommitAllTransactions();
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
