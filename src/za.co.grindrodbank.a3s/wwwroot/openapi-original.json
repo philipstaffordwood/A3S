@@ -2315,11 +2315,11 @@
           },
           "style" : "form"
         }, {
-          "description" : "A search query filter on the description",
+          "description" : "A search query filter on the name",
           "example" : "FilterByEntityType",
           "explode" : true,
           "in" : "query",
-          "name" : "filterDescription",
+          "name" : "filterName",
           "required" : false,
           "schema" : {
             "maxLength" : 255,
