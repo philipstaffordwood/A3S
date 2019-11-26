@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.2-beta" last-position="750,0" last-zoom="1" max-obj-count="38"
+<dbmodel pgmodeler-ver="0.9.2-beta" last-position="326,0" last-zoom="1" max-obj-count="38"
 	 default-schema="public" default-owner="postgres">
 <database name="identity_server" encoding="UTF8" lc-collate="en_US.utf8" lc-ctype="en_US.utf8" is-template="false" allow-conns="true">
 	<role name="postgres"/>
@@ -466,7 +466,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="id" not-null="true">
 		<type name="uuid" length="0"/>
 	</column>
-	<column name="name">
+	<column name="name" not-null="true">
 		<type name="text" length="0"/>
 	</column>
 	<column name="description">
@@ -478,7 +478,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="changed_by" not-null="true">
 		<type name="uuid" length="0"/>
 	</column>
-	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+	<column name="sys_period" not-null="true" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
 		<type name="tstzrange" length="0"/>
 	</column>
 	<constraint name="pk_team" type="pk-constr" table="_a3s.team">
@@ -651,7 +651,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="changed_by" not-null="true">
 		<type name="uuid" length="0"/>
 	</column>
-	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+	<column name="sys_period" not-null="true" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
 		<type name="tstzrange" length="0"/>
 	</column>
 	<constraint name="pk_team_team" type="pk-constr" table="_a3s.team_team">
@@ -841,7 +841,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="changed_by" not-null="true">
 		<type name="uuid" length="0"/>
 	</column>
-	<column name="sys_period" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
+	<column name="sys_period" not-null="true" default-value="tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)">
 		<type name="tstzrange" length="0"/>
 	</column>
 	<constraint name="pk_team_application_data_policy" type="pk-constr" table="_a3s.team_application_data_policy">
@@ -910,7 +910,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 	<comment><![CDATA[This stores the history of the acceptance of terms of service entries by users.
 On every update of a terms of service agreement version for a team, all user acceptance records get copied from 'terms_of_service_user_acceptance' to 'terms_of_service_user_acceptance_history'.]]></comment>
-	<position x="2080" y="0"/>
+	<position x="2180" y="0"/>
 	<column name="terms_of_service_id" not-null="true">
 		<type name="uuid" length="0"/>
 	</column>
