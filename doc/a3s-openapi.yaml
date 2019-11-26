@@ -1524,15 +1524,6 @@ paths:
             maximum: 20
             format: int32
             default: 10
-        - name: filterName
-          in: query
-          required: false
-          description: A search query filter on the name
-          schema:
-            type: string
-            minLength: 0
-            maxLength: 255
-          example: FilterByEntityType
         - name: orderBy
           in: query
           required: false
@@ -1713,6 +1704,12 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Terms of service entry not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Terms of service entry cannot be deleted.
           content:
             application/json:
               schema:

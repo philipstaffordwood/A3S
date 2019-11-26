@@ -62,6 +62,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         /// <response code="401">Not authenticated.</response>
         /// <response code="403">Forbidden - Not authorized to delete terms of service entry.</response>
         /// <response code="404">Terms of service entry not found.</response>
+        /// <response code="422">Terms of service entry cannot be deleted.</response>
         /// <response code="500">An unexpected error occurred.</response>
         [HttpDelete]
         [Route("/termsOfService/{termsOfServiceId}")]
@@ -70,6 +71,7 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 404, type: typeof(ErrorResponse))]
+        [ProducesResponseType(statusCode: 422, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
         public abstract Task<IActionResult> DeleteTermsOfServiceAsync([FromRoute][Required]Guid termsOfServiceId);
 
@@ -101,7 +103,6 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         /// <remarks>Search for terms of service entries.</remarks>
         /// <param name="page">The page to view.</param>
         /// <param name="size">The size of a page.</param>
-        /// <param name="filterName">A search query filter on the name</param>
         /// <param name="orderBy">a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.</param>
         /// <response code="200">OK</response>
         /// <response code="400">Bad Request.</response>
@@ -116,6 +117,6 @@ namespace za.co.grindrodbank.a3s.AbstractApiControllers
         [ProducesResponseType(statusCode: 401, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 403, type: typeof(ErrorResponse))]
         [ProducesResponseType(statusCode: 500, type: typeof(ErrorResponse))]
-        public abstract Task<IActionResult> ListTermsOfServicesAsync([FromQuery]int page, [FromQuery][Range(1, 20)]int size, [FromQuery][StringLength(255, MinimumLength=0)]string filterName, [FromQuery]List<string> orderBy);
+        public abstract Task<IActionResult> ListTermsOfServicesAsync([FromQuery]int page, [FromQuery][Range(1, 20)]int size, [FromQuery]List<string> orderBy);
     }
 }
