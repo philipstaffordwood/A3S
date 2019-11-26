@@ -257,7 +257,7 @@ workflows:
       - postman-integration-tests
       - build-dotnet-libs
       #testing in this location
-      - publish-dotnet-libs
+      - publish-dotnet-libs:
           requires:
           - build-dotnet-libs
       - fossa-scan:
