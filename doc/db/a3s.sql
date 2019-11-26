@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 10.7
--- Dumped by pg_dump version 12.1 (Ubuntu 12.1-1.pgdg18.04+1)
+-- Dumped by pg_dump version 12.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -47,9 +47,9 @@ SET default_tablespace = '';
 
 CREATE TABLE _a3s.application (
     id uuid NOT NULL,
-    name text,
+    name text NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -72,7 +72,7 @@ CREATE TABLE _a3s.application_data_policy (
     description text,
     application_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -91,11 +91,11 @@ COMMENT ON TABLE _a3s.application_data_policy IS 'Data policies defined for an a
 
 CREATE TABLE _a3s.application_function (
     id uuid NOT NULL,
-    name text,
+    name text NOT NULL,
     description text,
-    application_id uuid,
+    application_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -116,7 +116,7 @@ CREATE TABLE _a3s.application_function_permission (
     application_function_id uuid NOT NULL,
     permission_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -364,11 +364,11 @@ COMMENT ON TABLE _a3s.aspnet_user_role IS 'Asp.Net identity default table. Not U
 
 CREATE TABLE _a3s.function (
     id uuid NOT NULL,
-    name text,
+    name text NOT NULL,
     description text,
-    application_id uuid,
+    application_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -389,7 +389,7 @@ CREATE TABLE _a3s.function_permission (
     function_id uuid NOT NULL,
     permission_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -515,10 +515,10 @@ COMMENT ON COLUMN _a3s.ldap_authentication_mode_ldap_attribute.ldap_field IS 'Th
 
 CREATE TABLE _a3s.permission (
     id uuid NOT NULL,
-    name text,
+    name text NOT NULL,
     description text,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -537,10 +537,10 @@ COMMENT ON TABLE _a3s.permission IS ' Specific permission inside an application,
 
 CREATE TABLE _a3s.role (
     id uuid NOT NULL,
-    name text,
+    name text NOT NULL,
     description text,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -561,7 +561,7 @@ CREATE TABLE _a3s.role_function (
     role_id uuid NOT NULL,
     function_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -582,7 +582,7 @@ CREATE TABLE _a3s.role_role (
     parent_role_id uuid NOT NULL,
     child_role_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -601,11 +601,11 @@ COMMENT ON TABLE _a3s.role_role IS 'Role of Roles (compound role) definition';
 
 CREATE TABLE _a3s.team (
     id uuid NOT NULL,
-    name text,
+    name text NOT NULL,
     description text,
     terms_of_service_id uuid,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -626,7 +626,7 @@ CREATE TABLE _a3s.team_application_data_policy (
     team_id uuid NOT NULL,
     application_data_policy_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -647,7 +647,7 @@ CREATE TABLE _a3s.team_team (
     parent_team_id uuid NOT NULL,
     child_team_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -762,7 +762,7 @@ CREATE TABLE _a3s.user_role (
     user_id text NOT NULL,
     role_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
@@ -783,7 +783,7 @@ CREATE TABLE _a3s.user_team (
     user_id text NOT NULL,
     team_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
 );
 
 
