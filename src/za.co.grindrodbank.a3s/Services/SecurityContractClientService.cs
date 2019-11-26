@@ -133,7 +133,7 @@ namespace za.co.grindrodbank.a3s.Services
 
             foreach(var corsOrigin in oauth2ClientSubmit.AllowedCorsOrigins)
             {
-                if (string.IsNullOrEmpty(corsOrigin))
+                if (string.IsNullOrWhiteSpace(corsOrigin))
                 {
                     throw new InvalidFormatException($"Empty or null 'allowedCorsOrigin' declared for client: '{oauth2ClientSubmit.ClientId}'");
                 }
