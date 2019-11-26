@@ -300,6 +300,7 @@ namespace za.co.grindrodbank.a3s
                         FunctionPermissions = new List<FunctionPermissionModel>(),
                         Name = "a3s.securityContractMaintenance",
                         Description = "Functionality to apply security contracts for micro-services.",
+                        Application = application,
                         ChangedBy = Guid.Empty
                     };
                     function.FunctionPermissions.Add(new FunctionPermissionModel
