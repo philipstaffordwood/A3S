@@ -26,6 +26,15 @@ CREATE SCHEMA _a3s;
 ALTER SCHEMA _a3s OWNER TO postgres;
 
 --
+-- Name: _ids4; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA _ids4;
+
+
+ALTER SCHEMA _ids4 OWNER TO postgres;
+
+--
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -47,9 +56,9 @@ SET default_tablespace = '';
 
 CREATE TABLE _a3s.application (
     id uuid NOT NULL,
-    name text NOT NULL,
+    name text,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -72,7 +81,7 @@ CREATE TABLE _a3s.application_data_policy (
     description text,
     application_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -91,11 +100,11 @@ COMMENT ON TABLE _a3s.application_data_policy IS 'Data policies defined for an a
 
 CREATE TABLE _a3s.application_function (
     id uuid NOT NULL,
-    name text NOT NULL,
+    name text,
     description text,
-    application_id uuid NOT NULL,
+    application_id uuid,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -116,7 +125,7 @@ CREATE TABLE _a3s.application_function_permission (
     application_function_id uuid NOT NULL,
     permission_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -359,16 +368,36 @@ COMMENT ON TABLE _a3s.aspnet_user_role IS 'Asp.Net identity default table. Not U
 
 
 --
+-- Name: flyway_schema_history; Type: TABLE; Schema: _a3s; Owner: postgres
+--
+
+CREATE TABLE _a3s.flyway_schema_history (
+    installed_rank integer NOT NULL,
+    version character varying(50),
+    description character varying(200) NOT NULL,
+    type character varying(20) NOT NULL,
+    script character varying(1000) NOT NULL,
+    checksum integer,
+    installed_by character varying(100) NOT NULL,
+    installed_on timestamp without time zone DEFAULT now() NOT NULL,
+    execution_time integer NOT NULL,
+    success boolean NOT NULL
+);
+
+
+ALTER TABLE _a3s.flyway_schema_history OWNER TO postgres;
+
+--
 -- Name: function; Type: TABLE; Schema: _a3s; Owner: postgres
 --
 
 CREATE TABLE _a3s.function (
     id uuid NOT NULL,
-    name text NOT NULL,
+    name text,
     description text,
-    application_id uuid NOT NULL,
+    application_id uuid,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -389,7 +418,7 @@ CREATE TABLE _a3s.function_permission (
     function_id uuid NOT NULL,
     permission_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -515,10 +544,10 @@ COMMENT ON COLUMN _a3s.ldap_authentication_mode_ldap_attribute.ldap_field IS 'Th
 
 CREATE TABLE _a3s.permission (
     id uuid NOT NULL,
-    name text NOT NULL,
+    name text,
     description text,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -537,10 +566,10 @@ COMMENT ON TABLE _a3s.permission IS ' Specific permission inside an application,
 
 CREATE TABLE _a3s.role (
     id uuid NOT NULL,
-    name text NOT NULL,
+    name text,
     description text,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -561,7 +590,7 @@ CREATE TABLE _a3s.role_function (
     role_id uuid NOT NULL,
     function_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -582,7 +611,7 @@ CREATE TABLE _a3s.role_role (
     parent_role_id uuid NOT NULL,
     child_role_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -601,11 +630,11 @@ COMMENT ON TABLE _a3s.role_role IS 'Role of Roles (compound role) definition';
 
 CREATE TABLE _a3s.team (
     id uuid NOT NULL,
-    name text NOT NULL,
+    name text,
     description text,
-    terms_of_service_id uuid,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone),
+    terms_of_service_id uuid
 );
 
 
@@ -626,7 +655,7 @@ CREATE TABLE _a3s.team_application_data_policy (
     team_id uuid NOT NULL,
     application_data_policy_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -647,7 +676,7 @@ CREATE TABLE _a3s.team_team (
     parent_team_id uuid NOT NULL,
     child_team_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -700,61 +729,6 @@ COMMENT ON COLUMN _a3s.terms_of_service.agreement_file IS 'A .tar.gz file, conta
 
 
 --
--- Name: terms_of_service_user_acceptance; Type: TABLE; Schema: _a3s; Owner: postgres
---
-
-CREATE TABLE _a3s.terms_of_service_user_acceptance (
-    terms_of_service_id uuid NOT NULL,
-    user_id text NOT NULL,
-    acceptance_time tstzrange NOT NULL
-);
-
-
-ALTER TABLE _a3s.terms_of_service_user_acceptance OWNER TO postgres;
-
---
--- Name: TABLE terms_of_service_user_acceptance; Type: COMMENT; Schema: _a3s; Owner: postgres
---
-
-COMMENT ON TABLE _a3s.terms_of_service_user_acceptance IS 'This records the acceptance of terms of service entries by users.';
-
-
---
--- Name: COLUMN terms_of_service_user_acceptance.acceptance_time; Type: COMMENT; Schema: _a3s; Owner: postgres
---
-
-COMMENT ON COLUMN _a3s.terms_of_service_user_acceptance.acceptance_time IS 'The date and time the user accepted the specific agreement.';
-
-
---
--- Name: terms_of_service_user_acceptance_history; Type: TABLE; Schema: _a3s; Owner: postgres
---
-
-CREATE TABLE _a3s.terms_of_service_user_acceptance_history (
-    terms_of_service_id uuid NOT NULL,
-    user_id text NOT NULL,
-    acceptance_time tstzrange NOT NULL
-);
-
-
-ALTER TABLE _a3s.terms_of_service_user_acceptance_history OWNER TO postgres;
-
---
--- Name: TABLE terms_of_service_user_acceptance_history; Type: COMMENT; Schema: _a3s; Owner: postgres
---
-
-COMMENT ON TABLE _a3s.terms_of_service_user_acceptance_history IS 'This stores the history of the acceptance of terms of service entries by users.
-On every update of a terms of service agreement version for a team, all user acceptance records get copied from ''terms_of_service_user_acceptance'' to ''terms_of_service_user_acceptance_history''.';
-
-
---
--- Name: COLUMN terms_of_service_user_acceptance_history.acceptance_time; Type: COMMENT; Schema: _a3s; Owner: postgres
---
-
-COMMENT ON COLUMN _a3s.terms_of_service_user_acceptance_history.acceptance_time IS 'The date and time the user accepted the specific agreement.';
-
-
---
 -- Name: user_role; Type: TABLE; Schema: _a3s; Owner: postgres
 --
 
@@ -762,7 +736,7 @@ CREATE TABLE _a3s.user_role (
     user_id text NOT NULL,
     role_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -783,7 +757,7 @@ CREATE TABLE _a3s.user_team (
     user_id text NOT NULL,
     team_id uuid NOT NULL,
     changed_by uuid NOT NULL,
-    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone) NOT NULL
+    sys_period tstzrange DEFAULT tstzrange(CURRENT_TIMESTAMP, NULL::timestamp with time zone)
 );
 
 
@@ -797,240 +771,899 @@ COMMENT ON TABLE _a3s.user_team IS 'Users and Teams link';
 
 
 --
--- Data for Name: application; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiClaims; Type: TABLE; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.application (id, name, changed_by, sys_period) FROM stdin;
-\.
+CREATE TABLE _ids4."ApiClaims" (
+    "Id" integer NOT NULL,
+    "Type" character varying(200) NOT NULL,
+    "ApiResourceId" integer NOT NULL
+);
 
 
---
--- Data for Name: application_data_policy; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.application_data_policy (id, name, description, application_id, changed_by, sys_period) FROM stdin;
-\.
-
+ALTER TABLE _ids4."ApiClaims" OWNER TO postgres;
 
 --
--- Data for Name: application_function; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiClaims_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.application_function (id, name, description, application_id, changed_by, sys_period) FROM stdin;
-\.
+CREATE SEQUENCE _ids4."ApiClaims_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
+
+ALTER TABLE _ids4."ApiClaims_Id_seq" OWNER TO postgres;
 
 --
--- Data for Name: application_function_permission; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiClaims_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.application_function_permission (application_function_id, permission_id, changed_by, sys_period) FROM stdin;
-\.
-
-
---
--- Data for Name: application_user; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.application_user (id, user_name, normalized_user_name, email, normalized_email, email_confirmed, password_hash, security_stamp, concurrency_stamp, phone_number, phone_number_confirmed, two_factor_enabled, lockout_end, lockout_enabled, access_failed_count, ldap_authentication_mode_id, first_name, surname, avatar, is_deleted, deleted_time, changed_by, sys_period) FROM stdin;
-\.
+ALTER SEQUENCE _ids4."ApiClaims_Id_seq" OWNED BY _ids4."ApiClaims"."Id";
 
 
 --
--- Data for Name: application_user_claim; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiProperties; Type: TABLE; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.application_user_claim (id, claim_type, claim_value, user_id, discriminator) FROM stdin;
-\.
+CREATE TABLE _ids4."ApiProperties" (
+    "Id" integer NOT NULL,
+    "Key" character varying(250) NOT NULL,
+    "Value" character varying(2000) NOT NULL,
+    "ApiResourceId" integer NOT NULL
+);
 
 
---
--- Data for Name: application_user_token; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.application_user_token (user_id, login_provider, name, value, is_verified) FROM stdin;
-\.
-
+ALTER TABLE _ids4."ApiProperties" OWNER TO postgres;
 
 --
--- Data for Name: aspnet_role; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiProperties_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.aspnet_role (id, name, normalized_name, concurrency_stamp) FROM stdin;
-\.
+CREATE SEQUENCE _ids4."ApiProperties_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
+
+ALTER TABLE _ids4."ApiProperties_Id_seq" OWNER TO postgres;
 
 --
--- Data for Name: aspnet_role_claim; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiProperties_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.aspnet_role_claim (id, role_id, claim_type, claim_value) FROM stdin;
-\.
-
-
---
--- Data for Name: aspnet_user_login; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.aspnet_user_login (login_provider, provider_key, provider_display_name, user_id) FROM stdin;
-\.
+ALTER SEQUENCE _ids4."ApiProperties_Id_seq" OWNED BY _ids4."ApiProperties"."Id";
 
 
 --
--- Data for Name: aspnet_user_role; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiResources; Type: TABLE; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.aspnet_user_role (user_id, role_id) FROM stdin;
-\.
+CREATE TABLE _ids4."ApiResources" (
+    "Id" integer NOT NULL,
+    "Enabled" boolean NOT NULL,
+    "Name" character varying(200) NOT NULL,
+    "DisplayName" character varying(200),
+    "Description" character varying(1000),
+    "Created" timestamp without time zone NOT NULL,
+    "Updated" timestamp without time zone,
+    "LastAccessed" timestamp without time zone,
+    "NonEditable" boolean NOT NULL
+);
 
 
---
--- Data for Name: function; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.function (id, name, description, application_id, changed_by, sys_period) FROM stdin;
-\.
-
-
---
--- Data for Name: function_permission; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.function_permission (function_id, permission_id, changed_by, sys_period) FROM stdin;
-\.
-
+ALTER TABLE _ids4."ApiResources" OWNER TO postgres;
 
 --
--- Data for Name: ldap_authentication_mode; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiResources_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.ldap_authentication_mode (id, name, host_name, port, is_ldaps, account, password, base_dn, changed_by, sys_period) FROM stdin;
-\.
+CREATE SEQUENCE _ids4."ApiResources_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
+
+ALTER TABLE _ids4."ApiResources_Id_seq" OWNER TO postgres;
 
 --
--- Data for Name: ldap_authentication_mode_ldap_attribute; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiResources_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.ldap_authentication_mode_ldap_attribute (id, ldap_authentication_mode_id, user_field, ldap_field, changed_by, sys_period) FROM stdin;
-\.
-
-
---
--- Data for Name: permission; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.permission (id, name, description, changed_by, sys_period) FROM stdin;
-\.
+ALTER SEQUENCE _ids4."ApiResources_Id_seq" OWNED BY _ids4."ApiResources"."Id";
 
 
 --
--- Data for Name: role; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiScopeClaims; Type: TABLE; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.role (id, name, description, changed_by, sys_period) FROM stdin;
-\.
+CREATE TABLE _ids4."ApiScopeClaims" (
+    "Id" integer NOT NULL,
+    "Type" character varying(200) NOT NULL,
+    "ApiScopeId" integer NOT NULL
+);
 
 
---
--- Data for Name: role_function; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.role_function (role_id, function_id, changed_by, sys_period) FROM stdin;
-\.
-
+ALTER TABLE _ids4."ApiScopeClaims" OWNER TO postgres;
 
 --
--- Data for Name: role_role; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiScopeClaims_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.role_role (parent_role_id, child_role_id, changed_by, sys_period) FROM stdin;
-\.
+CREATE SEQUENCE _ids4."ApiScopeClaims_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
+
+ALTER TABLE _ids4."ApiScopeClaims_Id_seq" OWNER TO postgres;
 
 --
--- Data for Name: team; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiScopeClaims_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.team (id, name, description, terms_of_service_id, changed_by, sys_period) FROM stdin;
-\.
-
-
---
--- Data for Name: team_application_data_policy; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.team_application_data_policy (team_id, application_data_policy_id, changed_by, sys_period) FROM stdin;
-\.
+ALTER SEQUENCE _ids4."ApiScopeClaims_Id_seq" OWNED BY _ids4."ApiScopeClaims"."Id";
 
 
 --
--- Data for Name: team_team; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiScopes; Type: TABLE; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.team_team (parent_team_id, child_team_id, changed_by, sys_period) FROM stdin;
-\.
+CREATE TABLE _ids4."ApiScopes" (
+    "Id" integer NOT NULL,
+    "Name" character varying(200) NOT NULL,
+    "DisplayName" character varying(200),
+    "Description" character varying(1000),
+    "Required" boolean NOT NULL,
+    "Emphasize" boolean NOT NULL,
+    "ShowInDiscoveryDocument" boolean NOT NULL,
+    "ApiResourceId" integer NOT NULL
+);
 
 
---
--- Data for Name: terms_of_service; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.terms_of_service (id, agreement_name, version, agreement_file, changed_by, sys_period) FROM stdin;
-\.
-
-
---
--- Data for Name: terms_of_service_user_acceptance; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.terms_of_service_user_acceptance (terms_of_service_id, user_id, acceptance_time) FROM stdin;
-\.
-
+ALTER TABLE _ids4."ApiScopes" OWNER TO postgres;
 
 --
--- Data for Name: terms_of_service_user_acceptance_history; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiScopes_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.terms_of_service_user_acceptance_history (terms_of_service_id, user_id, acceptance_time) FROM stdin;
-\.
+CREATE SEQUENCE _ids4."ApiScopes_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
 
+
+ALTER TABLE _ids4."ApiScopes_Id_seq" OWNER TO postgres;
 
 --
--- Data for Name: user_role; Type: TABLE DATA; Schema: _a3s; Owner: postgres
+-- Name: ApiScopes_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
 --
 
-COPY _a3s.user_role (user_id, role_id, changed_by, sys_period) FROM stdin;
-\.
-
-
---
--- Data for Name: user_team; Type: TABLE DATA; Schema: _a3s; Owner: postgres
---
-
-COPY _a3s.user_team (user_id, team_id, changed_by, sys_period) FROM stdin;
-\.
+ALTER SEQUENCE _ids4."ApiScopes_Id_seq" OWNED BY _ids4."ApiScopes"."Id";
 
 
 --
--- Name: application_user_claim_id_seq; Type: SEQUENCE SET; Schema: _a3s; Owner: postgres
+-- Name: ApiSecrets; Type: TABLE; Schema: _ids4; Owner: postgres
 --
 
-SELECT pg_catalog.setval('_a3s.application_user_claim_id_seq', 1, false);
+CREATE TABLE _ids4."ApiSecrets" (
+    "Id" integer NOT NULL,
+    "Description" character varying(1000),
+    "Value" character varying(4000) NOT NULL,
+    "Expiration" timestamp without time zone,
+    "Type" character varying(250) NOT NULL,
+    "Created" timestamp without time zone NOT NULL,
+    "ApiResourceId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."ApiSecrets" OWNER TO postgres;
+
+--
+-- Name: ApiSecrets_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."ApiSecrets_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."ApiSecrets_Id_seq" OWNER TO postgres;
+
+--
+-- Name: ApiSecrets_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."ApiSecrets_Id_seq" OWNED BY _ids4."ApiSecrets"."Id";
 
 
 --
--- Name: aspnet_role_claim_id_seq; Type: SEQUENCE SET; Schema: _a3s; Owner: postgres
+-- Name: ClientClaims; Type: TABLE; Schema: _ids4; Owner: postgres
 --
 
-SELECT pg_catalog.setval('_a3s.aspnet_role_claim_id_seq', 1, false);
+CREATE TABLE _ids4."ClientClaims" (
+    "Id" integer NOT NULL,
+    "Type" character varying(250) NOT NULL,
+    "Value" character varying(250) NOT NULL,
+    "ClientId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."ClientClaims" OWNER TO postgres;
+
+--
+-- Name: ClientClaims_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."ClientClaims_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."ClientClaims_Id_seq" OWNER TO postgres;
+
+--
+-- Name: ClientClaims_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."ClientClaims_Id_seq" OWNED BY _ids4."ClientClaims"."Id";
 
 
 --
--- Name: ldap_authentication_mode_ldap_attribute_id_seq; Type: SEQUENCE SET; Schema: _a3s; Owner: postgres
+-- Name: ClientCorsOrigins; Type: TABLE; Schema: _ids4; Owner: postgres
 --
 
-SELECT pg_catalog.setval('_a3s.ldap_authentication_mode_ldap_attribute_id_seq', 1, false);
+CREATE TABLE _ids4."ClientCorsOrigins" (
+    "Id" integer NOT NULL,
+    "Origin" character varying(150) NOT NULL,
+    "ClientId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."ClientCorsOrigins" OWNER TO postgres;
+
+--
+-- Name: ClientCorsOrigins_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."ClientCorsOrigins_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."ClientCorsOrigins_Id_seq" OWNER TO postgres;
+
+--
+-- Name: ClientCorsOrigins_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."ClientCorsOrigins_Id_seq" OWNED BY _ids4."ClientCorsOrigins"."Id";
+
+
+--
+-- Name: ClientGrantTypes; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."ClientGrantTypes" (
+    "Id" integer NOT NULL,
+    "GrantType" character varying(250) NOT NULL,
+    "ClientId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."ClientGrantTypes" OWNER TO postgres;
+
+--
+-- Name: ClientGrantTypes_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."ClientGrantTypes_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."ClientGrantTypes_Id_seq" OWNER TO postgres;
+
+--
+-- Name: ClientGrantTypes_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."ClientGrantTypes_Id_seq" OWNED BY _ids4."ClientGrantTypes"."Id";
+
+
+--
+-- Name: ClientIdPRestrictions; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."ClientIdPRestrictions" (
+    "Id" integer NOT NULL,
+    "Provider" character varying(200) NOT NULL,
+    "ClientId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."ClientIdPRestrictions" OWNER TO postgres;
+
+--
+-- Name: ClientIdPRestrictions_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."ClientIdPRestrictions_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."ClientIdPRestrictions_Id_seq" OWNER TO postgres;
+
+--
+-- Name: ClientIdPRestrictions_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."ClientIdPRestrictions_Id_seq" OWNED BY _ids4."ClientIdPRestrictions"."Id";
+
+
+--
+-- Name: ClientPostLogoutRedirectUris; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."ClientPostLogoutRedirectUris" (
+    "Id" integer NOT NULL,
+    "PostLogoutRedirectUri" character varying(2000) NOT NULL,
+    "ClientId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."ClientPostLogoutRedirectUris" OWNER TO postgres;
+
+--
+-- Name: ClientPostLogoutRedirectUris_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."ClientPostLogoutRedirectUris_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."ClientPostLogoutRedirectUris_Id_seq" OWNER TO postgres;
+
+--
+-- Name: ClientPostLogoutRedirectUris_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."ClientPostLogoutRedirectUris_Id_seq" OWNED BY _ids4."ClientPostLogoutRedirectUris"."Id";
+
+
+--
+-- Name: ClientProperties; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."ClientProperties" (
+    "Id" integer NOT NULL,
+    "Key" character varying(250) NOT NULL,
+    "Value" character varying(2000) NOT NULL,
+    "ClientId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."ClientProperties" OWNER TO postgres;
+
+--
+-- Name: ClientProperties_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."ClientProperties_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."ClientProperties_Id_seq" OWNER TO postgres;
+
+--
+-- Name: ClientProperties_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."ClientProperties_Id_seq" OWNED BY _ids4."ClientProperties"."Id";
+
+
+--
+-- Name: ClientRedirectUris; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."ClientRedirectUris" (
+    "Id" integer NOT NULL,
+    "RedirectUri" character varying(2000) NOT NULL,
+    "ClientId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."ClientRedirectUris" OWNER TO postgres;
+
+--
+-- Name: ClientRedirectUris_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."ClientRedirectUris_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."ClientRedirectUris_Id_seq" OWNER TO postgres;
+
+--
+-- Name: ClientRedirectUris_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."ClientRedirectUris_Id_seq" OWNED BY _ids4."ClientRedirectUris"."Id";
+
+
+--
+-- Name: ClientScopes; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."ClientScopes" (
+    "Id" integer NOT NULL,
+    "Scope" character varying(200) NOT NULL,
+    "ClientId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."ClientScopes" OWNER TO postgres;
+
+--
+-- Name: ClientScopes_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."ClientScopes_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."ClientScopes_Id_seq" OWNER TO postgres;
+
+--
+-- Name: ClientScopes_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."ClientScopes_Id_seq" OWNED BY _ids4."ClientScopes"."Id";
+
+
+--
+-- Name: ClientSecrets; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."ClientSecrets" (
+    "Id" integer NOT NULL,
+    "Description" character varying(2000),
+    "Value" character varying(4000) NOT NULL,
+    "Expiration" timestamp without time zone,
+    "Type" character varying(250) NOT NULL,
+    "Created" timestamp without time zone NOT NULL,
+    "ClientId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."ClientSecrets" OWNER TO postgres;
+
+--
+-- Name: ClientSecrets_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."ClientSecrets_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."ClientSecrets_Id_seq" OWNER TO postgres;
+
+--
+-- Name: ClientSecrets_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."ClientSecrets_Id_seq" OWNED BY _ids4."ClientSecrets"."Id";
+
+
+--
+-- Name: Clients; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."Clients" (
+    "Id" integer NOT NULL,
+    "Enabled" boolean NOT NULL,
+    "ClientId" character varying(200) NOT NULL,
+    "ProtocolType" character varying(200) NOT NULL,
+    "RequireClientSecret" boolean NOT NULL,
+    "ClientName" character varying(200),
+    "Description" character varying(1000),
+    "ClientUri" character varying(2000),
+    "LogoUri" character varying(2000),
+    "RequireConsent" boolean NOT NULL,
+    "AllowRememberConsent" boolean NOT NULL,
+    "AlwaysIncludeUserClaimsInIdToken" boolean NOT NULL,
+    "RequirePkce" boolean NOT NULL,
+    "AllowPlainTextPkce" boolean NOT NULL,
+    "AllowAccessTokensViaBrowser" boolean NOT NULL,
+    "FrontChannelLogoutUri" character varying(2000),
+    "FrontChannelLogoutSessionRequired" boolean NOT NULL,
+    "BackChannelLogoutUri" character varying(2000),
+    "BackChannelLogoutSessionRequired" boolean NOT NULL,
+    "AllowOfflineAccess" boolean NOT NULL,
+    "IdentityTokenLifetime" integer NOT NULL,
+    "AccessTokenLifetime" integer NOT NULL,
+    "AuthorizationCodeLifetime" integer NOT NULL,
+    "ConsentLifetime" integer,
+    "AbsoluteRefreshTokenLifetime" integer NOT NULL,
+    "SlidingRefreshTokenLifetime" integer NOT NULL,
+    "RefreshTokenUsage" integer NOT NULL,
+    "UpdateAccessTokenClaimsOnRefresh" boolean NOT NULL,
+    "RefreshTokenExpiration" integer NOT NULL,
+    "AccessTokenType" integer NOT NULL,
+    "EnableLocalLogin" boolean NOT NULL,
+    "IncludeJwtId" boolean NOT NULL,
+    "AlwaysSendClientClaims" boolean NOT NULL,
+    "ClientClaimsPrefix" character varying(200),
+    "PairWiseSubjectSalt" character varying(200),
+    "Created" timestamp without time zone NOT NULL,
+    "Updated" timestamp without time zone,
+    "LastAccessed" timestamp without time zone,
+    "UserSsoLifetime" integer,
+    "UserCodeType" character varying(100),
+    "DeviceCodeLifetime" integer NOT NULL,
+    "NonEditable" boolean NOT NULL
+);
+
+
+ALTER TABLE _ids4."Clients" OWNER TO postgres;
+
+--
+-- Name: Clients_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."Clients_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."Clients_Id_seq" OWNER TO postgres;
+
+--
+-- Name: Clients_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."Clients_Id_seq" OWNED BY _ids4."Clients"."Id";
+
+
+--
+-- Name: IdentityClaims; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."IdentityClaims" (
+    "Id" integer NOT NULL,
+    "Type" character varying(200) NOT NULL,
+    "IdentityResourceId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."IdentityClaims" OWNER TO postgres;
+
+--
+-- Name: IdentityClaims_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."IdentityClaims_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."IdentityClaims_Id_seq" OWNER TO postgres;
+
+--
+-- Name: IdentityClaims_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."IdentityClaims_Id_seq" OWNED BY _ids4."IdentityClaims"."Id";
+
+
+--
+-- Name: IdentityProperties; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."IdentityProperties" (
+    "Id" integer NOT NULL,
+    "Key" character varying(250) NOT NULL,
+    "Value" character varying(2000) NOT NULL,
+    "IdentityResourceId" integer NOT NULL
+);
+
+
+ALTER TABLE _ids4."IdentityProperties" OWNER TO postgres;
+
+--
+-- Name: IdentityProperties_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."IdentityProperties_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."IdentityProperties_Id_seq" OWNER TO postgres;
+
+--
+-- Name: IdentityProperties_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."IdentityProperties_Id_seq" OWNED BY _ids4."IdentityProperties"."Id";
+
+
+--
+-- Name: IdentityResources; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4."IdentityResources" (
+    "Id" integer NOT NULL,
+    "Enabled" boolean NOT NULL,
+    "Name" character varying(200) NOT NULL,
+    "DisplayName" character varying(200),
+    "Description" character varying(1000),
+    "Required" boolean NOT NULL,
+    "Emphasize" boolean NOT NULL,
+    "ShowInDiscoveryDocument" boolean NOT NULL,
+    "Created" timestamp without time zone NOT NULL,
+    "Updated" timestamp without time zone,
+    "NonEditable" boolean NOT NULL
+);
+
+
+ALTER TABLE _ids4."IdentityResources" OWNER TO postgres;
+
+--
+-- Name: IdentityResources_Id_seq; Type: SEQUENCE; Schema: _ids4; Owner: postgres
+--
+
+CREATE SEQUENCE _ids4."IdentityResources_Id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE _ids4."IdentityResources_Id_seq" OWNER TO postgres;
+
+--
+-- Name: IdentityResources_Id_seq; Type: SEQUENCE OWNED BY; Schema: _ids4; Owner: postgres
+--
+
+ALTER SEQUENCE _ids4."IdentityResources_Id_seq" OWNED BY _ids4."IdentityResources"."Id";
+
+
+--
+-- Name: flyway_schema_history; Type: TABLE; Schema: _ids4; Owner: postgres
+--
+
+CREATE TABLE _ids4.flyway_schema_history (
+    installed_rank integer NOT NULL,
+    version character varying(50),
+    description character varying(200) NOT NULL,
+    type character varying(20) NOT NULL,
+    script character varying(1000) NOT NULL,
+    checksum integer,
+    installed_by character varying(100) NOT NULL,
+    installed_on timestamp without time zone DEFAULT now() NOT NULL,
+    execution_time integer NOT NULL,
+    success boolean NOT NULL
+);
+
+
+ALTER TABLE _ids4.flyway_schema_history OWNER TO postgres;
+
+--
+-- Name: ApiClaims Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiClaims" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ApiClaims_Id_seq"'::regclass);
+
+
+--
+-- Name: ApiProperties Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiProperties" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ApiProperties_Id_seq"'::regclass);
+
+
+--
+-- Name: ApiResources Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiResources" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ApiResources_Id_seq"'::regclass);
+
+
+--
+-- Name: ApiScopeClaims Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiScopeClaims" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ApiScopeClaims_Id_seq"'::regclass);
+
+
+--
+-- Name: ApiScopes Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiScopes" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ApiScopes_Id_seq"'::regclass);
+
+
+--
+-- Name: ApiSecrets Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiSecrets" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ApiSecrets_Id_seq"'::regclass);
+
+
+--
+-- Name: ClientClaims Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientClaims" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ClientClaims_Id_seq"'::regclass);
+
+
+--
+-- Name: ClientCorsOrigins Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientCorsOrigins" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ClientCorsOrigins_Id_seq"'::regclass);
+
+
+--
+-- Name: ClientGrantTypes Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientGrantTypes" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ClientGrantTypes_Id_seq"'::regclass);
+
+
+--
+-- Name: ClientIdPRestrictions Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientIdPRestrictions" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ClientIdPRestrictions_Id_seq"'::regclass);
+
+
+--
+-- Name: ClientPostLogoutRedirectUris Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientPostLogoutRedirectUris" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ClientPostLogoutRedirectUris_Id_seq"'::regclass);
+
+
+--
+-- Name: ClientProperties Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientProperties" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ClientProperties_Id_seq"'::regclass);
+
+
+--
+-- Name: ClientRedirectUris Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientRedirectUris" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ClientRedirectUris_Id_seq"'::regclass);
+
+
+--
+-- Name: ClientScopes Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientScopes" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ClientScopes_Id_seq"'::regclass);
+
+
+--
+-- Name: ClientSecrets Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientSecrets" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."ClientSecrets_Id_seq"'::regclass);
+
+
+--
+-- Name: Clients Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."Clients" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."Clients_Id_seq"'::regclass);
+
+
+--
+-- Name: IdentityClaims Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."IdentityClaims" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."IdentityClaims_Id_seq"'::regclass);
+
+
+--
+-- Name: IdentityProperties Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."IdentityProperties" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."IdentityProperties_Id_seq"'::regclass);
+
+
+--
+-- Name: IdentityResources Id; Type: DEFAULT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."IdentityResources" ALTER COLUMN "Id" SET DEFAULT nextval('_ids4."IdentityResources_Id_seq"'::regclass);
+
+
+--
+-- Name: flyway_schema_history flyway_schema_history_pk; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
+--
+
+ALTER TABLE ONLY _a3s.flyway_schema_history
+    ADD CONSTRAINT flyway_schema_history_pk PRIMARY KEY (installed_rank);
 
 
 --
@@ -1234,22 +1867,6 @@ ALTER TABLE ONLY _a3s.terms_of_service
 
 
 --
--- Name: terms_of_service_user_acceptance_history terms_of_service_user_acceptance_history_pk; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
---
-
-ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance_history
-    ADD CONSTRAINT terms_of_service_user_acceptance_history_pk PRIMARY KEY (terms_of_service_id, user_id);
-
-
---
--- Name: terms_of_service_user_acceptance terms_of_service_user_acceptance_pk; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
---
-
-ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
-    ADD CONSTRAINT terms_of_service_user_acceptance_pk PRIMARY KEY (terms_of_service_id, user_id);
-
-
---
 -- Name: application_data_policy uk_application_data_policy_name; Type: CONSTRAINT; Schema: _a3s; Owner: postgres
 --
 
@@ -1343,6 +1960,173 @@ ALTER TABLE ONLY _a3s.team
 
 ALTER TABLE ONLY _a3s.terms_of_service
     ADD CONSTRAINT uk_terms_of_service_agreement_name_version UNIQUE (agreement_name, version);
+
+
+--
+-- Name: ApiClaims PK_ApiClaims; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiClaims"
+    ADD CONSTRAINT "PK_ApiClaims" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ApiProperties PK_ApiProperties; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiProperties"
+    ADD CONSTRAINT "PK_ApiProperties" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ApiResources PK_ApiResources; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiResources"
+    ADD CONSTRAINT "PK_ApiResources" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ApiScopeClaims PK_ApiScopeClaims; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiScopeClaims"
+    ADD CONSTRAINT "PK_ApiScopeClaims" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ApiScopes PK_ApiScopes; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiScopes"
+    ADD CONSTRAINT "PK_ApiScopes" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ApiSecrets PK_ApiSecrets; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiSecrets"
+    ADD CONSTRAINT "PK_ApiSecrets" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ClientClaims PK_ClientClaims; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientClaims"
+    ADD CONSTRAINT "PK_ClientClaims" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ClientCorsOrigins PK_ClientCorsOrigins; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientCorsOrigins"
+    ADD CONSTRAINT "PK_ClientCorsOrigins" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ClientGrantTypes PK_ClientGrantTypes; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientGrantTypes"
+    ADD CONSTRAINT "PK_ClientGrantTypes" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ClientIdPRestrictions PK_ClientIdPRestrictions; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientIdPRestrictions"
+    ADD CONSTRAINT "PK_ClientIdPRestrictions" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ClientPostLogoutRedirectUris PK_ClientPostLogoutRedirectUris; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientPostLogoutRedirectUris"
+    ADD CONSTRAINT "PK_ClientPostLogoutRedirectUris" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ClientProperties PK_ClientProperties; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientProperties"
+    ADD CONSTRAINT "PK_ClientProperties" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ClientRedirectUris PK_ClientRedirectUris; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientRedirectUris"
+    ADD CONSTRAINT "PK_ClientRedirectUris" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ClientScopes PK_ClientScopes; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientScopes"
+    ADD CONSTRAINT "PK_ClientScopes" PRIMARY KEY ("Id");
+
+
+--
+-- Name: ClientSecrets PK_ClientSecrets; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientSecrets"
+    ADD CONSTRAINT "PK_ClientSecrets" PRIMARY KEY ("Id");
+
+
+--
+-- Name: Clients PK_Clients; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."Clients"
+    ADD CONSTRAINT "PK_Clients" PRIMARY KEY ("Id");
+
+
+--
+-- Name: IdentityClaims PK_IdentityClaims; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."IdentityClaims"
+    ADD CONSTRAINT "PK_IdentityClaims" PRIMARY KEY ("Id");
+
+
+--
+-- Name: IdentityProperties PK_IdentityProperties; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."IdentityProperties"
+    ADD CONSTRAINT "PK_IdentityProperties" PRIMARY KEY ("Id");
+
+
+--
+-- Name: IdentityResources PK_IdentityResources; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."IdentityResources"
+    ADD CONSTRAINT "PK_IdentityResources" PRIMARY KEY ("Id");
+
+
+--
+-- Name: flyway_schema_history flyway_schema_history_pk; Type: CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4.flyway_schema_history
+    ADD CONSTRAINT flyway_schema_history_pk PRIMARY KEY (installed_rank);
+
+
+--
+-- Name: flyway_schema_history_s_idx; Type: INDEX; Schema: _a3s; Owner: postgres
+--
+
+CREATE INDEX flyway_schema_history_s_idx ON _a3s.flyway_schema_history USING btree (success);
 
 
 --
@@ -1455,6 +2239,153 @@ CREATE INDEX ix_user_team_user_id ON _a3s.user_team USING btree (user_id) WITH (
 --
 
 CREATE UNIQUE INDEX role_name_index ON _a3s.aspnet_role USING btree (normalized_name) WITH (fillfactor='90');
+
+
+--
+-- Name: IX_ApiClaims_ApiResourceId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ApiClaims_ApiResourceId" ON _ids4."ApiClaims" USING btree ("ApiResourceId");
+
+
+--
+-- Name: IX_ApiProperties_ApiResourceId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ApiProperties_ApiResourceId" ON _ids4."ApiProperties" USING btree ("ApiResourceId");
+
+
+--
+-- Name: IX_ApiResources_Name; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "IX_ApiResources_Name" ON _ids4."ApiResources" USING btree ("Name");
+
+
+--
+-- Name: IX_ApiScopeClaims_ApiScopeId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ApiScopeClaims_ApiScopeId" ON _ids4."ApiScopeClaims" USING btree ("ApiScopeId");
+
+
+--
+-- Name: IX_ApiScopes_ApiResourceId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ApiScopes_ApiResourceId" ON _ids4."ApiScopes" USING btree ("ApiResourceId");
+
+
+--
+-- Name: IX_ApiScopes_Name; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "IX_ApiScopes_Name" ON _ids4."ApiScopes" USING btree ("Name");
+
+
+--
+-- Name: IX_ApiSecrets_ApiResourceId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ApiSecrets_ApiResourceId" ON _ids4."ApiSecrets" USING btree ("ApiResourceId");
+
+
+--
+-- Name: IX_ClientClaims_ClientId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ClientClaims_ClientId" ON _ids4."ClientClaims" USING btree ("ClientId");
+
+
+--
+-- Name: IX_ClientCorsOrigins_ClientId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ClientCorsOrigins_ClientId" ON _ids4."ClientCorsOrigins" USING btree ("ClientId");
+
+
+--
+-- Name: IX_ClientGrantTypes_ClientId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ClientGrantTypes_ClientId" ON _ids4."ClientGrantTypes" USING btree ("ClientId");
+
+
+--
+-- Name: IX_ClientIdPRestrictions_ClientId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ClientIdPRestrictions_ClientId" ON _ids4."ClientIdPRestrictions" USING btree ("ClientId");
+
+
+--
+-- Name: IX_ClientPostLogoutRedirectUris_ClientId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ClientPostLogoutRedirectUris_ClientId" ON _ids4."ClientPostLogoutRedirectUris" USING btree ("ClientId");
+
+
+--
+-- Name: IX_ClientProperties_ClientId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ClientProperties_ClientId" ON _ids4."ClientProperties" USING btree ("ClientId");
+
+
+--
+-- Name: IX_ClientRedirectUris_ClientId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ClientRedirectUris_ClientId" ON _ids4."ClientRedirectUris" USING btree ("ClientId");
+
+
+--
+-- Name: IX_ClientScopes_ClientId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ClientScopes_ClientId" ON _ids4."ClientScopes" USING btree ("ClientId");
+
+
+--
+-- Name: IX_ClientSecrets_ClientId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_ClientSecrets_ClientId" ON _ids4."ClientSecrets" USING btree ("ClientId");
+
+
+--
+-- Name: IX_Clients_ClientId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "IX_Clients_ClientId" ON _ids4."Clients" USING btree ("ClientId");
+
+
+--
+-- Name: IX_IdentityClaims_IdentityResourceId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_IdentityClaims_IdentityResourceId" ON _ids4."IdentityClaims" USING btree ("IdentityResourceId");
+
+
+--
+-- Name: IX_IdentityProperties_IdentityResourceId; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX "IX_IdentityProperties_IdentityResourceId" ON _ids4."IdentityProperties" USING btree ("IdentityResourceId");
+
+
+--
+-- Name: IX_IdentityResources_Name; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE UNIQUE INDEX "IX_IdentityResources_Name" ON _ids4."IdentityResources" USING btree ("Name");
+
+
+--
+-- Name: flyway_schema_history_s_idx; Type: INDEX; Schema: _ids4; Owner: postgres
+--
+
+CREATE INDEX flyway_schema_history_s_idx ON _ids4.flyway_schema_history USING btree (success);
 
 
 --
@@ -1642,38 +2573,6 @@ ALTER TABLE ONLY _a3s.team
 
 
 --
--- Name: terms_of_service_user_acceptance_history fk_terms_of_service_user_acceptance_history_terms_of_service_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
---
-
-ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance_history
-    ADD CONSTRAINT fk_terms_of_service_user_acceptance_history_terms_of_service_id FOREIGN KEY (terms_of_service_id) REFERENCES _a3s.terms_of_service(id) MATCH FULL;
-
-
---
--- Name: terms_of_service_user_acceptance_history fk_terms_of_service_user_acceptance_history_user_user_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
---
-
-ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance_history
-    ADD CONSTRAINT fk_terms_of_service_user_acceptance_history_user_user_id FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
-
-
---
--- Name: terms_of_service_user_acceptance fk_terms_of_service_user_acceptance_terms_of_service_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
---
-
-ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
-    ADD CONSTRAINT fk_terms_of_service_user_acceptance_terms_of_service_id FOREIGN KEY (terms_of_service_id) REFERENCES _a3s.terms_of_service(id) MATCH FULL;
-
-
---
--- Name: terms_of_service_user_acceptance fk_terms_of_service_user_acceptance_user_user_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
---
-
-ALTER TABLE ONLY _a3s.terms_of_service_user_acceptance
-    ADD CONSTRAINT fk_terms_of_service_user_acceptance_user_user_id FOREIGN KEY (user_id) REFERENCES _a3s.application_user(id) MATCH FULL;
-
-
---
 -- Name: user_role fk_user_role_application_user_user_id; Type: FK CONSTRAINT; Schema: _a3s; Owner: postgres
 --
 
@@ -1711,6 +2610,134 @@ ALTER TABLE ONLY _a3s.user_team
 
 ALTER TABLE ONLY _a3s.ldap_authentication_mode_ldap_attribute
     ADD CONSTRAINT ldap_authentication_mode_ldap__ldap_authentication_mode_id_fkey FOREIGN KEY (ldap_authentication_mode_id) REFERENCES _a3s.ldap_authentication_mode(id);
+
+
+--
+-- Name: ApiClaims FK_ApiClaims_ApiResources_ApiResourceId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiClaims"
+    ADD CONSTRAINT "FK_ApiClaims_ApiResources_ApiResourceId" FOREIGN KEY ("ApiResourceId") REFERENCES _ids4."ApiResources"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ApiProperties FK_ApiProperties_ApiResources_ApiResourceId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiProperties"
+    ADD CONSTRAINT "FK_ApiProperties_ApiResources_ApiResourceId" FOREIGN KEY ("ApiResourceId") REFERENCES _ids4."ApiResources"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ApiScopeClaims FK_ApiScopeClaims_ApiScopes_ApiScopeId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiScopeClaims"
+    ADD CONSTRAINT "FK_ApiScopeClaims_ApiScopes_ApiScopeId" FOREIGN KEY ("ApiScopeId") REFERENCES _ids4."ApiScopes"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ApiScopes FK_ApiScopes_ApiResources_ApiResourceId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiScopes"
+    ADD CONSTRAINT "FK_ApiScopes_ApiResources_ApiResourceId" FOREIGN KEY ("ApiResourceId") REFERENCES _ids4."ApiResources"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ApiSecrets FK_ApiSecrets_ApiResources_ApiResourceId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ApiSecrets"
+    ADD CONSTRAINT "FK_ApiSecrets_ApiResources_ApiResourceId" FOREIGN KEY ("ApiResourceId") REFERENCES _ids4."ApiResources"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ClientClaims FK_ClientClaims_Clients_ClientId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientClaims"
+    ADD CONSTRAINT "FK_ClientClaims_Clients_ClientId" FOREIGN KEY ("ClientId") REFERENCES _ids4."Clients"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ClientCorsOrigins FK_ClientCorsOrigins_Clients_ClientId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientCorsOrigins"
+    ADD CONSTRAINT "FK_ClientCorsOrigins_Clients_ClientId" FOREIGN KEY ("ClientId") REFERENCES _ids4."Clients"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ClientGrantTypes FK_ClientGrantTypes_Clients_ClientId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientGrantTypes"
+    ADD CONSTRAINT "FK_ClientGrantTypes_Clients_ClientId" FOREIGN KEY ("ClientId") REFERENCES _ids4."Clients"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ClientIdPRestrictions FK_ClientIdPRestrictions_Clients_ClientId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientIdPRestrictions"
+    ADD CONSTRAINT "FK_ClientIdPRestrictions_Clients_ClientId" FOREIGN KEY ("ClientId") REFERENCES _ids4."Clients"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ClientPostLogoutRedirectUris FK_ClientPostLogoutRedirectUris_Clients_ClientId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientPostLogoutRedirectUris"
+    ADD CONSTRAINT "FK_ClientPostLogoutRedirectUris_Clients_ClientId" FOREIGN KEY ("ClientId") REFERENCES _ids4."Clients"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ClientProperties FK_ClientProperties_Clients_ClientId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientProperties"
+    ADD CONSTRAINT "FK_ClientProperties_Clients_ClientId" FOREIGN KEY ("ClientId") REFERENCES _ids4."Clients"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ClientRedirectUris FK_ClientRedirectUris_Clients_ClientId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientRedirectUris"
+    ADD CONSTRAINT "FK_ClientRedirectUris_Clients_ClientId" FOREIGN KEY ("ClientId") REFERENCES _ids4."Clients"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ClientScopes FK_ClientScopes_Clients_ClientId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientScopes"
+    ADD CONSTRAINT "FK_ClientScopes_Clients_ClientId" FOREIGN KEY ("ClientId") REFERENCES _ids4."Clients"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: ClientSecrets FK_ClientSecrets_Clients_ClientId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."ClientSecrets"
+    ADD CONSTRAINT "FK_ClientSecrets_Clients_ClientId" FOREIGN KEY ("ClientId") REFERENCES _ids4."Clients"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: IdentityClaims FK_IdentityClaims_IdentityResources_IdentityResourceId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."IdentityClaims"
+    ADD CONSTRAINT "FK_IdentityClaims_IdentityResources_IdentityResourceId" FOREIGN KEY ("IdentityResourceId") REFERENCES _ids4."IdentityResources"("Id") ON DELETE CASCADE;
+
+
+--
+-- Name: IdentityProperties FK_IdentityProperties_IdentityResources_IdentityResourceId; Type: FK CONSTRAINT; Schema: _ids4; Owner: postgres
+--
+
+ALTER TABLE ONLY _ids4."IdentityProperties"
+    ADD CONSTRAINT "FK_IdentityProperties_IdentityResources_IdentityResourceId" FOREIGN KEY ("IdentityResourceId") REFERENCES _ids4."IdentityResources"("Id") ON DELETE CASCADE;
 
 
 --
