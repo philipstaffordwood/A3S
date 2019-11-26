@@ -1,6 +1,6 @@
 ﻿{
 	"info": {
-		"_postman_id": "e2f6cc98-6030-4ea6-8555-0d658cb40393",
+		"_postman_id": "dcec171a-627e-4a45-a939-0f9bbb3dfbe8",
 		"name": "A3S - Integration",
 		"description": "A Postman collection desgined to be executed remotely using Newman within the CI/CD context.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -756,9 +756,9 @@
 									"    pm.response.to.have.status(200);",
 									"});",
 									"",
-									"pm.test(\"Check that a list containing the three functions defined within the security contract was returned.\", function () {",
+									"pm.test(\"Check that a list containing the two functions defined within the security contract was returned.\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData.length).to.equal(3);",
+									"    pm.expect(jsonData.length).to.equal(2);",
 									"});",
 									"",
 									"pm.test(\"Check that the first element of the list is a correctly structured function\", function () {",
