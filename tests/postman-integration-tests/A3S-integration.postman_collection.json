@@ -1,6 +1,6 @@
 ﻿{
 	"info": {
-		"_postman_id": "dcec171a-627e-4a45-a939-0f9bbb3dfbe8",
+		"_postman_id": "57d11e69-7faf-481b-a2e1-b86127921be0",
 		"name": "A3S - Integration",
 		"description": "A Postman collection desgined to be executed remotely using Newman within the CI/CD context.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -7336,6 +7336,68 @@
 							]
 						},
 						"description": "Retrieves the entire security contract. Note: YAML is the preferred returned format, but these requests are asking for JSON to be returned so that Postman content analysis is easier. Checks the client that was created in the previous partial security contract upload is correct."
+					},
+					"response": []
+				},
+				{
+					"name": "PutSecurityContractDefinition - New Client - Empty CORS Origins - Expect 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "53f866e8-5434-4e46-8610-dbe1c3781067",
+								"exec": [
+									"pm.test(\"Response is 400 - Bad Request\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/x-yaml"
+							},
+							{
+								"key": "",
+								"type": "text",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "clients:\n  - clientId: test-security-contract-api\n    name: \"Test security contract client\"\n    allowedGrantTypes:\n      - authorization_code\n      - password\n    redirectUris:\n      - \"https://www.getpostman.com/oauth2/callback\"\n    postLogoutRedirectUris:\n      - \"https://www.getpostman.com\"\n    allowedCorsOrigins:\n      - \"\"\n    allowedScopes:\n      - \"openid\"\n      - \"profile\"\n      - \"dokuti\"\n      - \"a3s\"\n    clientSecrets:\n      - \"secret\"\n    allowedOfflineAccess: true\n"
+						},
+						"url": {
+							"raw": "{{a3s-host}}/securityContracts",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"securityContracts"
+							]
+						}
 					},
 					"response": []
 				},
