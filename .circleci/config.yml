@@ -29,7 +29,16 @@ jobs:
           root: ~/build
           paths:
             - tests/*
-          
+  build-dotnet-libs:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
+    working_directory: ~/build
+    steps:
+      - checkout
+      - run: cd shared-libraries/resource-server-policy-enforcement/cs
+      - run: pwd; dotnet restore
+      - run: dotnet build
+      - run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover       
   static-analysis:
     docker:
       - image: newtmitch/sonar-scanner:alpine
@@ -231,6 +240,7 @@ workflows:
       - vulnerability-test
       - license-headers
       - postman-integration-tests
+      - build-dotnet-libs
       - fossa-scan:
           filters:    
             branches:    
@@ -248,6 +258,7 @@ workflows:
       - fossa-scan: *only-tags
       - postman-integration-tests: *only-tags
       - generate-axios-client: *only-tags
+      - build-dotnet-libs: *only-tags
       - a3s-docker-build-push:
           requires:
           - unit-test
