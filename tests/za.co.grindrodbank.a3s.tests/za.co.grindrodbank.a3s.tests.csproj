@@ -39,6 +39,7 @@
     <Folder Include="Fakes\" />
     <Folder Include="Managers\" />
     <Folder Include="Extensions\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNetCore.Mvc.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" />

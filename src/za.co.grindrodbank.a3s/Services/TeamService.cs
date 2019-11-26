@@ -21,13 +21,15 @@ namespace za.co.grindrodbank.a3s.Services
     {
         private readonly ITeamRepository teamRepository;
         private readonly IApplicationDataPolicyRepository applicationDataPolicyRepository;
+        private readonly ITermsOfServiceRepository termsOfServiceRepository;
         private readonly IMapper mapper;
         private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
-        public TeamService(ITeamRepository teamRepository, IApplicationDataPolicyRepository applicationDataPolicyRepository, IMapper mapper)
+        public TeamService(ITeamRepository teamRepository, IApplicationDataPolicyRepository applicationDataPolicyRepository, ITermsOfServiceRepository termsOfServiceRepository, IMapper mapper)
         {
             this.teamRepository = teamRepository;
             this.applicationDataPolicyRepository = applicationDataPolicyRepository;
+            this.termsOfServiceRepository = termsOfServiceRepository;
             this.mapper = mapper;
         }
 
@@ -38,24 +40,41 @@ namespace za.co.grindrodbank.a3s.Services
 
             try
             {
+                TeamModel existingTeam = await teamRepository.GetByNameAsync(teamSubmit.Name, false);
+                if (existingTeam != null)
+                    throw new ItemNotProcessableException($"Team with Name '{teamSubmit.Name}' already exist.");
+
                 // This will only map the first level of members onto the model. User IDs and Policy IDs will not be.
-                TeamModel teamModel = mapper.Map<TeamModel>(teamSubmit);
+                var teamModel = mapper.Map<TeamModel>(teamSubmit);
                 teamModel.ChangedBy = createdById;
 
                 await AssignTeamsToTeamFromTeamIdList(teamModel, teamSubmit.TeamIds);
                 await AssignApplicationDataPoliciesToTeamFromDataPolicyIdList(teamModel, teamSubmit.DataPolicyIds);
+                await ValidateTermsOfServiceEntry(teamModel.TermsOfServiceId);
+
+                var createdTeam = mapper.Map<Team>(await teamRepository.CreateAsync(teamModel));
 
                 // All successful
                 CommitAllTransactions();
 
-                return mapper.Map<Team>(await teamRepository.CreateAsync(teamModel));
+                return createdTeam;
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
+        }
+
+        private async Task ValidateTermsOfServiceEntry(Guid? termsOfServiceId)
+        {
+            if (termsOfServiceId == null)
+                return;
+
+            TermsOfServiceModel existingTermsOfService = await termsOfServiceRepository.GetByIdAsync((Guid)termsOfServiceId, false);
+
+            if (existingTermsOfService == null)
+                throw new ItemNotFoundException($"TermsOfService entry with Id '{termsOfServiceId} not found.");
         }
 
         public async Task<Team> GetByIdAsync(Guid teamId, bool includeRelations = false)
@@ -91,19 +110,20 @@ namespace za.co.grindrodbank.a3s.Services
                 // Map the first level team submit attributes onto the team model.
                 existingTeam.Name = teamSubmit.Name;
                 existingTeam.Description = teamSubmit.Description;
+                existingTeam.TermsOfServiceId = teamSubmit.TermsOfServiceId;
                 existingTeam.ChangedBy = updatedById;
 
                 await AssignTeamsToTeamFromTeamIdList(existingTeam, teamSubmit.TeamIds);
                 await AssignApplicationDataPoliciesToTeamFromDataPolicyIdList(existingTeam, teamSubmit.DataPolicyIds);
+                await ValidateTermsOfServiceEntry(existingTeam.TermsOfServiceId);
 
                 // All successful
                 CommitAllTransactions();
 
                 return mapper.Map<Team>(await teamRepository.UpdateAsync(existingTeam));
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
@@ -212,16 +232,19 @@ namespace za.co.grindrodbank.a3s.Services
         private void BeginAllTransactions()
         {
             teamRepository.InitSharedTransaction();
+            applicationDataPolicyRepository.InitSharedTransaction();
         }
 
         private void CommitAllTransactions()
         {
             teamRepository.CommitTransaction();
+            applicationDataPolicyRepository.CommitTransaction();
         }
 
         private void RollbackAllTransactions()
         {
             teamRepository.RollbackTransaction();
+            applicationDataPolicyRepository.RollbackTransaction();
         }
     }
 }

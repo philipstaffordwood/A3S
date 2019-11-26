@@ -37,6 +37,7 @@ namespace za.co.grindrodbank.a3s.Models
         public DbSet<LdapAuthenticationModeModel> LdapAuthenticationMode { get; set; }
         public DbSet<LdapAuthenticationModeLdapAttributeModel> LdapAuthenticationModeLdapAttribute { get; set; }
         public DbSet<ApplicationDataPolicyModel> ApplicationDataPolicy { get; set; }
+        public DbSet<TermsOfServiceModel> TermsOfService { get; set; }
 
         // Identity specific database tables. We want to operate on these, but let them be managed by Identity.
         public DbSet<UserClaimModel> ApplicationUserClaims { get; set; }
@@ -200,6 +201,12 @@ namespace za.co.grindrodbank.a3s.Models
                 .HasOne(tdp => tdp.ApplicationDataPolicy)
                 .WithMany(adp => adp.ApplicationDataPolicies)
                 .HasForeignKey(tdp => tdp.ApplicationDataPolicyId);
+
+            // Customisations for one to many relationship between TermsOfService and Teams
+            modelBuilder.Entity<TeamModel>()
+                .HasOne(t => t.TermsOfService)
+                .WithMany(tOS => tOS.Teams)
+                .HasForeignKey(t => t.TermsOfServiceId);
 
             SetDbNamingConvention(modelBuilder);
             SetSysPeriodTransformedColumns(modelBuilder);

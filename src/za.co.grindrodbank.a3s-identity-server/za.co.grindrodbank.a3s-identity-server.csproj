@@ -151,5 +151,8 @@
     <Compile Include="..\za.co.grindrodbank.a3s\Stores\CustomUserStore.cs">
       <Link>Stores\CustomUserStore.cs</Link>
     </Compile>
+    <Compile Include="..\za.co.grindrodbank.a3s\Models\TermsOfServiceModel.cs">
+      <Link>Models\TermsOfServiceModel.cs</Link>
+    </Compile>
 </ItemGroup>
 </Project>

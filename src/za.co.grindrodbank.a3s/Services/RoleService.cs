@@ -57,9 +57,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return mapper.Map<Role>(await roleRepository.CreateAsync(newRole));
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
@@ -109,9 +108,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return mapper.Map<Role>(await roleRepository.UpdateAsync(role));
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }

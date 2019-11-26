@@ -50,7 +50,7 @@ applications:
         permissions:
           - name: a3s.applications.read
             description: Enables reading lists of applications and individual applications. Enables viewing which functions and permissions are assigned to applications.
-            
+
       - name: a3s.functions
         description: Functionality to manage functions created by micro-services.
         permissions:
@@ -109,6 +109,16 @@ applications:
             description: Removes two-factor authentication from a user profile.
           - name: a3s.twoFactorAuth.validateOtp
             description: Validates a user authenticator generated OTP.
+
+      - name: a3s.termsOfService
+        description: Functionality to manage terms of service entries.
+        permissions:
+          - name: a3s.termsOfService.read
+            description: Enables reading lists or individual entries of terms of service.
+          - name: a3s.termsOfService.create
+            description: Enables the creation of new terms of service entries.
+          - name: a3s.termsOfService.delete
+            description: Enables the delete of existing terms of service entries.
 
     dataPolicies:
       - name: a3s.viewYourTeamsOnly
@@ -178,6 +188,9 @@ defaultConfigurations:
               - a3s.clientRegistration.update
               - a3s.twoFactorAuth.remove
               - a3s.twoFactorAuth.validateOtp
+              - a3s.termsOfService.create
+              - a3s.termsOfService.delete
+              - a3s.termsOfService.read
           - name: "a3s.userMaintenance"
             description: "A function that contains all user related permissions within the A3S micro-service."
             permissions:

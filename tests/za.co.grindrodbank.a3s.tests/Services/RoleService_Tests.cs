@@ -68,7 +68,6 @@ namespace za.co.grindrodbank.a3s.tests.Services
 
             foreach (var function in mockedRoleModel.RoleFunctions)
                 mockedRoleSubmitModel.FunctionIds.Add(function.FunctionId);
-
         }
 
         [Fact]

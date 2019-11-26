@@ -71,7 +71,6 @@ namespace za.co.grindrodbank.a3s.Services
                 if (userModel.LdapAuthenticationModeId == Guid.Empty)
                     userModel.LdapAuthenticationModeId = null;
 
-
                 if (userModel.LdapAuthenticationModeId != null)
                 {
                     var authMode = await ldapAuthenticationModeRepository.GetByIdAsync((Guid)userModel.LdapAuthenticationModeId, true);
@@ -98,9 +97,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return mapper.Map<User>(createdUser);
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
@@ -165,9 +163,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return mapper.Map<User>(updatedUser);
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
@@ -215,9 +212,8 @@ namespace za.co.grindrodbank.a3s.Services
                 // All successful
                 CommitAllTransactions();
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
