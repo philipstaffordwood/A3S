@@ -87,7 +87,7 @@ namespace za.co.grindrodbank.a3s.tests.Controllers
             var controller = new TermsOfServiceController(termsOfServiceService);
 
             // Act
-            IActionResult actionResult = await controller.ListTermsOfServicesAsync(0, 50, string.Empty, null);
+            IActionResult actionResult = await controller.ListTermsOfServicesAsync(0, 50, null);
 
             // Assert
             var okResult = actionResult as OkObjectResult;

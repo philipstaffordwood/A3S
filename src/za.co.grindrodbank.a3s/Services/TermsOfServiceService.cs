@@ -54,9 +54,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return createdTermsOfService;
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }

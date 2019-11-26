@@ -56,7 +56,7 @@ namespace za.co.grindrodbank.a3s.Controllers
         }
 
         [Authorize(Policy = "permission:a3s.termsOfService.read")]
-        public async override Task<IActionResult> ListTermsOfServicesAsync([FromQuery] int page, [FromQuery, Range(1, 20)] int size, [FromQuery, StringLength(255, MinimumLength = 0)] string filterDescription, [FromQuery] List<string> orderBy)
+        public async override Task<IActionResult> ListTermsOfServicesAsync([FromQuery] int page, [FromQuery, Range(1, 20)] int size, [FromQuery] List<string> orderBy)
         {
             return Ok(await termsOfServiceService.GetListAsync());
         }

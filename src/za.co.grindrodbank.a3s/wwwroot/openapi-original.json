@@ -3,7 +3,7 @@
   "info" : {
     "description" : "API Definition for the A3S. This service allows authentication, authorisation and accounting.",
     "title" : "A3S",
-    "version" : "1.0.1"
+    "version" : "1.0.2"
   },
   "servers" : [ {
     "url" : "/"
@@ -2315,19 +2315,6 @@
           },
           "style" : "form"
         }, {
-          "description" : "A search query filter on the description",
-          "example" : "FilterByEntityType",
-          "explode" : true,
-          "in" : "query",
-          "name" : "filterDescription",
-          "required" : false,
-          "schema" : {
-            "maxLength" : 255,
-            "minLength" : 0,
-            "type" : "string"
-          },
-          "style" : "form"
-        }, {
           "description" : "a comma separated list of fields in their sort order. Ascending order is assumed. Append desc after a field to indicate descending order.",
           "explode" : false,
           "in" : "query",
@@ -2535,6 +2522,16 @@
               }
             },
             "description" : "Terms of service entry not found."
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Terms of service entry cannot be deleted."
           },
           "500" : {
             "content" : {

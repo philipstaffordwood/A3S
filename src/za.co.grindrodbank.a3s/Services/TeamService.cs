@@ -59,9 +59,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return createdTeam;
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }
@@ -123,9 +122,8 @@ namespace za.co.grindrodbank.a3s.Services
 
                 return mapper.Map<Team>(await teamRepository.UpdateAsync(existingTeam));
             }
-            catch (Exception ex)
+            catch
             {
-                logger.Error(ex);
                 RollbackAllTransactions();
                 throw;
             }

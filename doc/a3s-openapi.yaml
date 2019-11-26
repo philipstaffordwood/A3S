@@ -2,7 +2,7 @@
 info:
   description: >-
     API Definition for the A3S. This service allows authentication, authorisation and accounting.
-  version: 1.0.1
+  version: 1.0.2
   title: A3S
 paths:
   #region - User
@@ -1524,15 +1524,6 @@ paths:
             maximum: 20
             format: int32
             default: 10
-        - name: filterDescription
-          in: query
-          required: false
-          description: A search query filter on the description
-          schema:
-            type: string
-            minLength: 0
-            maxLength: 255
-          example: FilterByEntityType
         - name: orderBy
           in: query
           required: false
@@ -1713,6 +1704,12 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
           description: Terms of service entry not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Terms of service entry cannot be deleted.
           content:
             application/json:
               schema:
