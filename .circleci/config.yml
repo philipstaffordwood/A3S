@@ -53,7 +53,7 @@ jobs:
           at: ~/repo/workspace
       - run:
           command: 'pwd; find .'
-       - run:
+      - run:
           command: 'dotnet nuget push **/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json'     
   static-analysis:
     docker:
