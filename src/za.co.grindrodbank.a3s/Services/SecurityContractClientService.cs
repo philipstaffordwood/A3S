@@ -13,6 +13,7 @@ using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.Models;
 using NLog;
 using za.co.grindrodbank.a3s.A3SApiResources;
+using za.co.grindrodbank.a3s.Exceptions;
 
 namespace za.co.grindrodbank.a3s.Services
 {
@@ -132,6 +133,11 @@ namespace za.co.grindrodbank.a3s.Services
 
             foreach(var corsOrigin in oauth2ClientSubmit.AllowedCorsOrigins)
             {
+                if (string.IsNullOrEmpty(corsOrigin))
+                {
+                    throw new InvalidFormatException($"Empty or null 'allowedCorsOrigin' declared for client: '{oauth2ClientSubmit.ClientId}'");
+                }
+
                 client.AllowedCorsOrigins.Add(new ClientCorsOrigin {
                     Client = client,
                     Origin = corsOrigin
