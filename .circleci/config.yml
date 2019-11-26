@@ -41,11 +41,11 @@ jobs:
       - run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover       
       - run: dotnet pack
       - persist_to_workspace:
-          root: ~/build/shared-libraries/resource-server-policy-enforcement
+          root: ~/build
           paths:
-            - cs
+            - shared-libraries/resource-server-policy-enforcement/cs
   publish-dotnet-libs:
-    working_directory: ~/repo/workspace
+    working_directory: ~/repo/workspace/shared-libraries/resource-server-policy-enforcement/cs
     docker:
       - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
     steps:
