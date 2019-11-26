@@ -40,6 +40,20 @@ jobs:
       - run: dotnet build
       - run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover       
       - run: dotnet pack
+      - persist_to_workspace:
+          root: ~/build/shared-libraries/resource-server-policy-enforcement
+          paths:
+            - cs
+  publish-dotnet-libs:
+    working_directory: ~/repo/workspace
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
+    steps:
+      - attach_workspace:
+          at: ~/repo/workspace
+      - run:
+          command: 'pwd; find .'
+      
   static-analysis:
     docker:
       - image: newtmitch/sonar-scanner:alpine
