@@ -37,6 +37,7 @@ jobs:
       - checkout:
           path: ~/build
       - run: cp ~/build/LICENSE ./a3s-policy-enforcement
+      - run: find .
       - run: dotnet restore
       - run: dotnet build
       - run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover       
