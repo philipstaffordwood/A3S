@@ -32,10 +32,9 @@ jobs:
   build-dotnet-libs:
     docker:
       - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
-    working_directory: ~/build
+    working_directory: ~/build/shared-libraries/resource-server-policy-enforcement/cs
     steps:
-      - checkout
-      - run: cd shared-libraries/resource-server-policy-enforcement/cs
+      - checkout ~/build
       - run: pwd; dotnet restore
       - run: dotnet build
       - run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover       
