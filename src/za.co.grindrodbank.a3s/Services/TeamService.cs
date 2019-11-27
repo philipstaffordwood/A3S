@@ -23,7 +23,6 @@ namespace za.co.grindrodbank.a3s.Services
         private readonly IApplicationDataPolicyRepository applicationDataPolicyRepository;
         private readonly ITermsOfServiceRepository termsOfServiceRepository;
         private readonly IMapper mapper;
-        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
         public TeamService(ITeamRepository teamRepository, IApplicationDataPolicyRepository applicationDataPolicyRepository, ITermsOfServiceRepository termsOfServiceRepository, IMapper mapper)
         {
