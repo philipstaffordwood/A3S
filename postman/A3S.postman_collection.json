@@ -1,6 +1,6 @@
-﻿{
+{
 	"info": {
-		"_postman_id": "3cdb8e4a-a75d-4d32-a022-9b29d5043022",
+		"_postman_id": "253e9555-fd98-4deb-b415-861290b76e67",
 		"name": "A3S",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -785,6 +785,175 @@
 			"protocolProfileBehavior": {}
 		},
 		{
+			"name": "TermsOfService",
+			"item": [
+				{
+					"name": "CreateTermsOfService",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5992873-e926-4977-bbdf-5bcdc932fb4d",
+								"exec": [
+									"pm.test(\"Set function GUID environment variable.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('uuid');",
+									"    pm.environment.set(\"terms-of-service-guid\", jsonData.uuid);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"agreementName\": \"test-agreement\",\n    \"agreementFileData\": \"H4sIAF3V110AA+3T0QqCMBQG4K73FHuB9KibQkmvIstmCtPFNo2I3j1t4E1SN6YE+27OBoftjPF7vuGq1pksMs1VV+Xcy7XezAoAYkLwUJOYviqEdm+REAcRjWlCQwKAIUgigA2GeceY1mrDVD/KhbWiY00uheBqoq9vK4oP59iX4LH+iaM83fAd4V4hG7O98upcmh1upKqZ2KMHWntC55e89/yXphaz3vE1/yGM+acBGfJPaOzyv4R0+O0DQqlvF2vP4ziO4yzjCdehEDwADAAA\"\n}"
+						},
+						"url": {
+							"raw": "{{a3s-host}}/termsOfService",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"termsOfService"
+							]
+						},
+						"description": "Creates a new terms of service entry, which is a an agreement that need to be agreed upon by a user."
+					},
+					"response": []
+				},
+				{
+					"name": "GetTermsOfServices",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{a3s-host}}/termsOfService",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"termsOfService"
+							]
+						},
+						"description": "Gets a list of all the currently registered terms of service entries. This is useful for seeing all terms of service entries and obtaining their UUIDs, which can be used for the 'GetTermsOfService' and 'DeleteTermsOfService' API requests."
+					},
+					"response": []
+				},
+				{
+					"name": "GetTermsOfService",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{a3s-host}}/termsOfService/{{terms-of-service-guid}}",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"termsOfService",
+								"{{terms-of-service-guid}}"
+							]
+						},
+						"description": "Gets a terms of service entry by it's UUID. In order to obtain this UUID, run the 'GetTermsOfServices' API method, which returns all currently registered terms of service entries. Select the UUID field from the desired function and set it as the 'terms-of-service-guid' within the Postman environment. This API call uses the value of the environment variable as the terms of service UUID."
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTermsOfService",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{a3s-host}}/termsOfService/{{terms-of-service-guid}}",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"termsOfService",
+								"{{terms-of-service-guid}}"
+							]
+						},
+						"description": "Gets a terms of service entry by it's UUID. In order to obtain this UUID, run the 'GetTermsOfServices' API method, which returns all currently registered terms of service entries. Select the UUID field from the desired function and set it as the 'terms-of-service-guid' within the Postman environment. This API call uses the value of the environment variable as the terms of service UUID."
+					},
+					"response": []
+				}
+			],
+			"description": "This API allows for the creation and lookup of Terms of Service entries",
+			"protocolProfileBehavior": {}
+		},
+		{
 			"name": "Teams",
 			"item": [
 				{
@@ -845,6 +1014,67 @@
 							]
 						},
 						"description": "Creates a new team."
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTeam - with terms of service",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "107896b8-e3c5-40b7-a0d7-13e2c7b8ee3c",
+								"exec": [
+									"pm.test(\"Set profile GUID environment variable.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('uuid');",
+									"    pm.environment.set(\"team-guid\", jsonData.uuid);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"test-team-new\",\n    \"description\": \"test new team description\",\n    \"teamIds\": [],\n    \"dataPolicies\": [],\n    \"termsOfServiceId\": \"{{terms-of-service-guid}}\"\n}"
+						},
+						"url": {
+							"raw": "{{a3s-host}}/teams",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"teams"
+							]
+						},
+						"description": "Creates a new team with a related terms of service."
 					},
 					"response": []
 				},
@@ -1447,6 +1677,50 @@
 					"response": []
 				},
 				{
+					"name": "CreateUser - with Team",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "accessToken",
+									"value": "{{session_access_token}}",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"New User First Name\",\n\t\"surname\": \"New User Surname\",\n\t\"email\": \"new@emailadress.local\",\n\t\"phoneNumber\": \"+27110110110\",\n\t\"username\": \"new-user-name-8\",\n\t\"password\": \"Password1#\",\n\t\"teamIds\": [\"{{team-guid}}\"],\n    \"roleIds\": [\"{{role-guid}}\"],\n  \t\"avatar\": null\n}"
+						},
+						"url": {
+							"raw": "{{a3s-host}}/users",
+							"host": [
+								"{{a3s-host}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Creates a use with basic attributes set and teams."
+					},
+					"response": []
+				},
+				{
 					"name": "CreateUser-with-avatar",
 					"request": {
 						"auth": {
@@ -1848,175 +2122,6 @@
 				}
 			],
 			"description": "API methods relating to management of two-factor authentication related configuration.",
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "TermsOfService",
-			"item": [
-				{
-					"name": "CreateTermsOfService",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "b5992873-e926-4977-bbdf-5bcdc932fb4d",
-								"exec": [
-									"pm.test(\"Set function GUID environment variable.\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.have.property('uuid');",
-									"    pm.environment.set(\"terms-of-service-guid\", jsonData.uuid);",
-									"});",
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "accessToken",
-									"value": "{{session_access_token}}",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"agreementName\": \"test-agreement\",\n    \"agreementFileData\": \"H4sIAF3V110AA+3T0QqCMBQG4K73FHuB9KibQkmvIstmCtPFNo2I3j1t4E1SN6YE+27OBoftjPF7vuGq1pksMs1VV+Xcy7XezAoAYkLwUJOYviqEdm+REAcRjWlCQwKAIUgigA2GeceY1mrDVD/KhbWiY00uheBqoq9vK4oP59iX4LH+iaM83fAd4V4hG7O98upcmh1upKqZ2KMHWntC55e89/yXphaz3vE1/yGM+acBGfJPaOzyv4R0+O0DQqlvF2vP4ziO4yzjCdehEDwADAAA\"\n}"
-						},
-						"url": {
-							"raw": "{{a3s-host}}/termsOfService",
-							"host": [
-								"{{a3s-host}}"
-							],
-							"path": [
-								"termsOfService"
-							]
-						},
-						"description": "Creates a new terms of service entry, which is a an agreement that need to be agreed upon by a user."
-					},
-					"response": []
-				},
-				{
-					"name": "GetTermsOfServices",
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "accessToken",
-									"value": "{{session_access_token}}",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{a3s-host}}/termsOfService",
-							"host": [
-								"{{a3s-host}}"
-							],
-							"path": [
-								"termsOfService"
-							]
-						},
-						"description": "Gets a list of all the currently registered terms of service entries. This is useful for seeing all terms of service entries and obtaining their UUIDs, which can be used for the 'GetTermsOfService' and 'DeleteTermsOfService' API requests."
-					},
-					"response": []
-				},
-				{
-					"name": "GetTermsOfService",
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "accessToken",
-									"value": "{{session_access_token}}",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{a3s-host}}/termsOfService/{{terms-of-service-guid}}",
-							"host": [
-								"{{a3s-host}}"
-							],
-							"path": [
-								"termsOfService",
-								"{{terms-of-service-guid}}"
-							]
-						},
-						"description": "Gets a terms of service entry by it's UUID. In order to obtain this UUID, run the 'GetTermsOfServices' API method, which returns all currently registered terms of service entries. Select the UUID field from the desired function and set it as the 'terms-of-service-guid' within the Postman environment. This API call uses the value of the environment variable as the terms of service UUID."
-					},
-					"response": []
-				},
-				{
-					"name": "DeleteTermsOfService",
-					"request": {
-						"auth": {
-							"type": "oauth2",
-							"oauth2": [
-								{
-									"key": "accessToken",
-									"value": "{{session_access_token}}",
-									"type": "string"
-								},
-								{
-									"key": "addTokenTo",
-									"value": "header",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{a3s-host}}/termsOfService/{{terms-of-service-guid}}",
-							"host": [
-								"{{a3s-host}}"
-							],
-							"path": [
-								"termsOfService",
-								"{{terms-of-service-guid}}"
-							]
-						},
-						"description": "Gets a terms of service entry by it's UUID. In order to obtain this UUID, run the 'GetTermsOfServices' API method, which returns all currently registered terms of service entries. Select the UUID field from the desired function and set it as the 'terms-of-service-guid' within the Postman environment. This API call uses the value of the environment variable as the terms of service UUID."
-					},
-					"response": []
-				}
-			],
-			"description": "This API allows for the creation and lookup of Terms of Service entries",
 			"protocolProfileBehavior": {}
 		}
 	],
