@@ -12,6 +12,14 @@ only-tags: &only-tags
     branches:
       ignore: /.*/
 
+only-lib-tags: &only-lib-tags
+  filters:
+    tags:
+      only: /^lib-.*/
+    branches:
+      ignore: /.*/
+
+
 # Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle CI admin.
 version: 2.1
 jobs:
@@ -302,3 +310,4 @@ workflows:
       - publish-dotnet-libs:
           requires:
           - build-dotnet-libs
+          <<: *only-lib-tags
