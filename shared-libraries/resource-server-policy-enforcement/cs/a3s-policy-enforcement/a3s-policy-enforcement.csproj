@@ -11,6 +11,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.2.0" />
-    <None Include="./LICENSE" Pack="true" PackagePath="LICENSE"/>
+    <None Include="LICENSE.txt" Pack="true" PackagePath="LICENSE"/>
   </ItemGroup>
 </Project>
