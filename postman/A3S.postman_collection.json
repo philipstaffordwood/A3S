@@ -1,4 +1,4 @@
-{
+﻿{
 	"info": {
 		"_postman_id": "253e9555-fd98-4deb-b415-861290b76e67",
 		"name": "A3S",
@@ -1634,6 +1634,23 @@
 				},
 				{
 					"name": "CreateUser",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "17701951-d606-4279-9b65-a0c54763335f",
+								"exec": [
+									"pm.test(\"Set profile GUID environment variable.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('uuid');",
+									"    pm.environment.set(\"user-guid\", jsonData.uuid);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "oauth2",
@@ -1678,6 +1695,23 @@
 				},
 				{
 					"name": "CreateUser - with Team",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "32e9efb9-5109-4914-86f1-58e18b1a126c",
+								"exec": [
+									"pm.test(\"Set profile GUID environment variable.\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('uuid');",
+									"    pm.environment.set(\"user-guid\", jsonData.uuid);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "oauth2",
@@ -1793,7 +1827,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"uuid\": \"{{user-guid}}\",\n\t\"name\": \"Updated User First Name\",\n\t\"surname\": \"Updated User Surname\",\n\t\"email\": \"update@emailadress.local\",\n\t\"phoneNumber\": \"+27110110110\",\n\t\"username\": \"updated-user-name\",\n    \"roleIds\": [\"{{role-guid}}\"],\n    \"teamIds\": []\n}"
+							"raw": "{\n\t\"uuid\": \"{{user-guid}}\",\n    \"name\": \"New User First Name\",\n    \"surname\": \"New User Surname\",\n    \"username\": \"new-user-name-8\",\n    \"email\": \"new@emailadress.local\",\n    \"phoneNumber\": \"+27110110110\",\n    \"avatar\": null,\n    \"roleIds\": [\"93d5b958-ef55-4936-b402-371395dde15f\"],\n    \"teamIds\": [\"89847c2b-93fb-4972-8ab7-38db38e3021a\",\n    \t\t\t\"e0e66d74-03ec-40c7-a743-0820172457f7\"]\n}\n"
 						},
 						"url": {
 							"raw": "{{a3s-host}}/users/{{user-guid}}",
@@ -1927,13 +1961,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{a3s-host}}/users/{{guid}}",
+							"raw": "{{a3s-host}}/users/{{user-guid}}",
 							"host": [
 								"{{a3s-host}}"
 							],
 							"path": [
 								"users",
-								"{{guid}}"
+								"{{user-guid}}"
 							]
 						},
 						"description": "Deletes a user by it's UUID. In order to obtain the UUID of a desired user it is recommended to run the 'GetUsers' API method, select the UUID field of the desired user, and set it's value as the 'user-guid' Postman environment variable."
