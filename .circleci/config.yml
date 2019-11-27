@@ -259,10 +259,6 @@ workflows:
       - license-headers
       - postman-integration-tests
       - build-dotnet-libs
-      #testing in this location
-      - publish-dotnet-libs:
-          requires:
-          - build-dotnet-libs
       - fossa-scan:
           filters:    
             branches:    
@@ -303,3 +299,6 @@ workflows:
           - postman-integration-tests
           - generate-axios-client
           <<: *only-tags
+      - publish-dotnet-libs:
+          requires:
+          - build-dotnet-libs
