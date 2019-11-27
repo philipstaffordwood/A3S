@@ -36,7 +36,7 @@ jobs:
     steps:
       - checkout:
           path: ~/build
-      - run: cp ~/build/LICENSE ./a3s-policy-enforcement
+      - run: cp ~/build/LICENSE ./a3s-policy-enforcement/LICENSE
       - run: find .
       - run: dotnet restore
       - run: dotnet build
