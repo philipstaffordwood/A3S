@@ -157,6 +157,15 @@ jobs:
       - checkout:
           path: ~/build
       - run: cp ~/build/LICENSE ./a3s-policy-enforcement/LICENSE.txt
+      - run: 
+          name: Retrieving build tag and setting in package
+          command: |
+              echo "Adding Build $CIRCLE_TAG to version"	             
+              export PKG_VERSION=${CIRCLE_TAG:-`date  +%Y%M%d%H%M%S`}
+              export THE_FILE=./a3s-policy-enforcement/a3s-policy-enforcement.csproj
+              cp $THE_FILE $THE_FILE.old
+              sed -i "s/XXX_VERSION_XXX/$PKG_VERSION/" $THE_FILE
+              diff $THE_FILE $THE_FILE.old
       - run: dotnet restore
       - run: dotnet build
       - run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover       
