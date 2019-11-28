@@ -161,7 +161,7 @@ jobs:
           name: Retrieving build tag and setting in package
           command: |
               echo "Adding Build $CIRCLE_TAG to version"	             
-              export PKG_VERSION=${CIRCLE_TAG:-`date  +%Y.%M.%d.%H.%M.%S`}
+              export PKG_VERSION=${CIRCLE_TAG:-`date  +%Y.%M.%d.%H%M%S`}
               export THE_FILE=./a3s-policy-enforcement/a3s-policy-enforcement.csproj
               cp $THE_FILE $THE_FILE.old
               sed -i "s/XXX_VERSION_XXX/$PKG_VERSION/" $THE_FILE
