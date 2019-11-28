@@ -183,7 +183,7 @@ jobs:
       - attach_workspace:
           at: ~/repo/workspace
       - run:
-          command: 'dotnet nuget push **/*.nupkg --no-symbol -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json'     
+          command: 'dotnet nuget push **/*.nupkg -n true -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json'     
 
   a3s-docker-build-push:
     docker:
