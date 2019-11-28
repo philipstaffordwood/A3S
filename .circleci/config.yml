@@ -12,13 +12,6 @@ only-tags: &only-tags
     branches:
       ignore: /.*/
 
-only-lib-tags: &only-lib-tags
-  filters:
-    tags:
-      only: /^lib-.*/
-    branches:
-      ignore: /.*/
-
 
 # Orbs need to be enabled as a security setting. Third party orb access needs to be enabled by a circle CI admin.
 version: 2.1
@@ -37,34 +30,6 @@ jobs:
           root: ~/build
           paths:
             - tests/*
-  build-dotnet-libs:
-    docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
-    working_directory: ~/build/shared-libraries/resource-server-policy-enforcement/cs
-    steps:
-      - checkout:
-          path: ~/build
-      - run: cp ~/build/LICENSE ./a3s-policy-enforcement/LICENSE.txt
-      - run: find .
-      - run: dotnet restore
-      - run: dotnet build
-      - run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover       
-      - run: dotnet pack
-      - persist_to_workspace:
-          root: ~/build
-          paths:
-            - shared-libraries/resource-server-policy-enforcement/cs
-  publish-dotnet-libs:
-    working_directory: ~/repo/workspace/shared-libraries/resource-server-policy-enforcement/cs
-    docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
-    steps:
-      - attach_workspace:
-          at: ~/repo/workspace
-      - run:
-          command: 'pwd; find .'
-      - run:
-          command: 'dotnet nuget push **/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json'     
   static-analysis:
     docker:
       - image: newtmitch/sonar-scanner:alpine
@@ -183,6 +148,32 @@ jobs:
       - run: 
           name: Publish to NPM with Yarn.
           command: cd ~/repo/workspace/a3s-typescript-axios && yarn publish --access public
+
+  build-dotnet-libs:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
+    working_directory: ~/build/shared-libraries/resource-server-policy-enforcement/cs
+    steps:
+      - checkout:
+          path: ~/build
+      - run: cp ~/build/LICENSE ./a3s-policy-enforcement/LICENSE.txt
+      - run: dotnet restore
+      - run: dotnet build
+      - run: dotnet test --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover       
+      - run: dotnet pack
+      - persist_to_workspace:
+          root: ~/build
+          paths:
+            - shared-libraries/resource-server-policy-enforcement/cs
+  publish-dotnet-libs:
+    working_directory: ~/repo/workspace/shared-libraries/resource-server-policy-enforcement/cs
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.2-alpine
+    steps:
+      - attach_workspace:
+          at: ~/repo/workspace
+      - run:
+          command: 'dotnet nuget push **/*.nupkg -k ${NUGET_API_KEY} -s https://api.nuget.org/v3/index.json'     
 
   a3s-docker-build-push:
     docker:
@@ -310,4 +301,4 @@ workflows:
       - publish-dotnet-libs:
           requires:
           - build-dotnet-libs
-          <<: *only-lib-tags
+          <<: *only-tags
