@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <RootNamespace>a3s_policy_enforcement</RootNamespace>
     <PackageId>a3s-security-policy-enforcement</PackageId>
-    <Version>1.0.1-ci-test</Version>
+    <Version>XXX_VERSION_XXX</Version>
     <Company>Grindrod</Company>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
